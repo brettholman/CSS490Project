@@ -1,22 +1,23 @@
-drop table if exists Customers;
-drop table if exists Category;
-drop table if exists Books;
-drop table if exists Transactions;
 drop table if exists PurchaseDetails;
+drop table if exists Transactions;
+drop table if exists CutomerRatings;
+drop table if exists Customers;
+drop table if exists Books;
+drop table if exists Category;
 
 
 create table Customers (
-	id 			    integer auto_increment, 
-    pass 		    varchar(20), 	
-    fName 		    varchar(20), 	
-    lName 		    varchar(20), 	
-    email 		    varchar(50),
+	id 			    integer auto_increment not null, 
+    pass 		    varchar(20) not null, 	
+    fName 		    varchar(20) not null, 	
+    lName 		    varchar(20) not null, 	
+    email 		    varchar(50) not null,
 	primary key(id)	
 );
 
 create table Category (
-    id              integer auto_increment,
-    categoryName    varchar(20),
+    id              integer auto_increment not null,
+    categoryName    varchar(20) not null,
     description     varchar(50),
     primary key 	(id)
 );
@@ -28,15 +29,31 @@ create table Books (
     price 		    double not null, 
     categoryID	    integer not null, 	#foreign key 
     primary key     (id), 
-    foreign key     (categoryID) references Category(id)
+    foreign key     (categoryID) 
+		references Category(id)
+        on delete cascade on update cascade
 );
+
+delimiter $$ 
+create trigger BooksTrigger before insert on Books  
+    for each row 
+    begin 
+            if new.price <= 0
+            then
+                signal sqlstate '45000'
+                set MESSAGE_TEXT = 'Book price must be greater than 0.';
+            end if;
+    end $$
+delimiter ;
 
 create table Transactions (
     orderNumber     integer auto_increment not null,
     customerId      integer not null,
     purchaseDate    date not null,
     primary key     (orderNumber),
-    foreign key     (customerId) references Customers(id)
+    foreign key     (customerId) 
+		references Customers(id)
+        on delete cascade on update cascade
 );
 
 # Many-to-many relationship with Books and Transactions
@@ -45,6 +62,25 @@ create table PurchaseDetails (
     bookID          integer not null,
     quantity        integer not null,
     primary key     (orderNumber, bookID),
-    foreign key     (orderNumber) references Transactions(orderNumber),
-    foreign key     (bookID) references Books(id)
+    foreign key     (orderNumber) 
+		references Transactions(orderNumber)
+        on delete cascade on update cascade,
+    foreign key     (bookID) 
+		references Books(id)
+        on delete cascade on update cascade
+);
+
+# need to discuss how we want to keep ratings. 
+create table CutomerRatings (
+    customerID      integer not null,
+    bookID          integer not null,
+    rating          integer not null,
+    description     varchar(100),
+    primary key     (customerID, bookID),
+    foreign key     (customerID)
+        references Customers(id)
+        on delete cascade on update cascade,
+    foreign key     (bookID)
+        references Books(id)
+        on delete cascade on update cascade
 );
