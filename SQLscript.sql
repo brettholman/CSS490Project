@@ -70,13 +70,15 @@ create table PurchaseDetails (
         on delete cascade on update cascade
 );
 
-# need to discuss how we want to keep ratings. 
+# made to keep track of all ratings. 
 create table CustomerRatings (
+    id              integer auto_increment not null,
     customerID      integer not null,
     bookID          integer not null,
     rating          integer not null,
+    ratingDate      date not null,
     description     varchar(100),
-    primary key     (customerID, bookID),
+    primary key     (id),
     foreign key     (customerID)
         references Customers(id)
         on delete cascade on update cascade,
