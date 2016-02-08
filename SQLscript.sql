@@ -1,6 +1,6 @@
 drop table if exists PurchaseDetails;
 drop table if exists Transactions;
-drop table if exists CutomerRatings;
+drop table if exists CustomerRatings;
 drop table if exists Customers;
 drop table if exists Books;
 drop table if exists Category;
@@ -71,7 +71,7 @@ create table PurchaseDetails (
 );
 
 # need to discuss how we want to keep ratings. 
-create table CutomerRatings (
+create table CustomerRatings (
     customerID      integer not null,
     bookID          integer not null,
     rating          integer not null,
@@ -84,3 +84,20 @@ create table CutomerRatings (
         references Books(id)
         on delete cascade on update cascade
 );
+
+delimiter $$
+create trigger CustomerRatingsTrigger before insert on CustomerRatings
+		for each row 
+        begin
+				if new.rating < 0
+                then 
+						signal sqlstate '45000'
+				set MESSAGE_TEXT = 'A rating can not be negative.';
+				end if; 
+                if new.rating > 5
+                then 
+						signal sqlstate '45000'
+				set MESSAGE_TEXT = 'A raiting can not be more than 5.';
+                end if;
+		end $$
+delimiter ;
