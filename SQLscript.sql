@@ -8,17 +8,19 @@ drop table if exists Category;
 
 create table Customers (
 	id 			    integer auto_increment not null, 
-    pass 		    varchar(20) not null, 	
+    userName        varchar(20) not null,
     fName 		    varchar(20) not null, 	
     lName 		    varchar(20) not null, 	
     email 		    varchar(50) not null,
+    pass 		    varchar(20) not null,
+    lastLogin       date not null,
+    accountCreated  date not null 	
 	primary key(id)	
 );
 
 create table Category (
     id              integer auto_increment not null,
     categoryName    varchar(20) not null,
-    description     varchar(50),
     primary key 	(id)
 );
 
@@ -42,6 +44,11 @@ create trigger BooksTrigger before insert on Books
             then
                 signal sqlstate '45000'
                 set MESSAGE_TEXT = 'Book price must be greater than 0.';
+            end if;
+            if quantity < 0
+            then 
+                signal sqlstate '45000'
+                set MESSAGE_TEXT = 'There can not be a book with a quantity of less than 0'
             end if;
     end $$
 delimiter ;
