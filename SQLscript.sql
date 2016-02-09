@@ -1,12 +1,12 @@
 drop table if exists PurchaseDetails;
 drop table if exists Transactions;
-drop table if exists CustomerRatings;
-drop table if exists Customers;
+drop table if exists UserRatings;
+drop table if exists User;
 drop table if exists Books;
 drop table if exists Category;
 
 
-create table Customers ( 
+create table Users ( 
     userName        varchar(20) unique not null,
     fName 		    varchar(20) not null, 	
     lName 		    varchar(20) not null, 	
@@ -58,7 +58,7 @@ create table Transactions (
     purchaseDate    date not null,
     primary key     (orderNumber),
     foreign key     (userName) 
-		references Customers(userName)
+		references Users(userName)
         on delete cascade on update cascade
 );
 
@@ -77,7 +77,7 @@ create table PurchaseDetails (
 );
 
 # made to keep track of all ratings. 
-create table CustomerRatings (
+create table UserRatings (
     id              integer auto_increment not null,
     userName        varchar(20) not null,
     bookID          integer not null,
@@ -86,7 +86,7 @@ create table CustomerRatings (
     description     varchar(100),
     primary key     (id),
     foreign key     (userName)
-        references Customers(userName)
+        references Users(userName)
         on delete cascade on update cascade,
     foreign key     (bookID)
         references Books(id)
@@ -94,7 +94,7 @@ create table CustomerRatings (
 );
 
 delimiter $$
-create trigger CustomerRatingsTrigger before insert on CustomerRatings
+create trigger UserRatingsTrigger before insert on UserRatings
 		for each row 
         begin
 				if new.rating < 0
