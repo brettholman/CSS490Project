@@ -6,16 +6,15 @@ drop table if exists Books;
 drop table if exists Category;
 
 
-create table Customers (
-	id 			    integer auto_increment not null, 
-    userName        varchar(20) not null,
+create table Customers ( 
+    userName        varchar(20) unique not null,
     fName 		    varchar(20) not null, 	
     lName 		    varchar(20) not null, 	
     email 		    varchar(50) not null,
     pass 		    varchar(20) not null,
     lastLogin       date not null,
-    accountCreated  date not null 	
-	primary key(id)	
+    accountCreated  date not null, 	
+	primary key(userName)	
 );
 
 create table Category (
@@ -48,18 +47,18 @@ create trigger BooksTrigger before insert on Books
             if quantity < 0
             then 
                 signal sqlstate '45000'
-                set MESSAGE_TEXT = 'There can not be a book with a quantity of less than 0'
+                set MESSAGE_TEXT = 'There can not be a book with a quantity of less than 0';
             end if;
     end $$
 delimiter ;
 
 create table Transactions (
     orderNumber     integer auto_increment not null,
-    customerId      integer not null,
+    userName 		varchar(20) not null,
     purchaseDate    date not null,
     primary key     (orderNumber),
-    foreign key     (customerId) 
-		references Customers(id)
+    foreign key     (userName) 
+		references Customers(userName)
         on delete cascade on update cascade
 );
 
@@ -80,14 +79,14 @@ create table PurchaseDetails (
 # made to keep track of all ratings. 
 create table CustomerRatings (
     id              integer auto_increment not null,
-    customerID      integer not null,
+    userName        varchar(20) not null,
     bookID          integer not null,
     rating          integer not null,
     ratingDate      date not null,
     description     varchar(100),
     primary key     (id),
-    foreign key     (customerID)
-        references Customers(id)
+    foreign key     (userName)
+        references Customers(userName)
         on delete cascade on update cascade,
     foreign key     (bookID)
         references Books(id)
