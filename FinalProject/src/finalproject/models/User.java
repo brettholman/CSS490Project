@@ -2,12 +2,12 @@ package finalproject.models;
 
 public class User {
 	private String name = null;
-	private String mail = null;
-	private Boolean isAdmin = false;
+	private String password = null;
+	private String email = null;
 	
 	public Boolean isValid()
 	{
-		return (name != null && mail != null);
+		return (name != null && email != null);
 	}
 	
 	public String getName() {
@@ -18,19 +18,19 @@ public class User {
 		this.name = name;
 	}
 	
-	public String getMail() {
-		return mail;
+	public String getEmail() {
+		return email;
 	}
 	
-	public void setMail(String mail) {
-		this.mail = mail;
+	public void setEmail(String mail) {
+		this.email = mail;
 	}
 
-	public Boolean getIsAdmin() {
-		return isAdmin;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setIsAdmin(Boolean isAdmin) {
-		this.isAdmin = isAdmin;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

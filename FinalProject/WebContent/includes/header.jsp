@@ -10,7 +10,25 @@
 	User user = (User)session.getAttribute("currentUser");
 	if(user == null) { user = userDB.getUser(""); session.setAttribute("currentUser", user); }
 	System.out.println("User = " + user.getName());
+	System.out.println("!= " + (user.getName()!="Anonymous" ? "style=display:none;":"X"));
+	System.out.println("== " + (user.getName()=="Anonymous" ? "style=display:none;":"X"));
 %>
+
+<script>
+	function pageLoaded() {
+		
+	   var username = "<%=user.getName()%>";
+	   
+       if(username === 'Anonymous') {
+    	   document.getElementById("btnLogon").style.visibility="visible";  
+    	   document.getElementById("btnLogout").style.visibility="hidden"; 
+       }
+       else {
+    	   document.getElementById("btnLogon").style.visibility="hidden";  
+    	   document.getElementById("btnLogout").style.visibility="visible"; 
+       }
+	}
+</script>
 
 <html>
 <head>
@@ -21,7 +39,7 @@
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 </head>
 
-<body>
+<body onload="pageLoaded()">
 
     <header>
         <img src="<c:url value='/images/logo.jpg'/>" 
@@ -29,6 +47,10 @@
         <h1>The Bookstore</h1>
         <h2>Quality Books Served Up Fresh!</h2>
         <h2>Welcome <%=user.getName()%></h2>
+
+	<a href="user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
+	<a href="user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
+
     </header>
     <nav id="nav_bar">
         <ul>
