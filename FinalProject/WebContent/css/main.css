@@ -56,7 +56,7 @@ em { font-weight: bold; }
 
 /* the styles for the header */
 header { 
-    padding-bottom: 2em;
+    padding-bottom: 0.5em;
     border-bottom: 2px solid #ef9c00;
 }
 header h1 {
@@ -74,22 +74,41 @@ header img {
 }
 
 /* the styles for the top navigation bar */
+
 #nav_bar {
-    clear: left;
-    margin: 0;
-    padding: 0;
     border-bottom: 2px solid #ef9c00;
-    text-align: right;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
+
+#nav_bar div {
+}
+
 #nav_bar ul {
-    margin-bottom: .5em;
     list-style: none;
-    padding-top: .5em;
 }
+
 #nav_bar li {
     display: inline;
-    padding: 0 1.5em;
-    border-left: 2px solid black;
+}
+
+#userDiv {
+	display:flex;
+	display: -webkit-flex;
+	flex-flow:row wrap;
+	-webkit-flex-flow:row wrap;
+    text-align: left;
+}
+
+#navDiv {
+	display:flex;
+	display: -webkit-flex;
+	flex-flow:row wrap;
+	-webkit-flex-flow:row wrap;
+    text-align: right;
 }
 
 /* the styles for the side navigation bar */
