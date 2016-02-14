@@ -6,24 +6,25 @@ drop table if exists Books;
 drop table if exists Category;
 
 
-create table Users ( 
+create table if not exists Users ( 
     userName        varchar(20) unique not null,
     fName 		    varchar(20) not null, 	
     lName 		    varchar(20) not null, 	
     email 		    varchar(50) not null,
     pass 		    varchar(20) not null,
+    isAdmin         bool not null,
     lastLogin       date not null,
     accountCreated  date not null, 	
 	primary key(userName)	
 );
 
-create table Category (
+create table if not exists Category (
     id              integer auto_increment not null,
     categoryName    varchar(20) not null,
     primary key 	(id)
 );
 
-create table Books (
+create table if not exists Books (
 	id 			    integer auto_increment not null,
     title 		    varchar(50) not null, 
     quantity 	    integer not null, 
@@ -52,7 +53,7 @@ create trigger BooksTrigger before insert on Books
     end $$
 delimiter ;
 
-create table Transactions (
+create table if not exists Transactions (
     orderNumber     integer auto_increment not null,
     userName 		varchar(20) not null,
     purchaseDate    date not null,
@@ -63,7 +64,7 @@ create table Transactions (
 );
 
 # Many-to-many relationship with Books and Transactions
-create table PurchaseDetails (
+create table if not exists PurchaseDetails (
     orderNumber     integer not null,
     bookID          integer not null,
     quantity        integer not null,
@@ -77,7 +78,7 @@ create table PurchaseDetails (
 );
 
 # made to keep track of all ratings. 
-create table UserRatings (
+create table if not exists UserRatings (
     id              integer auto_increment not null,
     userName        varchar(20) not null,
     bookID          integer not null,
