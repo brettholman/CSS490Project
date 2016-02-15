@@ -14,6 +14,12 @@ public class userDB {
 	
 	public static User getUser(String uName)
 	{
+		// For testing until DB is fixed. 
+		if(uName.equals("")) {
+			User user = new User();
+			user.setUserName("Anon");
+			return user;
+		}
 		User user = new User();
 		Connection conn = null;
 		PreparedStatement stmt = null;
