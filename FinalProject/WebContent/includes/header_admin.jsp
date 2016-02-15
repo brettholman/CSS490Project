@@ -9,20 +9,8 @@
 	// Get the user if it exists, otherwise create an anonymous user
 	User user = (User)session.getAttribute("currentUser");
 	if(user == null) { user = userDB.getUser(""); session.setAttribute("currentUser", user); }
-	System.out.println("User = " + user.getUserName());
+	System.out.println("User = " + user.getName());
 %>
-
-<script>
-	function pageLoaded() {
-	   var username = "<%=user.getUserName()%>";
-       if(username === 'Anonymous') {
-    	   document.getElementById("btnLogout").style.display="none";  
-       }
-       else {
-    	   document.getElementById("btnLogon").style.display="none";  
-       }
-	}
-</script>
 
 <html>
 <head>
@@ -45,16 +33,14 @@
     <nav id="nav_bar">
     
 	    <div id="userDiv">
-		    <span>Welcome <%=user.getUserName()%>!
-			<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
-			<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
-		    </span>    
+		    <span>Welcome <%=user.getName()%>!</span>    
 	    </div>
     
     	<div id="navDiv">
 	        <ul>
-	            <li><a href="/admin">Admin</a></li>
-	            <li><a href="/shopping/cart.jsp">Show Cart</a></li>
+				<li><a href="inventory.jsp">Inventory Management</a></li>
+				<li><a href="sales.jsp">Sales Statistics</a></li>
+				<li><a href="users.jsp">User Management</a></li>	        
 	        </ul>
     	</div>
     </nav>

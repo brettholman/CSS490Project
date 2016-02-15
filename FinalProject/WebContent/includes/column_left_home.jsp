@@ -1,14 +1,8 @@
 <aside id="sidebarA">
     <nav>
       <ul>
-          <li><a class="current" href="<c:url value='/' />">
-                  Home</a></li>
-          <li><a href="<c:url value='/catalog' />">
-                  Browse Catalog</a></li>
-          <li><a href="<c:url value='/email' />">
-                  Join Email List</a></li>
-          <li><a href="<c:url value='/customer_service' />">
-                  Customer Service</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/shopping/catalog.jsp">Browse Catalog</a></li>
       </ul>
     </nav>
 </aside>

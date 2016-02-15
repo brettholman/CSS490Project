@@ -1,4 +1,5 @@
 <jsp:include page="/includes/header2.jsp" />
+<jsp:include page="/includes/column_left_home.jsp" />
 
 <!-- start the middle column -->
 
