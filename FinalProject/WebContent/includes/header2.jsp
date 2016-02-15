@@ -12,17 +12,6 @@
 	System.out.println("User = " + user.getName());
 %>
 
-<script>
-	function pageLoaded() {
-	   var username = "<%=user.getName()%>";
-       if(username === 'Anonymous') {
-    	   document.getElementById("btnLogout").style.display="none";  
-       }
-       else {
-    	   document.getElementById("btnLogon").style.display="none";  
-       }
-	}
-</script>
 
 <html>
 <head>
@@ -33,30 +22,10 @@
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 </head>
 
-<body onload="pageLoaded()">
-
+<body>
     <header>
         <img src="<c:url value='/images/logo.jpg'/>" 
              alt="The Bookstore Logo" width="58">
         <h1>The Bookstore</h1>
         <h2>Quality Books Served Up Fresh!</h2>
     </header>
-    
-    <nav id="nav_bar">
-    
-	    <div id="userDiv">
-		    <span>Welcome <%=user.getName()%>!
-			<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
-			<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
-		    </span>    
-	    </div>
-    
-    	<div id="navDiv">
-	        <ul>
-	            <li><a href="<c:url value='/admin'/>">
-	                    Admin</a></li>
-	            <li><a href="<c:url value='/order/showCart'/>">
-	                    Show Cart</a></li>
-	        </ul>
-    	</div>
-    </nav>

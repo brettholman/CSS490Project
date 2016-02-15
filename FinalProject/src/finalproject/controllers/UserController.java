@@ -7,11 +7,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class UserController
  */
-@WebServlet("/UserController")
+@WebServlet("/UserController/*")
 public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -35,17 +36,48 @@ public class UserController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String name = request.getParameter("name");
-		String mail = request.getParameter("mail");
-		Boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
 		
-		User user = new User();
-		user.setName(name);
-		user.setMail(mail);
-		user.setIsAdmin(isAdmin);
+		String requestURI = request.getRequestURI();
+		System.out.println(requestURI); 
+		String url = "";
 		
-		if(user.isValid() && user.getIsAdmin()) { getServletContext().getRequestDispatcher("/./admin/index.jsp").forward(request,  response); }
-		else if(user.isValid()) { getServletContext().getRequestDispatcher("/./shopping/index.jsp").forward(request,  response); }
-		else { getServletContext().getRequestDispatcher("/index.jsp").forward(request,  response); }
+		if(requestURI.endsWith("register")){
+			// If we were able to add the user then redirect them back to the main page
+			if(registerUser(request)) { getServletContext().getRequestDispatcher("/index.jsp").forward(request, response); }
+			
+			else { getServletContext().getRequestDispatcher("/user/registerError.jsp").forward(request, response); }
+		}
+		
+		//String name = request.getParameter("name");
+		//String mail = request.getParameter("mail");
+		//Boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
+		
+		//User user = new User();
+		//user.setName(name);
+		//user.setMail(mail);
+		//user.setIsAdmin(isAdmin);
+		
+		//if(user.isValid() && user.getIsAdmin()) { getServletContext().getRequestDispatcher("/./admin/index.jsp").forward(request,  response); }
+		//else if(user.isValid()) { getServletContext().getRequestDispatcher("/./shopping/index.jsp").forward(request,  response); }
+		//else { getServletContext().getRequestDispatcher("/index.jsp").forward(request,  response); }
 	}
+	
+	private Boolean registerUser(HttpServletRequest request){
+		
+		HttpSession session = request.getSession(true);
+		  
+		String username = request.getParameter("username");
+		String passwd = request.getParameter("passwd");
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+
+		// Temp code - for now just make the new user the current user
+		User user = new User();
+		user.setName(username);
+		user.setPassword(passwd);
+		user.setEmail(email);
+		session.setAttribute("currentUser", user);
+
+		return true;
+	}	
 }
