@@ -73,7 +73,7 @@ public class UserController extends HttpServlet {
 
 		// Temp code - for now just make the new user the current user
 		User user = new User();
-		user.setName(username);
+		user.setUserName(username);
 		user.setPassword(passwd);
 		user.setEmail(email);
 		session.setAttribute("currentUser", user);

@@ -9,7 +9,7 @@
 	// Get the user if it exists, otherwise create an anonymous user
 	User user = (User)session.getAttribute("currentUser");
 	if(user == null) { user = userDB.getUser(""); session.setAttribute("currentUser", user); }
-	System.out.println("User = " + user.getName());
+	System.out.println("User = " + user.getUserName());
 %>
 
 <html>
@@ -33,7 +33,7 @@
     <nav id="nav_bar">
     
 	    <div id="userDiv">
-		    <span>Welcome <%=user.getName()%>!</span>    
+		    <span>Welcome <%=user.getUserName()%>!</span>    
 	    </div>
     
     	<div id="navDiv">

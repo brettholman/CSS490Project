@@ -33,6 +33,10 @@ public class User {
 	public void setfName(String name) {
 		this.fName = name;
 	}
+	
+	public void setlName(String name) {
+		this.lName = name;
+	}
 
 	public String getlName() {
 		return lName;

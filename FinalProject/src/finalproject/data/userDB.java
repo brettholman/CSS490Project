@@ -137,7 +137,7 @@ public class userDB {
 			stmt.setString(2, user.getlName());
 			stmt.setString(3, user.getEmail());
 			stmt.setString(4, user.getPassword());
-			stmt.setString(5, user.getIsAdmin().toString());
+			stmt.setString(5, String.valueOf(user.getIsAdmin()));
 			
 			flag = stmt.executeUpdate();
 		}
