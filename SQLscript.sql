@@ -18,6 +18,8 @@ create table if not exists Users (
 	primary key(userName)	
 );
 
+insert into users values('test', 'test', 'test', 'test@test.net', 'pass', true, now(), now());
+
 create table if not exists Category (
     id              integer auto_increment not null,
     categoryName    varchar(20) not null,
