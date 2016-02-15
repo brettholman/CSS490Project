@@ -12,7 +12,6 @@
 	System.out.println("User = " + user.getUserName());
 %>
 
-
 <html>
 <head>
     <meta charset="utf-8">

@@ -14,18 +14,12 @@ public class userDB {
 	
 	public static User getUser(String uName)
 	{
-		// For testing until DB is fixed. 
-		if(uName.equals("")) {
-			User user = new User();
-			user.setUserName("Anon");
-			return user;
-		}
 		User user = new User();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		if(uName == null || uName.length() == 0)
-			return null;
+			return getAnonymousUser();
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -38,7 +32,7 @@ public class userDB {
 			rs = stmt.executeQuery();
 			
 			if(rs == null) {
-				return null;
+				return getAnonymousUser();
 			}
 				
 			user.setfName(rs.getNString("fName"));
@@ -56,6 +50,13 @@ public class userDB {
 		finally {
 			closeAll(stmt, conn, rs);
 		}
+		return user;
+	}
+	
+	public static User getAnonymousUser()
+	{
+		User user = new User();
+		user.setUserName("Anonymous");
 		return user;
 	}
 	
@@ -136,14 +137,13 @@ public class userDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 
-			String query = "update user set fName = ?, lName = ?, email = ?, pass = ?, isAdmin = ?, lastLogin = ? where userName = ?";
+			String query = "update user set fName = ?, lName = ?, email = ?, pass = ?, lastLogin = ? where userName = ?";
 			stmt = conn.prepareStatement(query);
 			
 			stmt.setString(1, user.getfName());
 			stmt.setString(2, user.getlName());
 			stmt.setString(3, user.getEmail());
 			stmt.setString(4, user.getPassword());
-			stmt.setString(5, String.valueOf(user.getIsAdmin()));
 			
 			flag = stmt.executeUpdate();
 		}

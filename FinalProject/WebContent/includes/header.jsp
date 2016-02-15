@@ -15,6 +15,8 @@
 	System.out.println("User = " + user.getUserName());
 %>
 
+<html>
+
 <script>
 	function pageLoaded() {
 	   var username = "<%=user.getUserName()%>";
@@ -27,7 +29,6 @@
 	}
 </script>
 
-<html>
 <head>
     <meta charset="utf-8">
     <title>The Bookstore</title>
