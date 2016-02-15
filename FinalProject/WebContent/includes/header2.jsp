@@ -9,7 +9,7 @@
 	// Get the user if it exists, otherwise create an anonymous user
 	User user = (User)session.getAttribute("currentUser");
 	if(user == null) { user = userDB.getUser(""); session.setAttribute("currentUser", user); }
-	System.out.println("User = " + user.getName());
+	System.out.println("User = " + user.getUserName());
 %>
 
 

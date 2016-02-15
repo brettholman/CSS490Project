@@ -7,7 +7,7 @@ import javax.naming.*;
 import java.util.*;
 
 public class userDB {
-	private static String dbURL = "jdbc:mysql://localhost:5500/CSS490";
+	private static String dbURL = "jdbc:mysql://localhost:3360/CSS490";
 	private static String dbUser = "css490";
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();

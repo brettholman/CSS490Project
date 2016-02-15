@@ -9,12 +9,12 @@
 	// Get the user if it exists, otherwise create an anonymous user
 	User user = (User)session.getAttribute("currentUser");
 	if(user == null) { user = userDB.getUser(""); session.setAttribute("currentUser", user); }
-	System.out.println("User = " + user.getName());
+	System.out.println("User = " + user.getUserName());
 %>
 
 <script>
 	function pageLoaded() {
-	   var username = "<%=user.getName()%>";
+	   var username = "<%=user.getUserName()%>";
        if(username === 'Anonymous') {
     	   document.getElementById("btnLogout").style.display="none";  
        }
@@ -45,7 +45,7 @@
     <nav id="nav_bar">
     
 	    <div id="userDiv">
-		    <span>Welcome <%=user.getName()%>!
+		    <span>Welcome <%=user.getUserName()%>!
 			<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
 			<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
 		    </span>    
