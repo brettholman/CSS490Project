@@ -38,27 +38,22 @@
 </head>
 
 <body onload="pageLoaded()">
-
-    <header>
-        <img src="<c:url value='/images/logo.jpg'/>" 
-             alt="The Bookstore Logo" width="58">
-        <h1>The Bookstore</h1>
-        <h2>Quality Books Served Up Fresh!</h2>
-    </header>
     
     <nav id="nav_bar">
-    
-	    <div id="userDiv">
-		    <span>Welcome <%=user.getUserName()%>!
-			<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
-			<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
-		    </span>    
+	    <div id="logo">
+		    <header>
+		        <img src="<c:url value='/images/logo.jpg'/>" 
+		             alt="The Bookstore Logo" width="58">
+		        <h1>The Bookstore</h1>
+		        <h2>Nunc semper odio eu augue porta egestas!</h2>
+		    </header>
 	    </div>
-    
-    	<div id="navDiv">
-	        <ul>
-	            <li><a href="/admin">Admin</a></li>
-	            <li><a href="/shopping/cart.jsp">Show Cart</a></li>
-	        </ul>
-    	</div>
+	    <div id="user">
+	    	<span>
+		    	Welcome <%=user.getUserName()%>!
+				<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
+				<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
+	    	</span>
+	    </div>
     </nav>
+    

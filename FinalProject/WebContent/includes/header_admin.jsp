@@ -8,11 +8,27 @@
 <%
 	// Get the user if it exists, otherwise create an anonymous user
 	User user = (User)session.getAttribute("currentUser");
-	if(user == null) { user = userDB.getUser(""); session.setAttribute("currentUser", user); }
+	if(user == null) { 
+		user = userDB.getUser(""); 
+		session.setAttribute("currentUser", user); 
+	}
 	System.out.println("User = " + user.getUserName());
 %>
 
 <html>
+
+<script>
+	function pageLoaded() {
+	   var username = "<%=user.getUserName()%>";
+       if(username === 'Anonymous') {
+    	   document.getElementById("btnLogout").style.display="none";  
+       }
+       else {
+    	   document.getElementById("btnLogon").style.display="none";  
+       }
+	}
+</script>
+
 <head>
     <meta charset="utf-8">
     <title>The Bookstore</title>
@@ -22,18 +38,20 @@
 </head>
 
 <body onload="pageLoaded()">
-
-    <header>
-        <img src="<c:url value='/images/logo.jpg'/>" 
-             alt="The Bookstore Logo" width="58">
-        <h1>The Bookstore</h1>
-        <h2>Quality Books Served Up Fresh!</h2>
-    </header>
     
     <nav id="nav_bar">
-    
-	    <div id="userDiv">
-		    <span>Welcome <%=user.getUserName()%>!</span>    
+	    <div id="logo">
+		    <header>
+		        <img src="<c:url value='/images/logo.jpg'/>" 
+		             alt="The Bookstore Logo" width="58">
+		        <h1>The Bookstore</h1>
+		        <h2>Nunc semper odio eu augue porta egestas!</h2>
+		    </header>
 	    </div>
-
+	    <div id="user">
+	    	<span>
+		    	Welcome <%=user.getUserName()%>!
+	    	</span>
+	    </div>
     </nav>
+ 
