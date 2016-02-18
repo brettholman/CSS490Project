@@ -1,7 +1,7 @@
 <%@ page import="finalproject.models.*" %>
 <%@ page import="finalproject.data.*" %>
 
-<jsp:include page="/includes/header2.jsp" />
+<jsp:include page="/includes/header_user.jsp" />
 <jsp:include page="/includes/column_left_home.jsp" />
 
 <!-- start the middle column -->

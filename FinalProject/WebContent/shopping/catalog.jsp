@@ -1,4 +1,4 @@
-<jsp:include page="/includes/header.jsp" />
+<jsp:include page="/includes/header_home.jsp" />
 <jsp:include page="/includes/column_left_home.jsp" />
 
 <%@ page import="finalproject.models.*" %>

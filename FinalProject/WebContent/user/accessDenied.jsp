@@ -5,7 +5,7 @@
 
 <section>
 
-	<h1>Cart</h1>
+	<h1>Access Denied</h1>
 
 </section>
 

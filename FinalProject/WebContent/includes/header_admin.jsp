@@ -35,12 +35,5 @@
 	    <div id="userDiv">
 		    <span>Welcome <%=user.getUserName()%>!</span>    
 	    </div>
-    
-    	<div id="navDiv">
-	        <ul>
-				<li><a href="inventory.jsp">Inventory Management</a></li>
-				<li><a href="sales.jsp">Sales Statistics</a></li>
-				<li><a href="users.jsp">User Management</a></li>	        
-	        </ul>
-    	</div>
+
     </nav>

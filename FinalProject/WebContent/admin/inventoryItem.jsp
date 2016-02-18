@@ -1,11 +1,11 @@
-<jsp:include page="/includes/header_home.jsp" />
-<jsp:include page="/includes/column_left_home.jsp" />
+<jsp:include page="/includes/header_admin.jsp" />
+<jsp:include page="/includes/column_left_admin.jsp" />
 
 <!-- start the middle column -->
 
 <section>
 
-	<h1>Cart</h1>
+	<h1>Inventory Item</h1>
 
 </section>
 

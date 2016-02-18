@@ -5,7 +5,7 @@
 
 <section>
 
-	<h1>Cart</h1>
+	<h1>Account Detail</h1>
 
 </section>
 

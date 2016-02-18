@@ -5,7 +5,7 @@
 
 <section>
 
-	<h1>Cart</h1>
+	<h1>Catalog Item</h1>
 
 </section>
 
