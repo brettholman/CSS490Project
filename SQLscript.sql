@@ -31,7 +31,8 @@ create table if not exists Books (
     title 		    varchar(50) not null, 
     quantity 	    integer not null, 
     price 		    double not null, 
-    categoryID	    integer not null, 	#foreign key 
+    description     varchar(100),       # can be null
+    categoryID	    integer not null, 	# foreign key 
     primary key     (id), 
     foreign key     (categoryID) 
 		references Category(id)
@@ -65,7 +66,8 @@ create table if not exists Transactions (
         on delete cascade on update cascade
 );
 
-# Many-to-many relationship with Books and Transactions
+# Many-to-many relationship with Books and Transactions, 
+# allows for more than one book to be purchased in a single transaction
 create table if not exists PurchaseDetails (
     orderNumber     integer not null,
     bookID          integer not null,
