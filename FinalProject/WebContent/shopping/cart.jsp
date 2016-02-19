@@ -7,6 +7,10 @@
 
 	<h1>Cart</h1>
 
+	<br>
+
+	<a href="/shopping/catalog.jsp">Continue Shopping</a>
+
 </section>
 
 <!-- end the middle column -->

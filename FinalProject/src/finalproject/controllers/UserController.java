@@ -64,6 +64,30 @@ public class UserController extends HttpServlet {
 			
 			// If we were able to add the user then redirect them back to the main page
 			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+		}	
+		
+		else if(requestURI.endsWith("viewItemDetails")){
+
+			// Get the itemID and add it to the session
+			HttpSession session = request.getSession(true);
+			String itemID = (String)request.getParameter("itemID");
+			session.setAttribute("currentItem", itemID);
+			
+			// Redirect the user to the inventoryItem view
+			getServletContext().getRequestDispatcher("/shopping/catalogItem.jsp").forward(request, response);
+		}
+		
+		else if(requestURI.endsWith("addItemToCart")){
+
+			HttpSession session = request.getSession(true);
+			String itemID = (String)request.getParameter("itemID");
+			
+			// TODO: add the itemID to the cart (need to track the quantity too - if the item is already in
+			//   the cart, then just increment the quantity.
+			
+			// Verify that we have quantity in stock before allowing the item to be added to the cart
+			
+			getServletContext().getRequestDispatcher("/shopping/cart.jsp").forward(request, response);
 		}
 	}
 	

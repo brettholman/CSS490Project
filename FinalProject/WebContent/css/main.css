@@ -315,3 +315,18 @@ fieldset {
 	margin: 0;
 	padding 0;
 }
+
+.pagePart {
+  color: #e3dfdd; 
+  border-radius: 5px;
+  text-align: center;
+  text-shadow: -1px -1px 0px #333;
+  -webkit-box-shadow: inset -1px -1px 0px 0px #a5948c;
+  box-shadow: inset -1px -1px 0px 0px #a5948c;
+  background-color: #403c3b;
+}
+
+#catalogToolbar {
+	margin: 0;
+}
+
