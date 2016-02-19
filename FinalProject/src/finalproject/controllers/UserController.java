@@ -48,18 +48,23 @@ public class UserController extends HttpServlet {
 			else { getServletContext().getRequestDispatcher("/user/registerError.jsp").forward(request, response); }
 		}
 		
-		//String name = request.getParameter("name");
-		//String mail = request.getParameter("mail");
-		//Boolean isAdmin = Boolean.parseBoolean(request.getParameter("isAdmin"));
-		
-		//User user = new User();
-		//user.setName(name);
-		//user.setMail(mail);
-		//user.setIsAdmin(isAdmin);
-		
-		//if(user.isValid() && user.getIsAdmin()) { getServletContext().getRequestDispatcher("/./admin/index.jsp").forward(request,  response); }
-		//else if(user.isValid()) { getServletContext().getRequestDispatcher("/./shopping/index.jsp").forward(request,  response); }
-		//else { getServletContext().getRequestDispatcher("/index.jsp").forward(request,  response); }
+		else if(requestURI.endsWith("logon")){
+			
+			HttpSession session = request.getSession(true);
+			String name = (String)request.getParameter("username");
+			String password = (String)request.getParameter("password");
+			
+			// ADD: need to check and see if the user provided the correct logon and password
+			
+			// TEMP: for now, just create and return the user object
+			User user = new User();
+			user.setUserName(name);
+			user.setPassword(password);
+			session.setAttribute("currentUser", user);
+			
+			// If we were able to add the user then redirect them back to the main page
+			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+		}
 	}
 	
 	private Boolean registerUser(HttpServletRequest request){

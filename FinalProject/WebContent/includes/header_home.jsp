@@ -49,11 +49,9 @@
 		    </header>
 	    </div>
 	    <div id="user">
-	    	<span>
-		    	Welcome <%=user.getUserName()%>!
-				<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
-				<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
-	    	</span>
+	    	<p>Welcome <%=user.getUserName()%>!</p>
+			<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
+			<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
 	    </div>
     </nav>
     

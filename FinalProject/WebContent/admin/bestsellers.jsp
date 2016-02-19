@@ -5,7 +5,7 @@
 
 <section>
 
-	<h1>Best Seller List</h1>
+	<h1>Bestseller List</h1>
 
 </section>
 

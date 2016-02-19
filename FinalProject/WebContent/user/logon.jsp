@@ -7,7 +7,7 @@
 
   <div id="page">
 
-    <form method="post" name="form1" id="form1" action="/UserController/Login">
+    <form method="post" name="form1" id="form1" action="/UserController/logon">
 
       <label for="username">Enter username: </label>
       <input type="text" id="username" name="username" required/>
@@ -58,7 +58,7 @@
 	</script>
 
     <br>
-    <span>Are you a new user?  Click here to sign up now!<a href="/user/signup.jsp" style="margin-left:5px;"><button name="signupButton">Sign up</button></a></span>
+    <span>Are you a new user?  Click here to sign up now!<a href="/user/signup.jsp" style="margin-left:8px;"><button name="signupButton">Sign up</button></a></span>
 
 </section>
 
