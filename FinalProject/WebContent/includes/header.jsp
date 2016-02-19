@@ -13,6 +13,11 @@
 		session.setAttribute("currentUser", user); 
 	}
 	System.out.println("User = " + user.getUserName());
+	String requestURI = request.getRequestURI();
+	
+	String headerType = "default";
+	if(requestURI.contains("/admin/")) { headerType = "admin"; }
+	else if(requestURI.contains("/user/")) { headerType = "user"; }
 %>
 
 <html>
@@ -48,10 +53,31 @@
 		        <h2>Nunc semper odio eu augue porta egestas!</h2>
 		    </header>
 	    </div>
+	    
+<%-- Insert the admin header information (username only) --%>
+<% if(headerType == "admin") { %>	    
+	    
 	    <div id="user">
-	    	<span>
-		    	Welcome <%=user.getUserName()%>!
-	    	</span>
+	    	<p>Welcome <%=user.getUserName()%>!</p>
 	    </div>
+	    
+<% } %>	 
+   
+<%-- Insert the default header information (username, logon/logoff buttons) --%>
+<% if(headerType == "default") { %>	    
+	    
+	    <div id="user">
+	    	<p>Welcome <%=user.getUserName()%>!</p>
+			<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
+			<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
+	    </div>
+	    
+<% } %>	    
+	    
     </nav>
- 
+    
+
+
+
+
+

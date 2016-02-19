@@ -155,14 +155,12 @@ section label {
     font-weight: bold;
     padding-top: 0.25em;    
 }
-section input[type="text"], input[type="email"], input[type="password"] {
+
+section input {
     width: 12em;
     margin-left: 0.5em;    
-    margin-bottom: 0.5em;
 }
-section input[type="submit"] {
-    margin-left: 0.5em;
-}
+
 br {
     clear: both;
 }
@@ -305,9 +303,15 @@ footer p {
 }
 
 label {
-	color: white;
+	color: #D8D8D8;
 }
 
 legend {
-	color: white;
+	color: #D8D8D8;
+}
+
+fieldset {
+	border-style: none;
+	margin: 0;
+	padding 0;
 }
