@@ -11,10 +11,9 @@
 
     <form method="post" name="form1" id="form1" action="/UserController/filter">
 
-      <label for="searchText">Search:</label>
-      <input type="text" id="searchText" name="searchText"/>
+      Search:<input type="text" id="searchText" name="searchText"/>
 
-	  <select name="category">
+      Category:<select id="category" name="category">
 		  <option value="cat1">All</option>
 		  <option value="cat2">Computers & Technology</option>
 		  <option value="cat3">History</option>
@@ -23,7 +22,7 @@
 		  <option value="cat6">Science Fiction, Fantasy</option>
   	  </select>
 
-      <input type="submit" id="submit" value="Search"/>
+      <input type="submit" id="submit" value="Go"/>
 
     </form>
 
@@ -58,7 +57,7 @@ function addItemToCart(id){
 <tr>
 	<td><a href="javascript:viewItemDetails('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
 	<td><%=item.getDescription()%></td>
-	<td><%=item.getPrice()%></td>
+	<td>$<%=item.getPrice()%></td>
 	<td width="20%">
 	
 <% if(item.getQuantityInStock() > 0) { %>	

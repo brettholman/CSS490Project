@@ -317,16 +317,43 @@ fieldset {
 }
 
 .pagePart {
+	
   color: #e3dfdd; 
   border-radius: 5px;
-  text-align: center;
   text-shadow: -1px -1px 0px #333;
   -webkit-box-shadow: inset -1px -1px 0px 0px #a5948c;
   box-shadow: inset -1px -1px 0px 0px #a5948c;
-  background-color: #403c3b;
+  background-color: #401c3b;
+  
+  margin: 0;
 }
 
 #catalogToolbar {
-	margin: 0;
+  
+	width: 80%;
+    padding-right: 0;
+    padding-left: 0;
+   
+  
+  margin-left: 5px;
+  vertical-align: middle;
+  
+   float: left;
+	padding: 3px;
+	padding-bottom: 5px;
+  
+  
+  
 }
 
+section input, section select {
+  vertical-align: middle;
+  margin: 0;
+  margin-left: 3px;
+  padding: 3px;
+}
+
+section input[type="submit"] {
+	width: auto;
+	padding: 3px;
+}
