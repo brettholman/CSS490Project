@@ -59,7 +59,7 @@ public class AdminController extends HttpServlet {
 		}
 
 		// Update an item's properties
-		else if(requestURI.endsWith("changeItem")){
+		else if(requestURI.endsWith("modifyItem")){
 			
 			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
 			InventoryItem item = inventoryDB.getInventoryItem(itemID);

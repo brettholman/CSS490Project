@@ -1,5 +1,6 @@
 package finalproject.controllers;
 
+import finalproject.data.inventoryDB;
 import finalproject.data.userDB;
 import finalproject.models.*;
 import java.io.IOException;
@@ -74,8 +75,8 @@ public class UserController extends HttpServlet {
 
 			// Get the itemID and add it to the session
 			HttpSession session = request.getSession(true);
-			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
-			session.setAttribute("currentItem", itemID);
+			InventoryItem item = inventoryDB.getInventoryItem(Integer.parseInt((String)request.getParameter("itemID")));
+			session.setAttribute("currentItem", item);
 			
 			// Redirect the user to the inventoryItem view
 			getServletContext().getRequestDispatcher("/shopping/catalogItem.jsp").forward(request, response);
@@ -86,6 +87,7 @@ public class UserController extends HttpServlet {
 
 			HttpSession session = request.getSession(true);
 			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
+			int itemQuantity = Integer.parseInt((String)request.getParameter("itemQuantity"));
 			
 			// TODO: add the itemID to the cart (need to track the quantity too - if the item is already in
 			//   the cart, then just increment the quantity.
@@ -129,6 +131,16 @@ public class UserController extends HttpServlet {
 			user.setUserName((String)request.getParameter("name"));
 			user.setfName((String)request.getParameter("fmail"));
 			user.setlName((String)request.getParameter("lmail"));
+			
+			// TODO: update the user's properties.
+			
+			getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
+		}
+		
+		// Allow the user to add a rating for the specified item.
+		else if(requestURI.endsWith("addRating")){
+			
+			InventoryItem item = inventoryDB.getInventoryItem(Integer.parseInt((String)request.getParameter("itemID")));
 			
 			// TODO: update the user's properties.
 			
