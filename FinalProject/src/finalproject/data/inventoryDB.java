@@ -16,7 +16,7 @@ public class inventoryDB {
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
 	
-	public static InventoryItem getInventoryItem(String uName)
+	public static InventoryItem getInventoryItem(int itemID)
 	{
 		return null;
 	}	

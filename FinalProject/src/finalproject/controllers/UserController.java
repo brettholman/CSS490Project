@@ -1,5 +1,6 @@
 package finalproject.controllers;
 
+import finalproject.data.userDB;
 import finalproject.models.*;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -41,6 +42,7 @@ public class UserController extends HttpServlet {
 		System.out.println(requestURI); 
 		String url = "";
 		
+		// Register a new user
 		if(requestURI.endsWith("register")){
 			// If we were able to add the user then redirect them back to the main page
 			if(registerUser(request)) { getServletContext().getRequestDispatcher("/index.jsp").forward(request, response); }
@@ -48,6 +50,7 @@ public class UserController extends HttpServlet {
 			else { getServletContext().getRequestDispatcher("/user/registerError.jsp").forward(request, response); }
 		}
 		
+		// Log the user on
 		else if(requestURI.endsWith("logon")){
 			
 			HttpSession session = request.getSession(true);
@@ -66,21 +69,23 @@ public class UserController extends HttpServlet {
 			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
 		}	
 		
+		// View the details for a specific item
 		else if(requestURI.endsWith("viewItemDetails")){
 
 			// Get the itemID and add it to the session
 			HttpSession session = request.getSession(true);
-			String itemID = (String)request.getParameter("itemID");
+			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
 			session.setAttribute("currentItem", itemID);
 			
 			// Redirect the user to the inventoryItem view
 			getServletContext().getRequestDispatcher("/shopping/catalogItem.jsp").forward(request, response);
 		}
 		
+		// Add an item to the cart
 		else if(requestURI.endsWith("addItemToCart")){
 
 			HttpSession session = request.getSession(true);
-			String itemID = (String)request.getParameter("itemID");
+			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
 			
 			// TODO: add the itemID to the cart (need to track the quantity too - if the item is already in
 			//   the cart, then just increment the quantity.
@@ -89,6 +94,46 @@ public class UserController extends HttpServlet {
 			
 			getServletContext().getRequestDispatcher("/shopping/cart.jsp").forward(request, response);
 		}
+		
+		// Remove an item from the cart
+		else if(requestURI.endsWith("removeItemFromCart")){
+
+			HttpSession session = request.getSession(true);
+			
+			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
+			int itemQuantity = Integer.parseInt((String)request.getParameter("itemQuantity"));
+			
+			// TODO: remove the specified number of items for the itemID from the cart
+			
+			getServletContext().getRequestDispatcher("/shopping/cart.jsp").forward(request, response);
+		}	
+		
+		// Allow the user to place an order
+		else if(requestURI.endsWith("processOrder")){
+
+			HttpSession session = request.getSession(true);
+			
+			// TODO: pull the cart items from the session, add all of the transaction details to the database,
+			// clear the cart, send the user to the orderProcessed.jsp page
+			
+			getServletContext().getRequestDispatcher("/shopping/orderProcessed.jsp").forward(request, response);
+		}
+		
+		// Allow the user to modify their account details (EXCEPT for the isAdmin flag, which can only be changed
+		// from the admin page.
+		else if(requestURI.endsWith("modifyUser")){
+			
+			int userID = Integer.parseInt((String)request.getParameter("userID"));
+			User user = userDB.getUser(userID);
+			user.setEmail((String)request.getParameter("mail"));
+			user.setUserName((String)request.getParameter("name"));
+			user.setfName((String)request.getParameter("fmail"));
+			user.setlName((String)request.getParameter("lmail"));
+			
+			// TODO: update the user's properties.
+			
+			getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
+		}		
 	}
 	
 	private Boolean registerUser(HttpServletRequest request){

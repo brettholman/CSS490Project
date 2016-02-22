@@ -12,6 +12,13 @@ public class userDB {
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
 	
+	public static User getUser(int id)
+	{
+		// TODO: add the code to actually find the user by ID
+		
+		return null;
+	}	
+	
 	public static User getUser(String uName)
 	{
 		User user = new User();
@@ -100,6 +107,11 @@ public class userDB {
 		}
 		return result;
 	}
+	
+	public static boolean deleteUser(int id) 
+	{
+		return false;
+	}	
 	
 	public static int deleteUser(String uName) 
 	{
