@@ -54,7 +54,7 @@ public class Rating {
 		return this.description;
 	}
 	
-	public void setID(String desc) {
+	public void setDescription(String desc) {
 		this.description = desc;
 	}
 }
