@@ -5,12 +5,80 @@ import java.sql.*;
 import javax.sql.*;
 import javax.naming.*;
 import java.util.*;
+import java.util.Date;
+
+import finalproject.DataStructures.*;
+
 
 public class userDB {
 	private static String dbURL = "jdbc:mysql://localhost:3360/CSS490";
 	private static String dbUser = "css490";
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
+	
+	/* 
+	 * returns a triplet of User, Previous Month Max purchases and all time max purchases
+	 */
+	public static Triplet<User, Integer, Integer>[] getAllUserAndTotals()
+	{
+		ArrayList<Triplet<User, Integer, Integer>> items = new ArrayList<Triplet<User, Integer, Integer>>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			// Pretty sure I'm going to end up taking out the password in the query. 
+			String query = "select u.id, u.username, u.fName, u.lName, u.email, u.pass, u.isAdmin, u.LastLogin, u.accountCreated, "
+					+ "sum(if(t.purchaseDate <= (date_add(NOW(), interval 1 month)), quantity, 0)) as MonthBack,"
+					+ "sum(quantity) as alltimetotal  "
+					+ "from users as u "
+					+ "inner join Transactions as t "
+					+ "on t.userID = u.id "
+					+ "inner join PurchaseDetails as pd "
+					+ "on pd.transactionNumber = t.transactionNumber "
+					+ "group by u.id;";
+
+			stmt = conn.prepareStatement(query);
+			
+			rs = stmt.executeQuery();
+			if(rs != null) {
+				do {
+					User toAdd = new User();
+					int monthMax;
+					int allTimeMax;
+					
+					// Need to fix the user class to include its id
+					toAdd.setUserName(rs.getString("username"));
+					toAdd.setfName(rs.getString("fName"));
+					toAdd.setlName(rs.getString("lName"));
+					toAdd.setEmail(rs.getString("email"));
+					toAdd.setPassword(rs.getString("pass"));
+					toAdd.setIsAdmin(Boolean.parseBoolean(rs.getString("isAdmin")));
+					toAdd.setLastLogin(rs.getDate("LastLogin"));
+					toAdd.setAccountCreated(rs.getDate("accountCreated"));
+					monthMax = rs.getInt("MonthBack");
+					allTimeMax = rs.getInt("alltimetotal");
+					
+					items.add(new Triplet<User, Integer, Integer>(toAdd, monthMax, allTimeMax));
+					
+				}while(rs.next());
+			}
+			else {
+				return null;
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			items = null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+        // Might be an issue, will need to debug. 
+		return (Triplet<User, Integer, Integer>[])items.toArray();
+	}
 	
 	public static User getUser(int id)
 	{
