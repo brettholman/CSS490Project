@@ -2,7 +2,7 @@ package finalproject.models;
 
 import java.sql.Date;
 
-public class UserRating {
+public class Rating {
 	private int id;
 	private String userName;
 	private int bookId;
