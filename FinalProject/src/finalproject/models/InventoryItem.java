@@ -11,6 +11,7 @@ public class InventoryItem {
 	private double price;
 	private int categoryID;
 	private Category category;
+	private double averageRating;
 	
 	public int getId() {
 		return id;
@@ -68,5 +69,15 @@ public class InventoryItem {
 	public void setCategory(Category cat) 
 	{
 		this.category = cat;
+	}
+	
+	public double getAverageRating()
+	{
+		return this.averageRating;
+	}
+	
+	public void setAverageRating(double avg)
+	{
+		this.averageRating = avg;
 	}
 }

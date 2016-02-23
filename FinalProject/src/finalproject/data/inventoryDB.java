@@ -93,7 +93,7 @@ public class inventoryDB {
 		}
 		return (InventoryItem[])items.toArray();
 	}
-
+	
 	public InventoryItem[] getAllItemsForCategory(int categoryID)
 	{
 		if(categoryID < 0)
@@ -109,11 +109,14 @@ public class inventoryDB {
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			String query = "select ii.id as 'ii.id', ii.title, ii.quantity, "
-					+ "ii.price, ii.description, c.id as 'c.id', c.categoryname "
+					+ "ii.price, ii.description, c.id as 'c.id', c.categoryname avg(r.rating) as average"
 					+ "from inventoryitems as ii"
 					+ "inner join category as c "
 					+ "on ii.categoryid = c.id"
-					+ "where c.id = ?;";
+					+ "inner join ratings as r "
+					+ "on r.itemId = ii.id"
+					+ "where c.id = ? "
+					+ "group by ii.id;";
 			
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, Integer.toString(categoryID));
@@ -132,6 +135,7 @@ public class inventoryDB {
 					cat.setCategoryName(rs.getString("categoryname"));
 					cat.setId(rs.getInt("c.id"));
 					item.setCategory(cat);
+					item.setAverageRating(rs.getDouble("average"));
 					items.add(item);
 				}while(rs.next());
 			}
@@ -148,8 +152,8 @@ public class inventoryDB {
 		}
 		return (InventoryItem[])items.toArray();
 	}
-	
-	public static InventoryItem getInventoryItem(int itemID)
+
+	public static InventoryItem getInventoryItemWithAverage(int itemID)
 	{
 		InventoryItem item = new InventoryItem();
 		Connection conn = null;
@@ -162,12 +166,14 @@ public class inventoryDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
-			String query = "select i.id, i.title,"
+			String query = "select i.id, i.title, "
 					+ "i.quantity, i.price, i.categoryID, c.ID as 'c.ID', "
-					+ "c.categoryName"
+					+ "c.categoryName, avg(r.rating) as average "
 					+ "from InventoryItems as i "
 					+ "inner join Category as c "
 					+ "on c.id = i.categoryID "
+					+ "inner join Ratings as r "
+					+ "on r.itemID = i.id "
 					+ "where i.id = ?;";
 			
 			stmt = conn.prepareStatement(query);
@@ -178,8 +184,6 @@ public class inventoryDB {
 			if(rs == null){
 				return null;
 			}
-			
-			// Still need to check logic on this. 
 			item.setId(rs.getInt("i.id"));
 			item.setTitle(rs.getNString("title"));
 			item.setQuantityInStock(rs.getInt("quantity"));
@@ -189,6 +193,7 @@ public class inventoryDB {
 			cat.setCategoryName(rs.getNString("categoryName"));
 			cat.setId(rs.getInt("c.id"));
 			item.setCategory(cat);
+			item.setAverageRating(rs.getDouble("average"));
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -198,7 +203,7 @@ public class inventoryDB {
 			closeAll(stmt, conn, rs);
 		}
 		return item;
-	}	
+	}
 	
 	public static InventoryItem[] getAllInventoryItems()
 	{
