@@ -18,10 +18,11 @@ public class userDB {
 	
 	/* 
 	 * returns a triplet of User, Previous Month Max purchases and all time max purchases
+	 * Assuming that the first and last name are the names requested. 
 	 */
-	public static Triplet<User, Integer, Integer>[] getAllUserAndTotals()
+	public static Quad<String, String, Integer, Integer>[] getAllUserAndTotals()
 	{
-		ArrayList<Triplet<User, Integer, Integer>> items = new ArrayList<Triplet<User, Integer, Integer>>();
+		ArrayList<Quad<String, String, Integer, Integer>> items = new ArrayList<Quad<String, String, Integer, Integer>>();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -30,8 +31,8 @@ public class userDB {
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			// Pretty sure I'm going to end up taking out the password in the query. 
-			String query = "select u.id, u.username, u.fName, u.lName, u.email, u.pass, u.isAdmin, u.LastLogin, u.accountCreated, "
-					+ "sum(if(t.purchaseDate <= (date_add(NOW(), interval 1 month)), quantity, 0)) as MonthBack,"
+			String query = "select u.fName, u.lName, "
+					+ "sum(if(t.purchaseDate <= (date_add(NOW(), interval 1 month)), quantity, 0)) as MonthBack, "
 					+ "sum(quantity) as alltimetotal  "
 					+ "from users as u "
 					+ "inner join Transactions as t "
@@ -45,23 +46,12 @@ public class userDB {
 			rs = stmt.executeQuery();
 			if(rs != null) {
 				do {
-					User toAdd = new User();
-					int monthMax;
-					int allTimeMax;
-					
-					// Need to fix the user class to include its id
-					toAdd.setUserName(rs.getString("username"));
-					toAdd.setfName(rs.getString("fName"));
-					toAdd.setlName(rs.getString("lName"));
-					toAdd.setEmail(rs.getString("email"));
-					toAdd.setPassword(rs.getString("pass"));
-					toAdd.setIsAdmin(Boolean.parseBoolean(rs.getString("isAdmin")));
-					toAdd.setLastLogin(rs.getDate("LastLogin"));
-					toAdd.setAccountCreated(rs.getDate("accountCreated"));
-					monthMax = rs.getInt("MonthBack");
-					allTimeMax = rs.getInt("alltimetotal");
-					
-					items.add(new Triplet<User, Integer, Integer>(toAdd, monthMax, allTimeMax));
+					String fName = rs.getString("fName");
+					String lName = rs.getString("lName");
+					int monthMax = rs.getInt("MonthBack");
+					int allTimeMax = rs.getInt("alltimetotal");
+				
+					items.add(new Quad<String, String, Integer, Integer>(fName, lName, monthMax, allTimeMax));
 					
 				}while(rs.next());
 			}
@@ -77,7 +67,7 @@ public class userDB {
 			closeAll(stmt, conn, rs);
 		}
         // Might be an issue, will need to debug. 
-		return (Triplet<User, Integer, Integer>[])items.toArray();
+		return (Quad<String, String, Integer, Integer>[])items.toArray();
 	}
 	
 	public static User getUser(int id)
