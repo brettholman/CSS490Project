@@ -16,10 +16,11 @@ create table if not exists Users (
     isAdmin         bool not null,
     lastLogin       date not null,
     accountCreated  date not null, 	
-	primary key(userName)	
+	primary key(id)	
 );
 
-insert into Users values(1,'test', 'test', 'test', 'test@test.net', 'pass', true, now(), now());
+insert into Users values(1,'test1', 'test1', 'test1', 'test@test.net', 'pass', true, curdate(), curdate());
+insert into Users values(2,'test2', 'test2', 'test2', 'test@test.net', 'pass', true, curdate(), curdate());
 
 create table if not exists Category (
     id              integer auto_increment not null,

@@ -30,8 +30,14 @@ public class inventoryDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
-			String query = "select * from InventoryItems as i inner join Category as c on c.id = i.categoryID"
-					+ " where i.id = '?'";
+			String query = "select i.id as 'i.id', i.title as 'i.title', "
+					+ "i.quantity as 'i.quantity', i.price as 'i.price', "
+					+ "i.categoryID as 'i.CategoryID', c.ID as 'c.ID', "
+					+ "c.categoryName as 'c.categoryName' "
+					+ "from InventoryItems as i "
+					+ "inner join Category as c "
+					+ "on c.id = i.categoryID "
+					+ "where i.id = '?';";
 			
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, itemID);
