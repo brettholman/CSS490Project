@@ -14,9 +14,76 @@ public class userDB {
 	
 	public static User getUser(int id)
 	{
-		// TODO: add the code to actually find the user by ID
-		
-		return null;
+        User user = new User();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        if(id < 0)
+            return null;
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "select * from users where id = '?'";
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, Integer.toString(id));
+			
+			rs = stmt.executeQuery();
+			if(rs == null) {
+				return null;
+			}
+				
+			user.setfName(rs.getString("fName"));
+			user.setlName(rs.getString("lName"));
+			user.setEmail(rs.getString("email"));
+			user.setIsAdmin(rs.getBoolean("isAdmin"));
+			user.setUserName(rs.getString("userName"));
+			user.setLastLogin(rs.getDate("lastLogin"));
+			user.setAccountCreated(rs.getDate("accountCreated"));
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			user = null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return user;
+	}	
+    
+    public static boolean deleteUser(int id)
+	{
+    	boolean flag = false;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        if(id < 0)
+        	return false;
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "delete from users where id = '?';";
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, Integer.toString(id));
+			
+			if(stmt.executeUpdate() > 0)
+			{
+				flag = true;
+			}
+        }
+		catch(Exception e) {
+			e.printStackTrace();
+			flag = false;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return flag;
 	}	
 	
 	public static User getUser(String uName)
@@ -42,11 +109,11 @@ public class userDB {
 				return getAnonymousUser();
 			}
 				
-			user.setfName(rs.getNString("fName"));
-			user.setlName(rs.getNString("lName"));
+			user.setfName(rs.getString("fName"));
+			user.setlName(rs.getString("lName"));
 			user.setEmail(rs.getString("email"));
 			user.setIsAdmin(rs.getBoolean("isAdmin"));
-			user.setUserName(rs.getNString("userName"));
+			user.setUserName(rs.getString("userName"));
 			user.setLastLogin(rs.getDate("lastLogin"));
 			user.setAccountCreated(rs.getDate("accountCreated"));
 		}
@@ -107,11 +174,6 @@ public class userDB {
 		}
 		return result;
 	}
-	
-	public static boolean deleteUser(int id) 
-	{
-		return false;
-	}	
 	
 	public static int deleteUser(String uName) 
 	{

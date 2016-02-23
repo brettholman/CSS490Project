@@ -7,6 +7,7 @@ drop table if exists Category;
 
 
 create table if not exists Users ( 
+    id              integer unique not null,
     userName        varchar(20) unique not null,
     fName 		    varchar(20) not null, 	
     lName 		    varchar(20) not null, 	
@@ -18,7 +19,7 @@ create table if not exists Users (
 	primary key(userName)	
 );
 
-insert into Users values('test', 'test', 'test', 'test@test.net', 'pass', true, now(), now());
+insert into Users values(1,'test', 'test', 'test', 'test@test.net', 'pass', true, now(), now());
 
 create table if not exists Category (
     id              integer auto_increment not null,
@@ -40,7 +41,7 @@ create table if not exists InventoryItems (
 );
 
 delimiter $$ 
-create trigger BooksTrigger before insert on Books  
+create trigger InventoryItemsTrigger before insert on InventoryItems  
     for each row 
     begin 
             if new.price <= 0
@@ -70,14 +71,14 @@ create table if not exists Transactions (
 # allows for more than one book to be purchased in a single transaction
 create table if not exists PurchaseDetails (
     orderNumber     integer not null,
-    bookID          integer not null,
+    itemID          integer not null,
     quantity        integer not null,
-    primary key     (orderNumber, bookID),
+    primary key     (orderNumber, itemID),
     foreign key     (orderNumber) 
 		references Transactions(orderNumber)
         on delete cascade on update cascade,
-    foreign key     (bookID) 
-		references Books(id)
+    foreign key     (itemID) 
+		references InventoryItems(id)
         on delete cascade on update cascade
 );
 
@@ -85,7 +86,7 @@ create table if not exists PurchaseDetails (
 create table if not exists UserRatings (
     id              integer auto_increment not null,
     userName        varchar(20) not null,
-    bookID          integer not null,
+    itemID          integer not null,
     rating          integer not null,
     ratingDate      date not null,
     description     varchar(100),
@@ -93,8 +94,8 @@ create table if not exists UserRatings (
     foreign key     (userName)
         references Users(userName)
         on delete cascade on update cascade,
-    foreign key     (bookID)
-        references Books(id)
+    foreign key     (itemID)
+        references InventoryItems(id)
         on delete cascade on update cascade
 );
 
