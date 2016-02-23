@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
 
+import finalproject.models.Category;
 import finalproject.models.InventoryItem;
 
 public class inventoryDB {
@@ -18,7 +19,42 @@ public class inventoryDB {
 	
 	public static InventoryItem getInventoryItem(int itemID)
 	{
-		return null;
+		InventoryItem item = new InventoryItem();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		if(itemID < 0)
+			return null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "select * from books where id = '?'";
+			
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, itemID);
+			
+			rs = stmt.executeQuery();
+			
+			if(rs == null){
+				return null;
+			}
+			
+			item.setId(rs.getInt("id"));
+			item.setTitle(rs.getNString("title"));
+			item.setQuantityInStock(rs.getInt("quantity"));
+			item.setDescription(rs.getNString("description"));
+			item.setCategoryID(rs.getInt("categoryID"));
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			item = null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return item;
 	}	
 	
 	public static InventoryItem[] getAllInventoryItems()
