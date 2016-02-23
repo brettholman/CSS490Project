@@ -69,12 +69,17 @@ public class inventoryDB {
 					item.setTitle(rs.getNString("title"));
 					item.setQuantityInStock(rs.getInt("quantity"));
 					item.setDescription(rs.getNString("description"));
+					item.setPrice(rs.getDouble("price"));
 					Category cat = new Category();
 					cat.setCategoryName(rs.getNString("categoryName"));
 					cat.setId(rs.getInt("c.id"));
 					item.setCategory(cat);
 					items.add(item);
 				}while(rs.next());
+			}
+			else 
+			{
+				return null;
 			}
 			
 			
@@ -89,6 +94,61 @@ public class inventoryDB {
 		return (InventoryItem[])items.toArray();
 	}
 
+	public InventoryItem[] getAllItemsForCategory(int categoryID)
+	{
+		if(categoryID < 0)
+			return null;
+		
+		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "select ii.id as 'ii.id', ii.title, ii.quantity, "
+					+ "ii.price, ii.description, c.id as 'c.id', c.categoryname "
+					+ "from inventoryitems as ii"
+					+ "inner join category as c "
+					+ "on ii.categoryid = c.id"
+					+ "where c.id = '?';";
+			
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, Integer.toString(categoryID));
+			
+			rs = stmt.executeQuery();
+			
+			if(rs != null){
+				do {
+					InventoryItem item = new InventoryItem();
+					item.setId(rs.getInt("ii.id"));
+					item.setTitle(rs.getString("title"));
+					item.setQuantityInStock(rs.getInt("quantity"));
+					item.setPrice(rs.getDouble("price"));
+					item.setDescription(rs.getNString("description"));
+					Category cat = new Category();
+					cat.setCategoryName(rs.getString("categoryname"));
+					cat.setId(rs.getInt("c.id"));
+					item.setCategory(cat);
+					items.add(item);
+				}while(rs.next());
+			}
+			else {
+				return null;
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			items = null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return (InventoryItem[])items.toArray();
+	}
+	
 	public static InventoryItem getInventoryItem(int itemID)
 	{
 		InventoryItem item = new InventoryItem();
@@ -124,6 +184,7 @@ public class inventoryDB {
 			item.setTitle(rs.getNString("title"));
 			item.setQuantityInStock(rs.getInt("quantity"));
 			item.setDescription(rs.getNString("description"));
+			item.setPrice(rs.getDouble("price"));
 			Category cat = new Category();
 			cat.setCategoryName(rs.getNString("categoryName"));
 			cat.setId(rs.getInt("c.id"));
