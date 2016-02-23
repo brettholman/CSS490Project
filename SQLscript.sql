@@ -20,6 +20,7 @@ create table if not exists Users (
 
 insert into Users values(1,'test1', 'test1', 'test1', 'test@test.net', 'pass', true, curdate(), curdate());
 insert into Users values(2,'test2', 'test2', 'test2', 'test@test.net', 'pass', true, curdate(), curdate());
+insert into Users values(3,'test3', 'test3', 'test3', 'test3@test.net', 'pass', false, curdate(), curdate());
 
 create table if not exists Category (
     id              integer auto_increment not null,
