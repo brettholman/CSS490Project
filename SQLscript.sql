@@ -141,3 +141,12 @@ create trigger RatingsTrigger before insert on Ratings
         end if;
     end $$
 delimiter ;
+
+insert into ratings values (1, 1, 1, 1, curdate(), 'super cool, dude');
+insert into ratings values (2, 1, 1, 3, curdate(), 'super cool, dude');
+insert into ratings values (3, 2, 2, 2, curdate(), 'super cool, dude');
+insert into ratings values (4, 2, 3, 2, curdate(), 'super cool, dude');
+insert into ratings values (5, 2, 3, 3, curdate(), 'super cool, dude');
+insert into ratings values (6, 1, 1, 4, curdate(), 'super cool, dude');
+insert into ratings values (7, 1, 2, 4, curdate(), 'super cool, dude');
+insert into ratings values (8, 2, 3, 5, curdate(), 'super cool, dude');
