@@ -113,7 +113,7 @@ public class inventoryDB {
 					+ "from inventoryitems as ii"
 					+ "inner join category as c "
 					+ "on ii.categoryid = c.id"
-					+ "where c.id = '?';";
+					+ "where c.id = ?;";
 			
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, Integer.toString(categoryID));
@@ -168,7 +168,7 @@ public class inventoryDB {
 					+ "from InventoryItems as i "
 					+ "inner join Category as c "
 					+ "on c.id = i.categoryID "
-					+ "where i.id = '?';";
+					+ "where i.id = ?;";
 			
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, itemID);
