@@ -1,6 +1,6 @@
 drop table if exists PurchaseDetails;
 drop table if exists Transactions;
-drop table if exists UserRatings;
+drop table if exists Ratings;
 drop table if exists Users;
 drop table if exists InventoryItems;
 drop table if exists Category;
@@ -109,7 +109,7 @@ insert into PurchaseDetails values(3, 1, 3);
 
 
 # made to keep track of all ratings. 
-create table if not exists UserRatings (
+create table if not exists Ratings (
     id          integer unique not null,
     userID      integer not null,
     itemID      integer not null,
@@ -126,7 +126,7 @@ create table if not exists UserRatings (
 );
 
 delimiter $$
-create trigger UserRatingsTrigger before insert on UserRatings
+create trigger RatingsTrigger before insert on Ratings
     for each row 
     begin
         if new.rating < 0
