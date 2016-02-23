@@ -30,7 +30,8 @@ public class inventoryDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
-			String query = "select * from books where id = '?'";
+			String query = "select * from InventoryItems as i inner join Category as c on c.id = i.categoryID"
+					+ " where i.id = '?'";
 			
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, itemID);
@@ -41,11 +42,15 @@ public class inventoryDB {
 				return null;
 			}
 			
-			item.setId(rs.getInt("id"));
-			item.setTitle(rs.getNString("title"));
-			item.setQuantityInStock(rs.getInt("quantity"));
-			item.setDescription(rs.getNString("description"));
-			item.setCategoryID(rs.getInt("categoryID"));
+			// Still need to check logic on this. 
+			item.setId(rs.getInt("i.id"));
+			item.setTitle(rs.getNString("i.title"));
+			item.setQuantityInStock(rs.getInt("i.quantity"));
+			item.setDescription(rs.getNString("i.description"));
+			Category cat = new Category();
+			cat.setCategoryName(rs.getNString("c.categoryName"));
+			cat.setId(rs.getInt("c.id"));
+			item.setCategory(cat);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -65,7 +70,6 @@ public class inventoryDB {
 		{
 			retval[i] = new InventoryItem();
 			retval[i].setId(i);
-			retval[i].setCategoryID(i);
 			retval[i].setTitle("Title" + i);
 			retval[i].setDescription("Description Text " + i);
 			retval[i].setQuantityInStock(i);
