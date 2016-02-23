@@ -27,8 +27,17 @@ create table if not exists Category (
     primary key 	(id)
 );
 
-insert into Category values(1, 'drama');
-insert into Category values(2, 'something else');
+insert into Category values(1, 'Art');
+insert into Category values(2, 'Biography');
+insert into Category values(3, 'Childrens');
+insert into Category values(4, 'Cookbooks');
+insert into Category values(5, 'History');
+insert into Category values(6, 'Fiction');
+insert into Category values(7, 'Non-Fiction');
+insert into Category values(8, 'Mystery');
+insert into Category values(9, 'Romance');
+insert into Category values(10, 'Sci-Fi');
+insert into Category values(11, 'Young Adult');
 
 create table if not exists InventoryItems (
     id 			    integer unique not null,
