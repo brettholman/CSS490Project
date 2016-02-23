@@ -84,7 +84,7 @@ public class userDB {
             Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
-			String query = "select * from users where id = '?'";
+			String query = "select * from users where id = ?";
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, Integer.toString(id));
 			
@@ -125,7 +125,7 @@ public class userDB {
             Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
-			String query = "delete from users where id = '?';";
+			String query = "delete from users where id = ?;";
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, Integer.toString(id));
 			
@@ -213,7 +213,7 @@ public class userDB {
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			String query = "insert into users(userName, fName, lName, email, pass, lastLogin, accountCreated)" +
-											"values('?', '?', '?', '?', '?', '?', '?')";
+											"values(?, ?, ?, ?, ?, ?, ?)";
 			
 			stmt = conn.prepareStatement(query);
 			
