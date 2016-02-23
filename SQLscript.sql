@@ -1,8 +1,8 @@
 drop table if exists PurchaseDetails;
 drop table if exists Transactions;
 drop table if exists UserRatings;
-drop table if exists User;
-drop table if exists Books;
+drop table if exists Users;
+drop table if exists InventoryItems;
 drop table if exists Category;
 
 
@@ -18,7 +18,7 @@ create table if not exists Users (
 	primary key(userName)	
 );
 
-insert into users values('test', 'test', 'test', 'test@test.net', 'pass', true, now(), now());
+insert into Users values('test', 'test', 'test', 'test@test.net', 'pass', true, now(), now());
 
 create table if not exists Category (
     id              integer auto_increment not null,
@@ -26,7 +26,7 @@ create table if not exists Category (
     primary key 	(id)
 );
 
-create table if not exists Books (
+create table if not exists InventoryItems (
 	id 			    integer auto_increment not null,
     title 		    varchar(50) not null, 
     quantity 	    integer not null, 
