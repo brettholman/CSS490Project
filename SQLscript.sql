@@ -102,14 +102,14 @@ insert into PurchaseDetails values(3, 1, 3);
 # made to keep track of all ratings. 
 create table if not exists UserRatings (
     id          integer unique not null,
-    userName    varchar(20) not null,
+    userID      integer not null,
     itemID      integer not null,
     rating      integer not null,
     ratingDate  date not null,
     description varchar(100),
     primary key (id),
-    foreign key (userName)
-        references Users(userName)
+    foreign key (userID)
+        references Users(id)
         on delete cascade on update cascade,
     foreign key (itemID)
         references InventoryItems(id)
