@@ -61,7 +61,7 @@ delimiter $$
                 signal sqlstate '45000'
                 set MESSAGE_TEXT = 'Book price must be greater than 0.';
             end if;
-            if quantity < 0
+            if new.quantity < 0
             then 
                 signal sqlstate '45000'
                 set MESSAGE_TEXT = 'There can not be a book with a quantity of less than 0';
@@ -92,7 +92,7 @@ insert into Transactions values(3, 1, curdate());
 create table if not exists PurchaseDetails (
     transactionNumber   integer not null,
     itemID  integer not null,
-    quantityinteger not null,
+    quantity integer not null,
     primary key (transactionNumber, itemID),
     foreign key (transactionNumber) 
         references Transactions(transactionNumber)

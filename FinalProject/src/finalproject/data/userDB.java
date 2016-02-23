@@ -162,28 +162,35 @@ public class userDB {
 		ResultSet rs = null;
 		if(uName == null || uName.length() == 0)
 			return getAnonymousUser();
-		
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
-			String query = "select * from users where userName = '?'";
+			String query = "select * from users where userName = ?";
 			stmt = conn.prepareStatement(query);
-			stmt.setString(1, uName);
+			stmt.setString(1, uName); 
 			
-			rs = stmt.executeQuery();
-			
-			if(rs == null) {
+			rs = stmt.executeQuery(); 
+				
+			if(rs == null || rs.wasNull()) {
 				return getAnonymousUser();
 			}
-				
-			user.setfName(rs.getString("fName"));
-			user.setlName(rs.getString("lName"));
-			user.setEmail(rs.getString("email"));
-			user.setIsAdmin(rs.getBoolean("isAdmin"));
-			user.setUserName(rs.getString("userName"));
-			user.setLastLogin(rs.getDate("lastLogin"));
-			user.setAccountCreated(rs.getDate("accountCreated"));
+
+			// Get the first row and pull down the user data
+			if(rs.first()) {
+				user.setfName(rs.getString("fName"));
+				user.setlName(rs.getString("lName"));
+				user.setEmail(rs.getString("email"));
+				user.setIsAdmin(rs.getBoolean("isAdmin"));
+				user.setUserName(rs.getString("userName"));
+				user.setLastLogin(rs.getDate("lastLogin"));
+				user.setPassword(rs.getString("pass"));
+				user.setAccountCreated(rs.getDate("accountCreated"));
+			}
+			else {
+				user = null;
+			}
 		}
 		catch(Exception e) {
 			e.printStackTrace();

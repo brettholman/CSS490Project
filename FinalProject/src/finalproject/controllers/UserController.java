@@ -54,20 +54,32 @@ public class UserController extends HttpServlet {
 		// Log the user on
 		else if(requestURI.endsWith("logon")){
 			
+			boolean logonSuccess = false;
+
 			HttpSession session = request.getSession(true);
 			String name = (String)request.getParameter("username");
 			String password = (String)request.getParameter("password");
 			
-			// ADD: need to check and see if the user provided the correct logon and password
+			// Look for the user
+			User u = userDB.getUser(name);
 			
-			// TEMP: for now, just create and return the user object
-			User user = new User();
-			user.setUserName(name);
-			user.setPassword(password);
-			session.setAttribute("currentUser", user);
+			if(u != null) {
+				
+				// Check the password
+				if(password.equals(u.getPassword())) {
+					logonSuccess = true;
+				}
+			}
 			
-			// If we were able to add the user then redirect them back to the main page
-			getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+			// If we failed then redirect to the logonFailed page
+			if(!logonSuccess) {
+				getServletContext().getRequestDispatcher("/user/logonFailed.jsp").forward(request, response);
+			}
+			// Otherwise log the user on!
+			else {
+				session.setAttribute("currentUser", u);
+				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+			}
 		}	
 		
 		// View the details for a specific item
