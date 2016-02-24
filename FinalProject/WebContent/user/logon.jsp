@@ -7,15 +7,15 @@
 
   <div id="page">
 
-    <form method="post" name="form1" id="form1" action="/UserController/logon">
+    <form method="get" name="form1" id="form1" action="j_security_check">
 
       <label for="username">Enter username: </label>
-      <input type="text" id="username" name="username" required/>
+      <input type="text" id="username" name="j_username" required/>
       <div id="feedback1" class="feedback"></div>
 
       <br>
       <label for="password">Enter password: </label>
-      <input type="password" id="password" name="password"  required/>
+      <input type="password" id="password" name="j_password"  required/>
       <div id="feedback2" class="feedback"></div>
 
       <br>

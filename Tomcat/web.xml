@@ -4667,11 +4667,11 @@
   </security-constraint>
   
   <login-config>
-	<auth-method>DIGEST</auth-method>
-	<realm-name>Admin Logon</realm-name>
+	<auth-method>FORM</auth-method>
+	<form-login-config>
+		<form-login-page>/user/logon.jsp</form-login-page>
+		<form-error-page>/user/logonFailed.jsp</form-error-page>
+	</form-login-config>
   </login-config>
 
-  </web-app>
-  
-
-  
+</web-app> 

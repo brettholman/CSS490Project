@@ -6,6 +6,11 @@
 <!doctype html>
 
 <%
+	response.setHeader("Cache-Control","no-cache"); //Forces caches to obtain a new copy of the page from the origin server
+	response.setHeader("Cache-Control","no-store"); //Directs caches not to store the page under any circumstance
+	response.setDateHeader("Expires", 0); //Causes the proxy cache to see the page as "stale"
+	response.setHeader("Pragma","no-cache"); //HTTP 1.0 backward compatibility
+
 	// Get the user if it exists, otherwise create an anonymous user
 	User user = (User)session.getAttribute("currentUser");
 	if(user == null) { 
@@ -68,7 +73,7 @@
 	    
 	    <div id="user">
 	    	<p>Welcome <%=user.getUserName()%>!</p>
-			<a href="/user/logon.jsp"><button id="btnLogon" name="logonButton">Logon</button></a>
+			<a href="/UserController/logonManual"><button id="btnLogon" name="logonButton">Logon</button></a>
 			<a href="/user/logout.jsp"><button id="btnLogout" name="logoutButton">Logout</button></a>
 	    </div>
 	    

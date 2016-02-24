@@ -30,8 +30,20 @@ public class UserController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+
+		String requestURI = request.getRequestURI();
+		
+		// Allow users to logon manually (via the button)
+		if(requestURI.endsWith("logonManual")){
+
+			// Prompt the user to logon (since we're configured for FORM based auth)
+			if(request.authenticate(response)) {
+				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+			}
+			else {
+				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+			}
+		}		
 	}
 
 	/**
@@ -50,38 +62,7 @@ public class UserController extends HttpServlet {
 			
 			else { getServletContext().getRequestDispatcher("/user/registerError.jsp").forward(request, response); }
 		}
-		
-		// Log the user on
-		else if(requestURI.endsWith("logon")){
-			
-			boolean logonSuccess = false;
-
-			HttpSession session = request.getSession(true);
-			String name = (String)request.getParameter("username");
-			String password = (String)request.getParameter("password");
-			
-			// Look for the user
-			User u = userDB.getUser(name);
-			
-			if(u != null) {
-				
-				// Check the password
-				if(password.equals(u.getPassword())) {
-					logonSuccess = true;
-				}
-			}
-			
-			// If we failed then redirect to the logonFailed page
-			if(!logonSuccess) {
-				getServletContext().getRequestDispatcher("/user/logonFailed.jsp").forward(request, response);
-			}
-			// Otherwise log the user on!
-			else {
-				session.setAttribute("currentUser", u);
-				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
-			}
-		}	
-		
+	
 		// View the details for a specific item
 		else if(requestURI.endsWith("viewItemDetails")){
 

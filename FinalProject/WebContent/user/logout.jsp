@@ -1,3 +1,4 @@
+<%@page import="com.mysql.fabric.Response"%>
 <%@ page import="finalproject.models.*" %>
 <%@ page import="finalproject.data.*" %>
 
@@ -10,10 +11,8 @@
 
 	<% 
 		session.invalidate();
-		response.setHeader("Pragma","no-cache"); 
-		response.setHeader("Cache-Control","no-store"); 
-		response.setHeader("Expires","0"); 
-		response.setDateHeader("Expires",-1);
+		request.logout();
+		System.out.println("logged out");
 	%>
 	<p>You have been successfully logged out</p>
 	
