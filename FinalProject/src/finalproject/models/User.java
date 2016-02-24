@@ -8,7 +8,6 @@ public class User {
 	private String lName = null;
 	private String email = null;
 	private String password = null;
-	private Boolean isAdmin = false;
 	private Date lastLogin = null;
 	private Date accountCreated = null;
 	
@@ -73,13 +72,4 @@ public class User {
 	public void setAccountCreated(Date date) {
 		this.accountCreated = date;
 	}
-	
-	public boolean getIsAdmin() {
-		return isAdmin;
-	}
-	
-	public void setIsAdmin(boolean admin) {
-		this.isAdmin = admin;
-	}
-	
 }

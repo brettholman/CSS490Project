@@ -1,26 +1,28 @@
+use css490;
+
 drop table if exists PurchaseDetails;
 drop table if exists Transactions;
 drop table if exists Ratings;
 drop table if exists Users;
+drop table if exists Roles;
 drop table if exists InventoryItems;
 drop table if exists Category;
     
 create table if not exists Users ( 
-    id              integer unique not null,
+    id              integer unique not null auto_increment,
     userName        varchar(20) unique not null,
     fName 		    varchar(20) not null, 	
     lName 		    varchar(20) not null, 	
     email 		    varchar(50) not null,
     pass 		    varchar(20) not null,
-    isAdmin         bool not null,
     lastLogin       date not null,
     accountCreated  date not null, 	
     primary key(id)	
 );
 
-insert into Users values(1,'test1', 'test1', 'test1', 'test@test.net', 'pass', true, curdate(), curdate());
-insert into Users values(2,'test2', 'test2', 'test2', 'test@test.net', 'pass', true, curdate(), curdate());
-insert into Users values(3,'test3', 'test3', 'test3', 'test3@test.net', 'pass', false, curdate(), curdate());
+insert into Users values(1,'test1', 'test1', 'test1', 'test@test.net', 'pass', curdate(), curdate());
+insert into Users values(2,'test2', 'test2', 'test2', 'test@test.net', 'pass', curdate(), curdate());
+insert into Users values(3,'test3', 'test3', 'test3', 'test3@test.net', 'pass', curdate(), curdate());
 
 create table if not exists roles ( 
     id              integer unique not null auto_increment,
@@ -34,7 +36,7 @@ insert into roles (userName, roleName) values
 	('test2', 'admin');
 
 create table if not exists Category (
-    id              integer auto_increment not null,
+    id              integer unique not null auto_increment,
     categoryName    varchar(20) not null,
     primary key 	(id)
 );
@@ -52,7 +54,7 @@ insert into Category values(10, 'Sci-Fi');
 insert into Category values(11, 'Young Adult');
 
 create table if not exists InventoryItems (
-    id 			    integer unique not null,
+    id 			    integer unique not null auto_increment,
     title 		    varchar(50) not null, 
     quantity 	    integer not null, 
     price 		    double not null, 
@@ -122,7 +124,7 @@ insert into PurchaseDetails values(3, 1, 3);
 
 # made to keep track of all ratings. 
 create table if not exists Ratings (
-    id          integer unique not null,
+    id          integer unique not null auto_increment,
     userID      integer not null,
     itemID      integer not null,
     rating      integer not null,
@@ -162,3 +164,4 @@ insert into ratings values (5, 2, 3, 3, curdate(), 'super cool, dude');
 insert into ratings values (6, 1, 1, 4, curdate(), 'super cool, dude');
 insert into ratings values (7, 1, 2, 4, curdate(), 'super cool, dude');
 insert into ratings values (8, 2, 3, 5, curdate(), 'super cool, dude');
+

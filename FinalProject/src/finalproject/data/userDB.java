@@ -96,7 +96,6 @@ public class userDB {
 			user.setfName(rs.getString("fName"));
 			user.setlName(rs.getString("lName"));
 			user.setEmail(rs.getString("email"));
-			user.setIsAdmin(rs.getBoolean("isAdmin"));
 			user.setUserName(rs.getString("userName"));
 			user.setLastLogin(rs.getDate("lastLogin"));
 			user.setAccountCreated(rs.getDate("accountCreated"));
@@ -172,7 +171,6 @@ public class userDB {
 				user.setfName(rs.getString("fName"));
 				user.setlName(rs.getString("lName"));
 				user.setEmail(rs.getString("email"));
-				user.setIsAdmin(rs.getBoolean("isAdmin"));
 				user.setUserName(rs.getString("userName"));
 				user.setLastLogin(rs.getDate("lastLogin"));
 				user.setPassword(rs.getString("pass"));
@@ -220,10 +218,10 @@ public class userDB {
 			stmt.setString(1, user.getUserName());
 			stmt.setString(2, user.getfName());
 			stmt.setString(3, user.getlName());
-			stmt.setString(3, user.getEmail());
-			stmt.setString(4, user.getPassword());
-			stmt.setString(5, cal.getTime().toString());
-			stmt.setString(6, cal.getTime().toString());
+			stmt.setString(4, user.getEmail());
+			stmt.setString(5, user.getPassword());
+			stmt.setString(6, new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString());
+			stmt.setString(7, new java.sql.Date(Calendar.getInstance().getTime().getTime()).toString());
 			
 			// returns total rows effected. 
 			if(stmt.executeUpdate() > 0)

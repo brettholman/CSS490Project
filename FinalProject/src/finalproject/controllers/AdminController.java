@@ -95,7 +95,6 @@ public class AdminController extends HttpServlet {
 			user.setUserName((String)request.getParameter("name"));
 			user.setfName((String)request.getParameter("fmail"));
 			user.setlName((String)request.getParameter("lmail"));
-			user.setIsAdmin(Boolean.parseBoolean((String)request.getParameter("isAdmin")));
 			user.setPassword((String)request.getParameter("password"));
 			
 			// TODO: update the user's properties.

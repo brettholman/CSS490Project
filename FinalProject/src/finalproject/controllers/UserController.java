@@ -4,6 +4,11 @@ import finalproject.data.inventoryDB;
 import finalproject.data.userDB;
 import finalproject.models.*;
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -150,13 +155,19 @@ public class UserController extends HttpServlet {
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 
-		// Temp code - for now just make the new user the current user
 		User user = new User();
 		user.setUserName(username);
 		user.setPassword(passwd);
 		user.setEmail(email);
-		session.setAttribute("currentUser", user);
-
-		return true;
+		user.setfName(name);
+		user.setlName("");
+		
+		if(userDB.insertUser(user)) {
+			session.setAttribute("currentUser", user);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}	
 }
