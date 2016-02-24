@@ -22,6 +22,17 @@ insert into Users values(1,'test1', 'test1', 'test1', 'test@test.net', 'pass', t
 insert into Users values(2,'test2', 'test2', 'test2', 'test@test.net', 'pass', true, curdate(), curdate());
 insert into Users values(3,'test3', 'test3', 'test3', 'test3@test.net', 'pass', false, curdate(), curdate());
 
+create table if not exists roles ( 
+    id              integer unique not null auto_increment,
+    userName        varchar(20) unique not null,
+    roleName	    varchar(20) not null,
+    primary key(id)	
+);
+
+insert into roles (userName, roleName) values
+	('test1', 'admin'),
+	('test2', 'admin');
+
 create table if not exists Category (
     id              integer auto_increment not null,
     categoryName    varchar(20) not null,

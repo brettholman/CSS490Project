@@ -271,4 +271,9 @@ public class inventoryDB {
 			}
 		}
 	}
+
+	public static InventoryItem getInventoryItem(int itemID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

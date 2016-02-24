@@ -9,8 +9,11 @@
 <section>
 
 	<% 
-		User user = userDB.getUser(""); 
-		session.setAttribute("currentUser", user);
+		session.invalidate();
+		response.setHeader("Pragma","no-cache"); 
+		response.setHeader("Cache-Control","no-store"); 
+		response.setHeader("Expires","0"); 
+		response.setDateHeader("Expires",-1);
 	%>
 	<p>You have been successfully logged out</p>
 	
