@@ -13,9 +13,9 @@
 	<h1>Inventory Management</h1>
 
 <script>
-function viewItemDetails(id){
-	document.getElementById("viewItemID").value=id;
-	document.viewItemDetails.submit();
+function editItem(id){
+	document.getElementById("editItemID").value=id;
+	document.editItem.submit();
 }
 function addItemToCart(id){
 	document.getElementById("addItemID").value=id;
@@ -39,7 +39,7 @@ function addItemToCart(id){
 	for(InventoryItem item: items){
 %>
 <tr>
-	<td width="15%"><a href="javascript:viewItemDetails('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
+	<td width="15%"><a href="javascript:editItem('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
 	<td width="15%"><%=item.getDescription()%></td>
 	<td width="15%"><%=item.getCategory()%></td>
 	<td width="15%">$<%=item.getPrice()%></td>
@@ -52,8 +52,8 @@ function addItemToCart(id){
 </table>
 </form>
 
-<form name="viewItemDetails" method="post" action="/UserController/viewItemDetails">
-	<input type="hidden" name="itemID" id="viewItemID">
+<form name="editItem" method="post" action="/UserController/editItem">
+	<input type="hidden" name="itemID" id="editItemID">
 </form>
 <form name="itemAddToCart" method="post" action="/UserController/addItemToCart">
 	<input type="hidden" name="itemID" id="addItemID">

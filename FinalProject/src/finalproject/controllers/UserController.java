@@ -67,7 +67,7 @@ public class UserController extends HttpServlet {
 			
 			else { getServletContext().getRequestDispatcher("/user/registerError.jsp").forward(request, response); }
 		}
-	
+		
 		// View the details for a specific item
 		else if(requestURI.endsWith("viewItemDetails")){
 
@@ -78,6 +78,18 @@ public class UserController extends HttpServlet {
 			
 			// Redirect the user to the inventoryItem view
 			getServletContext().getRequestDispatcher("/shopping/catalogItem.jsp").forward(request, response);
+		}	
+		
+		// Edit a specific item
+		else if(requestURI.endsWith("editItem")){
+
+			// Get the itemID and add it to the session
+			HttpSession session = request.getSession(true);
+			InventoryItem item = inventoryDB.getInventoryItem(Integer.parseInt((String)request.getParameter("itemID")));
+			session.setAttribute("currentItem", item);
+			
+			// Redirect the user to the inventoryItem view
+			getServletContext().getRequestDispatcher("/admin/inventoryItem.jsp").forward(request, response);
 		}
 		
 		// Add an item to the cart

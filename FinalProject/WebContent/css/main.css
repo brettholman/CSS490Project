@@ -161,6 +161,11 @@ section input {
     margin-left: 0.5em;    
 }
 
+section textarea {
+    margin-left: 0.25em;
+    margin-bottom: 0.5em;  
+}
+
 br {
     clear: both;
 }

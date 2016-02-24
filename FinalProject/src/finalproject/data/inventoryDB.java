@@ -267,7 +267,52 @@ public class inventoryDB {
 	}
 
 	public static InventoryItem getInventoryItem(int itemID) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		InventoryItem item = null;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = 
+					"SELECT II.id, C.categoryName as category, II.title, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
+					"INNER JOIN category AS C ON II.categoryID = C.id " +
+					"INNER JOIN ratings AS R ON R.itemID = II.id " +
+					"WHERE II.id = ? " +
+					"GROUP BY II.id ORDER BY title";
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, Integer.toString(itemID));
+			
+			rs = stmt.executeQuery();
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+	
+			// Get the first row and pull down the item data
+			if(rs.first()) {
+				item = new InventoryItem();
+				item.setId(rs.getInt("id"));
+				item.setCategory(rs.getString("category"));
+				item.setTitle(rs.getString("title"));
+				item.setDescription(rs.getNString("description"));
+				item.setPrice(rs.getDouble("price"));
+				item.setQuantityInStock(rs.getInt("quantity"));
+				item.setAverageRating(rs.getDouble("rating"));
+			}
+			else {
+				return null;
+			}			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return item;		
 	}
 }
