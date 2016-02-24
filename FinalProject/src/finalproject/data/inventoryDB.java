@@ -73,7 +73,7 @@ public class inventoryDB {
 					Category cat = new Category();
 					cat.setCategoryName(rs.getNString("categoryName"));
 					cat.setId(rs.getInt("c.id"));
-					item.setCategory(cat);
+					//item.setCategory(cat);
 					items.add(item);
 				}while(rs.next());
 			}
@@ -94,10 +94,10 @@ public class inventoryDB {
 		return (InventoryItem[])items.toArray();
 	}
 	
-	public InventoryItem[] getAllItemsForCategory(int categoryID)
+	public static InventoryItem[] getAllItemsForCategory(int categoryID)
 	{
-		if(categoryID < 0)
-			return null;
+		// If categoryID is < 0 then return items for all categories
+		if(categoryID < 0) { categoryID = -1; }
 		
 		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 		Connection conn = null;
@@ -108,49 +108,59 @@ public class inventoryDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
-			String query = "select ii.id as 'ii.id', ii.title, ii.quantity, "
-					+ "ii.price, ii.description, c.id as 'c.id', c.categoryname avg(r.rating) as average"
-					+ "from inventoryitems as ii"
-					+ "inner join category as c "
-					+ "on ii.categoryid = c.id"
-					+ "inner join ratings as r "
-					+ "on r.itemId = ii.id"
-					+ "where c.id = ? "
-					+ "group by ii.id;";
-			
-			stmt = conn.prepareStatement(query);
-			stmt.setString(1, Integer.toString(categoryID));
+			// If the categoryID is < 0 then return all items 
+			if(categoryID < 0) {
+				String query = 
+						"SELECT II.id, C.categoryName as category, II.title, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
+						"INNER JOIN category AS C ON II.categoryID = C.id " +
+						"INNER JOIN ratings AS R ON R.itemID = II.id " +
+						"GROUP BY II.id ORDER BY title";
+				stmt = conn.prepareStatement(query);
+			}
+			// Get all items in the specified category
+			else {
+				String query = 
+					"select ii.id, c.categoryName as category, ii.title, ii.description, ii.price, ii.quantity, avg(r.rating) as rating " +
+					"from inventoryitems as ii " +
+					"inner join category as c on ii.categoryid = c.id " +
+					"inner join ratings as r on r.itemId = ii.id " +
+					"where c.id = 1 " +
+					"group by ii.id, c.id;";
+				stmt = conn.prepareStatement(query);
+				stmt.setString(1, Integer.toString(categoryID));
+			}
 			
 			rs = stmt.executeQuery();
-			
-			if(rs != null){
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+	
+			// Get the first row and pull down the user data
+			if(rs.first()) {
 				do {
 					InventoryItem item = new InventoryItem();
-					item.setId(rs.getInt("ii.id"));
+					item.setId(rs.getInt("id"));
+					item.setCategory(rs.getString("category"));
 					item.setTitle(rs.getString("title"));
-					item.setQuantityInStock(rs.getInt("quantity"));
-					item.setPrice(rs.getDouble("price"));
 					item.setDescription(rs.getNString("description"));
-					Category cat = new Category();
-					cat.setCategoryName(rs.getString("categoryname"));
-					cat.setId(rs.getInt("c.id"));
-					item.setCategory(cat);
-					item.setAverageRating(rs.getDouble("average"));
+					item.setPrice(rs.getDouble("price"));
+					item.setQuantityInStock(rs.getInt("quantity"));
+					item.setAverageRating(rs.getDouble("rating"));
 					items.add(item);
 				}while(rs.next());
 			}
 			else {
 				return null;
-			}
+			}			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			items = null;
+			return null;
 		}
 		finally {
 			closeAll(stmt, conn, rs);
 		}
-		return (InventoryItem[])items.toArray();
+		return items.toArray(new InventoryItem[items.size()]);
 	}
 
 	public static InventoryItem getInventoryItemWithAverage(int itemID)
@@ -192,7 +202,7 @@ public class inventoryDB {
 			Category cat = new Category();
 			cat.setCategoryName(rs.getNString("categoryName"));
 			cat.setId(rs.getInt("c.id"));
-			item.setCategory(cat);
+			//item.setCategory(cat);
 			item.setAverageRating(rs.getDouble("average"));
 		}
 		catch(Exception e) {
@@ -203,22 +213,6 @@ public class inventoryDB {
 			closeAll(stmt, conn, rs);
 		}
 		return item;
-	}
-	
-	public static InventoryItem[] getAllInventoryItems()
-	{
-		// Temp code, just going to generate some fake items for now
-		InventoryItem[] retval = new InventoryItem[20];
-		for(int i = 0; i < 20; i++)
-		{
-			retval[i] = new InventoryItem();
-			retval[i].setId(i);
-			retval[i].setTitle("Title" + i);
-			retval[i].setDescription("Description Text " + i);
-			retval[i].setQuantityInStock(i);
-			retval[i].setPrice(9.99);
-		}
-		return retval;
 	}
 	
 	private static void closeAll(Statement stmt, Connection conn)

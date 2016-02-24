@@ -10,7 +10,7 @@ public class InventoryItem {
 	private int quantityInStock;
 	private double price;
 	private int categoryID;
-	private Category category;
+	private String category;
 	private double averageRating;
 	
 	public int getId() {
@@ -61,12 +61,12 @@ public class InventoryItem {
 		this.description = description;
 	}
 	
-	public Category getCategory() 
+	public String getCategory() 
 	{
 		return this.category;
 	}
 	
-	public void setCategory(Category cat) 
+	public void setCategory(String cat) 
 	{
 		this.category = cat;
 	}
