@@ -46,12 +46,32 @@ public class UserController extends HttpServlet {
 		// Allow users to logon manually (via the button)
 		if(requestURI.endsWith("logonManual")){
 
+			HttpSession session = request.getSession(true);
+
+			int sourceID = 0;
+			Map<String, String[]> map = request.getParameterMap();
+			if(map.containsKey("sourceID")) { sourceID = Integer.parseInt((String)request.getParameter("sourceID")); } 
+			
 			// Prompt the user to logon (since we're configured for FORM based auth)
 			if(request.authenticate(response)) {
-				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				
+				switch(sourceID) {
+					case 1:
+						getServletContext().getRequestDispatcher("/shopping/checkout.jsp").forward(request, response);
+						
+					default:
+						getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				}
 			}
 			else {
-				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				switch(sourceID) {
+					case 1:
+						session.setAttribute("errorMsg", "You must be logged on in order to place an order.");
+						getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+						
+					default:
+						getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				}
 			}
 		}		
 	}
