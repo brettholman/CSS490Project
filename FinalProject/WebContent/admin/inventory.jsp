@@ -27,6 +27,7 @@ function addItemToCart(id){
 <table id="list">
 	<tr>
 		<th>Title</th>
+		<th>Author</th>
 		<th>Description</th>
 		<th>Category</th>
 		<th>Price</th>
@@ -39,12 +40,13 @@ function addItemToCart(id){
 	for(InventoryItem item: items){
 %>
 <tr>
-	<td width="15%"><a href="javascript:editItem('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
-	<td width="15%"><%=item.getDescription()%></td>
+	<td width="20%"><a href="javascript:editItem('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
+	<td width="15%"><%=item.getAuthor()%></td>
+	<td width="25%"><%=item.getDescription()%></td>
 	<td width="15%"><%=item.getCategory()%></td>
-	<td width="15%">$<%=item.getPrice()%></td>
-	<td width="15%"><%=item.getQuantityInStock()%></td>
-	<td width="15%"><%=item.getAverageRating()%></td>
+	<td width="10%">$<%=item.getPrice()%></td>
+	<td width="10%"><%=item.getQuantityInStock()%></td>
+	<td width="10%"><%=item.getAverageRating()%></td>
 </tr>
 <%
 	}
@@ -52,11 +54,8 @@ function addItemToCart(id){
 </table>
 </form>
 
-<form name="editItem" method="post" action="/UserController/editItem">
+<form name="editItem" method="post" action="/AdminController/editItem">
 	<input type="hidden" name="itemID" id="editItemID">
-</form>
-<form name="itemAddToCart" method="post" action="/UserController/addItemToCart">
-	<input type="hidden" name="itemID" id="addItemID">
 </form>
 
 </section>

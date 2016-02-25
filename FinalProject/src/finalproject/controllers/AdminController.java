@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class AdminController
  */
-@WebServlet("/AdminController")
+@WebServlet("/AdminController/*")
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -47,32 +47,42 @@ public class AdminController extends HttpServlet {
 		if(requestURI.endsWith("addItem")){
 			
 			InventoryItem item = new InventoryItem();
-			item.setTitle((String)request.getParameter("title"));
-			item.setDescription((String)request.getParameter("description"));
-			item.setQuantityInStock(Integer.parseInt((String)request.getParameter("quantityInStock")));
-			item.setPrice(Double.parseDouble((String)request.getParameter("price")));
-			item.setCategoryID(Integer.parseInt((String)request.getParameter("categoryID")));
+			item.setTitle(request.getParameter("title"));
+			item.setAuthor(request.getParameter("author"));
+			item.setDescription(request.getParameter("description"));
+			item.setQuantityInStock(Integer.parseInt(request.getParameter("quantityInStock")));
+			item.setPrice(Double.parseDouble(request.getParameter("price")));
+			item.setCategoryID(Integer.parseInt(request.getParameter("categoryID")));
 			
 			// TODO: Add the new item to the database (not sure how we determine/set the ID?).  
 			
 			getServletContext().getRequestDispatcher("/admin/inventory.jsp").forward(request, response);
 		}
 
-		// Update an item's properties
-		else if(requestURI.endsWith("modifyItem")){
+		// Edit a specific item
+		else if(requestURI.endsWith("editItem")){
+
+			// Get the itemID and add it to the session
+			HttpSession session = request.getSession(true);
+			InventoryItem item = inventoryDB.getInventoryItem(Integer.parseInt((String)request.getParameter("itemID")));
+			session.setAttribute("currentItem", item);
 			
-			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
-			InventoryItem item = inventoryDB.getInventoryItem(itemID);
-			item.setTitle((String)request.getParameter("title"));
-			item.setDescription((String)request.getParameter("description"));
-			item.setQuantityInStock(Integer.parseInt((String)request.getParameter("quantityInStock")));
-			item.setPrice(Double.parseDouble((String)request.getParameter("price")));
-			item.setCategoryID(Integer.parseInt((String)request.getParameter("categoryID")));
-			
-			// TODO: save the modified item in the database.
-			
+			// Redirect the user to the inventoryItem view
 			getServletContext().getRequestDispatcher("/admin/inventoryItem.jsp").forward(request, response);
-		}		
+		}
+
+		// Edit a specific item
+		else if(requestURI.endsWith("saveItem")){
+
+			if(saveItem(request)) {
+				getServletContext().getRequestDispatcher("/admin/inventory.jsp").forward(request, response);
+			}
+			else {
+				HttpSession session = request.getSession(true);
+				session.setAttribute("errorMsg", "Unable to save item.");
+				getServletContext().getRequestDispatcher("/admin/error.jsp").forward(request, response);
+			}
+		}			
 		
 		// Remove an item (by reducing "quantityInStock" to 0)
 		else if(requestURI.endsWith("removeItem")){
@@ -118,4 +128,35 @@ public class AdminController extends HttpServlet {
 			}
 		}
 	}
+	
+	private Boolean saveItem(HttpServletRequest request){
+		
+		HttpSession session = request.getSession(true);
+		
+		InventoryItem item = (InventoryItem)session.getAttribute("currentItem");
+		if(item == null) { return false; }
+
+		try {
+			
+			item.setTitle(request.getParameter("title"));
+			item.setAuthor(request.getParameter("author"));
+			item.setDescription(request.getParameter("description"));
+			item.setPrice(Double.parseDouble(request.getParameter("price")));
+			item.setCategory(request.getParameter("category"));
+			item.setQuantityInStock(Integer.parseInt(request.getParameter("quantity")));
+			
+			// Is this a new item?
+			if(item.getId() < 1) {
+				return inventoryDB.insertItem(item);
+			}
+			// Or is this an update?
+			else {
+				return inventoryDB.updateItem(item);
+			}
+		} 
+		catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}		
 }

@@ -9,8 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import finalproject.models.Book;
 import finalproject.models.Category;
+import finalproject.models.InventoryItem;
 import finalproject.models.Rating;
 
 public class ratingDB {
@@ -19,7 +19,7 @@ public class ratingDB {
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
 	
-	public static Rating[] getAllRatingsForABook(Book book)
+	public static Rating[] getAllRatingsForABook(InventoryItem book)
 	{
 		if(book == null)
 			return null;

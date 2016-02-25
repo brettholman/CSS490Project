@@ -17,6 +17,206 @@ public class inventoryDB {
 	private static String dbUser = "css490";
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
+
+	public static Boolean insertItem(InventoryItem item) {
+		
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		if(item == null)
+			return result;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "INSERT INTO inventoryitems (title, author, description, categoryID, quantity, price) " +
+					"SELECT ?, ?, ?, coalesce(C.id, 1), ?, ? FROM category C WHERE C.categoryName = ?";
+			
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, item.getTitle());
+			stmt.setString(2, item.getAuthor());
+			stmt.setString(3, item.getDescription());
+			stmt.setString(4, item.getCategory());
+			stmt.setInt(5, item.getQuantityInStock());
+			stmt.setDouble(6, item.getPrice());
+			
+			// returns total rows effected. 
+			if(stmt.executeUpdate() > 0)
+			{
+				result = true;
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
+		return result;		
+	}	
+	
+	public static boolean updateItem(InventoryItem item) {
+		
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		if(item == null)
+			return result;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "UPDATE inventoryitems SET title=?, author=?, description=?, " + 
+					"categoryID=coalesce((SELECT id FROM category WHERE categoryName=?),1), " +
+					"quantity=?, price=? WHERE id=? ";
+			
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, item.getTitle());
+			stmt.setString(2, item.getAuthor());
+			stmt.setString(3, item.getDescription());
+			stmt.setString(4, item.getCategory());
+			stmt.setInt(5, item.getQuantityInStock());
+			stmt.setDouble(6, item.getPrice());
+			stmt.setInt(7, item.getId());
+			
+			// returns total rows effected. 
+			if(stmt.executeUpdate() > 0)
+			{
+				result = true;
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
+		return result;	
+	}	
+	
+	public static InventoryItem getInventoryItem(int itemID) {
+		
+		InventoryItem item = null;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = 
+					"SELECT II.id, C.categoryName as category, II.title, II.author, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
+					"INNER JOIN category AS C ON II.categoryID = C.id " +
+					"LEFT JOIN ratings AS R ON R.itemID = II.id " +
+					"WHERE II.id = ? " +
+					"GROUP BY II.id ORDER BY title";
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, Integer.toString(itemID));
+			
+			rs = stmt.executeQuery();
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+	
+			// Get the first row and pull down the item data
+			if(rs.first()) {
+				item = new InventoryItem();
+				item.setId(rs.getInt("id"));
+				item.setCategory(rs.getString("category"));
+				item.setTitle(rs.getString("title"));
+				item.setAuthor(rs.getString("author"));
+				item.setDescription(rs.getNString("description"));
+				item.setPrice(rs.getDouble("price"));
+				item.setQuantityInStock(rs.getInt("quantity"));
+				item.setAverageRating(rs.getDouble("rating"));
+			}
+			else {
+				return null;
+			}			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return item;		
+	}	
+	
+	public static InventoryItem[] getAllItemsForCategory(int categoryID)
+	{
+		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			// If the categoryID is < 0 then return all items 
+			if(categoryID < 0) {
+				String query = 
+						"SELECT II.id, C.categoryName as category, II.title, II.author, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
+						"INNER JOIN category AS C ON II.categoryID = C.id " +
+						"LEFT JOIN ratings AS R ON R.itemID = II.id " +
+						"GROUP BY II.id ORDER BY title";
+				stmt = conn.prepareStatement(query);
+			}
+			// Get all items in the specified category
+			else {
+				String query = 
+					"select ii.id, c.categoryName as category, ii.title, II.author, ii.description, ii.price, ii.quantity, avg(r.rating) as rating " +
+					"from inventoryitems as ii " +
+					"inner join category as c on ii.categoryid = c.id " +
+					"LEFT join ratings as r on r.itemId = ii.id " +
+					"where c.id = 1 " +
+					"group by ii.id, c.id;";
+				stmt = conn.prepareStatement(query);
+				stmt.setString(1, Integer.toString(categoryID));
+			}
+			
+			rs = stmt.executeQuery();
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+	
+			// Get the first row and pull down the user data
+			if(rs.first()) {
+				do {
+					InventoryItem item = new InventoryItem();
+					item.setId(rs.getInt("id"));
+					item.setCategory(rs.getString("category"));
+					item.setTitle(rs.getString("title"));
+					item.setAuthor(rs.getString("author"));
+					item.setDescription(rs.getNString("description"));
+					item.setPrice(rs.getDouble("price"));
+					item.setQuantityInStock(rs.getInt("quantity"));
+					item.setAverageRating(rs.getDouble("rating"));
+					items.add(item);
+				}while(rs.next());
+			}
+			else {
+				return null;
+			}			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return items.toArray(new InventoryItem[items.size()]);
+	}
 	
 	// This will need some massive testing once the UI is using it. 
 	public static InventoryItem[] getBestSellers(int maxBooks, Category category)
@@ -92,75 +292,6 @@ public class inventoryDB {
 			closeAll(stmt, conn, rs);
 		}
 		return (InventoryItem[])items.toArray();
-	}
-	
-	public static InventoryItem[] getAllItemsForCategory(int categoryID)
-	{
-		// If categoryID is < 0 then return items for all categories
-		if(categoryID < 0) { categoryID = -1; }
-		
-		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
-			
-			// If the categoryID is < 0 then return all items 
-			if(categoryID < 0) {
-				String query = 
-						"SELECT II.id, C.categoryName as category, II.title, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
-						"INNER JOIN category AS C ON II.categoryID = C.id " +
-						"INNER JOIN ratings AS R ON R.itemID = II.id " +
-						"GROUP BY II.id ORDER BY title";
-				stmt = conn.prepareStatement(query);
-			}
-			// Get all items in the specified category
-			else {
-				String query = 
-					"select ii.id, c.categoryName as category, ii.title, ii.description, ii.price, ii.quantity, avg(r.rating) as rating " +
-					"from inventoryitems as ii " +
-					"inner join category as c on ii.categoryid = c.id " +
-					"inner join ratings as r on r.itemId = ii.id " +
-					"where c.id = 1 " +
-					"group by ii.id, c.id;";
-				stmt = conn.prepareStatement(query);
-				stmt.setString(1, Integer.toString(categoryID));
-			}
-			
-			rs = stmt.executeQuery();
-			if(rs == null || rs.wasNull()) {
-				return null;
-			}
-	
-			// Get the first row and pull down the user data
-			if(rs.first()) {
-				do {
-					InventoryItem item = new InventoryItem();
-					item.setId(rs.getInt("id"));
-					item.setCategory(rs.getString("category"));
-					item.setTitle(rs.getString("title"));
-					item.setDescription(rs.getNString("description"));
-					item.setPrice(rs.getDouble("price"));
-					item.setQuantityInStock(rs.getInt("quantity"));
-					item.setAverageRating(rs.getDouble("rating"));
-					items.add(item);
-				}while(rs.next());
-			}
-			else {
-				return null;
-			}			
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		finally {
-			closeAll(stmt, conn, rs);
-		}
-		return items.toArray(new InventoryItem[items.size()]);
 	}
 
 	public static InventoryItem getInventoryItemWithAverage(int itemID)
@@ -264,55 +395,5 @@ public class inventoryDB {
 				sqle.printStackTrace();
 			}
 		}
-	}
-
-	public static InventoryItem getInventoryItem(int itemID) {
-		
-		InventoryItem item = null;
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
-			
-			String query = 
-					"SELECT II.id, C.categoryName as category, II.title, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
-					"INNER JOIN category AS C ON II.categoryID = C.id " +
-					"INNER JOIN ratings AS R ON R.itemID = II.id " +
-					"WHERE II.id = ? " +
-					"GROUP BY II.id ORDER BY title";
-			stmt = conn.prepareStatement(query);
-			stmt.setString(1, Integer.toString(itemID));
-			
-			rs = stmt.executeQuery();
-			if(rs == null || rs.wasNull()) {
-				return null;
-			}
-	
-			// Get the first row and pull down the item data
-			if(rs.first()) {
-				item = new InventoryItem();
-				item.setId(rs.getInt("id"));
-				item.setCategory(rs.getString("category"));
-				item.setTitle(rs.getString("title"));
-				item.setDescription(rs.getNString("description"));
-				item.setPrice(rs.getDouble("price"));
-				item.setQuantityInStock(rs.getInt("quantity"));
-				item.setAverageRating(rs.getDouble("rating"));
-			}
-			else {
-				return null;
-			}			
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		finally {
-			closeAll(stmt, conn, rs);
-		}
-		return item;		
 	}
 }

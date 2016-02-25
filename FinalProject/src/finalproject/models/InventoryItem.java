@@ -6,6 +6,7 @@ public class InventoryItem {
 	
 	private int id;
 	private String title;
+	private String author;
 	private String description;
 	private int quantityInStock;
 	private double price;
@@ -79,5 +80,13 @@ public class InventoryItem {
 	public void setAverageRating(double avg)
 	{
 		this.averageRating = avg;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 }

@@ -14,26 +14,33 @@
 
 	<h1>Inventory Item</h1>
 
-	<form action="/UserController/saveItem" method="post">
+	<form action="/AdminController/saveItem" method="post">
 		<fieldset>
 		
 			<label for="title">Title</label>
-  			<input type="text" name="title" id="title" value=<%=item.getTitle()%>><br>
+  			<input type="text" name="title" id="title" value="<%=item.getTitle()%>"><br>
+		
+			<label for="author">Title</label>
+  			<input type="text" name="author" id="author" value="<%=item.getAuthor()%>"><br>
 		
 			<label for="description">Description</label>
   			<textarea rows=10 cols=80 name="description" id="description"><%=item.getDescription()%></textarea><br>
 		
 			<label for="category">Category</label>
   			<select name="category" id="category">
-				<option> RED </option>
-				<option> GREEN </option>
-				<option> YELLOW </option>
-				<option> BLUE </option>
-				<option> ORANGE </option>
+				<%
+					Category[] categories = categoryDB.getAllCategories();
+					for(Category cat: categories){
+				%>
+				<option <% if(item.getCategory().equalsIgnoreCase(cat.getCategoryName())) { %>selected<% } %>
+			  		value=<%=cat.getCategoryName()%>><%=cat.getCategoryName()%></option>
+				<%
+					}
+				%>   			
   			</select><br>
 		
 			<label for="price">Price</label>
-  			<input type="number" name="price" id="price" min="0" max="999999.99" value=<%=item.getPrice()%>><br>
+  			<input type="number" name="price" id="price" min="0" max="999999.99" step="0.01" value=<%=item.getPrice()%>><br>
 		
 			<label for="quantity">Quantity</label>
   			<input type="number" name="quantity" id="quantity" min="0" max="9999" value=<%=item.getQuantityInStock()%>><br>

@@ -41,21 +41,25 @@ create table if not exists Category (
     primary key 	(id)
 );
 
-insert into Category values(1, 'Art');
-insert into Category values(2, 'Biography');
-insert into Category values(3, 'Childrens');
-insert into Category values(4, 'Cookbooks');
-insert into Category values(5, 'History');
-insert into Category values(6, 'Fiction');
-insert into Category values(7, 'Non-Fiction');
-insert into Category values(8, 'Mystery');
-insert into Category values(9, 'Romance');
-insert into Category values(10, 'Sci-Fi');
-insert into Category values(11, 'Young Adult');
+insert into Category (categoryName) values
+	('Art'),
+	('Biography'),
+	('Childrens'),
+	('Cookbooks'),
+	('History'),
+	('Fiction'),
+	('Non-Fiction'),
+	('Mystery'),
+	('Romance'),
+	('Sci-Fi'),
+	('Fantasy'),
+	('Horror'),
+	('Young Adult');
 
 create table if not exists InventoryItems (
     id 			    integer unique not null auto_increment,
     title 		    varchar(50) not null, 
+	author			varchar(50) not null,
     quantity 	    integer not null, 
     price 		    double not null, 
     description     varchar(100),   # can be null
@@ -83,9 +87,13 @@ delimiter $$
     end $$
 delimiter ;
 
-insert into InventoryItems values (1, 'book1', 20, 20.99, 'temp book one', 1);
-insert into InventoryItems values (2, 'book2', 20, 21.99, 'temp book one', 2);
-insert into InventoryItems values (3, 'book3', 20, 22.99, 'temp book one', 1);
+insert into InventoryItems (title, author, quantity, price, description, categoryID) values
+	('The Eye of the World', 'Robert Jordan', 0, 20.99, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 11),
+	('The Great Hunt', 'Robert Jordan', 3, 21.99, 'Vestibulum pulvinar leo sit amet dui hendrerit mattis.', 11),
+	('The Stand', 'Stephen King', 42, 21.99, 'Vivamus rutrum nibh quis volutpat lobortis.', 12),
+	('The Day of the Triffids', 'John Wyndham', 17, 21.99, 'Proin quis nibh lobortis, porttitor tortor a, finibus massa.', 10),
+	('The Civil War: A Narrative', 'Shelby Foote', 22, 21.99, 'Nullam in dolor ullamcorper, euismod tellus in, tristique ipsum.', 5),
+	('The Rise and Fall of the Third Reich', 'William L. Shirer', 8, 21.99, 'Curabitur elementum ex blandit pharetra porta.', 5);
 
 create table if not exists Transactions (
     transactionNumber       integer not null,

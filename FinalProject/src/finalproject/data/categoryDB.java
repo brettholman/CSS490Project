@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import finalproject.models.Category;
+import finalproject.models.InventoryItem;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,8 +20,7 @@ public class categoryDB {
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
 	
-	
-	public Category[] getAllCategories() 
+	public static Category[] getAllCategories()
 	{
 		ArrayList<Category> list = new ArrayList<Category>();
 		Connection conn = null;
@@ -30,32 +30,36 @@ public class categoryDB {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
-			
 			String query = "select * from Category";
 			stmt = conn.prepareStatement(query);
 			
 			rs = stmt.executeQuery();
-			
-			if(rs != null)
-			{
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+	
+			// Get the first row and pull down the user data
+			if(rs.first()) {
 				do {
 					Category tmp = new Category();
 					tmp.setCategoryName(rs.getNString("categoryName"));
 					tmp.setId(rs.getInt("id"));
 					list.add(tmp);
-					
 				}while(rs.next());
 			}
+			else {
+				return null;
+			}			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			list = null;
+			return null;
 		}
 		finally {
 			closeAll(stmt, conn, rs);
 		}
-		return (Category[])list.toArray();
-	}
+		return list.toArray(new Category[list.size()]);
+	}	
 	
 	private static void closeAll(Statement stmt, Connection conn)
 	{
