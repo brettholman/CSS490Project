@@ -7,28 +7,28 @@ drop table if exists Users;
 drop table if exists Roles;
 drop table if exists InventoryItems;
 drop table if exists Category;
-    
-create table if not exists Users ( 
+
+create table if not exists Users (
     id              integer unique not null auto_increment,
     userName        varchar(20) unique not null,
-    fName 		    varchar(20) not null, 	
-    lName 		    varchar(20) not null, 	
+    fName 		    varchar(20) not null,
+    lName 		    varchar(20) not null,
     email 		    varchar(50) not null,
     pass 		    varchar(20) not null,
     lastLogin       date not null,
-    accountCreated  date not null, 	
-    primary key(id)	
+    accountCreated  date not null,
+    primary key(id)
 );
 
 insert into Users values(1,'test1', 'test1', 'test1', 'test@test.net', 'pass', curdate(), curdate());
 insert into Users values(2,'test2', 'test2', 'test2', 'test@test.net', 'pass', curdate(), curdate());
 insert into Users values(3,'test3', 'test3', 'test3', 'test3@test.net', 'pass', curdate(), curdate());
 
-create table if not exists roles ( 
+create table if not exists roles (
     id              integer unique not null auto_increment,
     userName        varchar(20) unique not null,
     roleName	    varchar(20) not null,
-    primary key(id)	
+    primary key(id)
 );
 
 insert into roles (userName, roleName) values
@@ -58,29 +58,29 @@ insert into Category (categoryName) values
 
 create table if not exists InventoryItems (
     id 			    integer unique not null auto_increment,
-    title 		    varchar(50) not null, 
+    title 		    varchar(50) not null,
 	author			varchar(50) not null,
-    quantity 	    integer not null, 
-    price 		    double not null, 
+    quantity 	    integer not null,
+    price 		    double not null,
     description     varchar(100),   # can be null
-    categoryID	    integer not null, 	# foreign key 
-    primary key     (id), 
-    foreign key     (categoryID) 
+    categoryID	    integer not null, 	# foreign key
+    primary key     (id),
+    foreign key     (categoryID)
     references      Category(id)
     on delete cascade on update cascade
 );
 
-delimiter $$ 
-    create trigger InventoryItemsTrigger before insert on InventoryItems  
-        for each row 
-            begin 
+delimiter $$
+    create trigger InventoryItemsTrigger before insert on InventoryItems
+        for each row
+            begin
             if new.price <= 0
             then
                 signal sqlstate '45000'
                 set MESSAGE_TEXT = 'Book price must be greater than 0.';
             end if;
             if new.quantity < 0
-            then 
+            then
                 signal sqlstate '45000'
                 set MESSAGE_TEXT = 'There can not be a book with a quantity of less than 0';
             end if;
@@ -99,27 +99,31 @@ create table if not exists Transactions (
     transactionNumber       integer not null,
     userID 		            integer not null,
     purchaseDate            date not null,
+    totalCost               double not null,
     primary key             (transactionNumber),
-    foreign key             (userID) 
+    foreign key             (userID)
         references Users(id)
         on delete cascade on update cascade
 );
 
-insert into Transactions values(1, 1, curdate());
-insert into Transactions values(2, 2, curdate());
-insert into Transactions values(3, 1, curdate());
+insert into Transactions values(1, 1, curdate(), 123);
+insert into Transactions values(2, 2, curdate(), 555);
+insert into Transactions values(3, 1, curdate(), 20);
+insert into Transactions values(3, 1, '01/23/2016', 20);
+insert into Transactions values(3, 1, '01/24/2016', 60);
+insert into Transactions values(3, 1, '01/14/2016', 70);
 
-# Many-to-many relationship with Books and Transactions, 
+# Many-to-many relationship with Books and Transactions,
 # allows for more than one book to be purchased in a single transaction
 create table if not exists PurchaseDetails (
     transactionNumber   integer not null,
     itemID  integer not null,
     quantity integer not null,
     primary key (transactionNumber, itemID),
-    foreign key (transactionNumber) 
+    foreign key (transactionNumber)
         references Transactions(transactionNumber)
         on delete cascade on update cascade,
-    foreign key (itemID) 
+    foreign key (itemID)
         references InventoryItems(id)
         on delete cascade on update cascade
 );
@@ -130,7 +134,7 @@ insert into PurchaseDetails values(2, 1, 4);
 insert into PurchaseDetails values(3, 1, 3);
 
 
-# made to keep track of all ratings. 
+# made to keep track of all ratings.
 create table if not exists Ratings (
     id          integer unique not null auto_increment,
     userID      integer not null,
@@ -149,15 +153,15 @@ create table if not exists Ratings (
 
 delimiter $$
 create trigger RatingsTrigger before insert on Ratings
-    for each row 
+    for each row
     begin
         if new.rating < 0
-        then 
+        then
             signal sqlstate '45000'
             set MESSAGE_TEXT = 'A rating can not be negative.';
-        end if; 
+        end if;
         if new.rating > 5
-        then 
+        then
             signal sqlstate '45000'
             set MESSAGE_TEXT = 'A raiting can not be more than 5.';
         end if;
@@ -172,4 +176,3 @@ insert into ratings values (5, 2, 3, 3, curdate(), 'super cool, dude');
 insert into ratings values (6, 1, 1, 4, curdate(), 'super cool, dude');
 insert into ratings values (7, 1, 2, 4, curdate(), 'super cool, dude');
 insert into ratings values (8, 2, 3, 5, curdate(), 'super cool, dude');
-
