@@ -5,28 +5,7 @@
 <%@ page import="finalproject.data.*" %>
 
 <!-- start the middle column -->
-
-<!-- Catalog toolbar -->
-<section id="catalogToolbar" class="pagePart">
-
-    <form method="post" name="form1" id="form1" action="/UserController/filter">
-
-      Search:<input type="text" id="searchText" name="searchText"/>
-
-      Category:<select id="category" name="category">
-		  <option value="cat1">All</option>
-		  <option value="cat2">Computers & Technology</option>
-		  <option value="cat3">History</option>
-		  <option value="cat4">Mystery, Thriller, Suspense</option>
-		  <option value="cat5">Romance</option>
-		  <option value="cat6">Science Fiction, Fantasy</option>
-  	  </select>
-
-      <input type="submit" id="submit" value="Go"/>
-
-    </form>
-
-</section>
+<jsp:include page="/includes/catalog_toolbar.jsp" />
 
 <!-- Catalog view -->
 <section>
@@ -46,27 +25,32 @@ function addItemToCart(id){
 <table id="list">
 	<tr>
 		<th>Title</th>
+		<th>Author</th>
 		<th>Description</th>
+		<th>Category</th>
 		<th>Price</th>
-		<th></th>
+		<th>Rating</th>
+		<th>Order</th>
 	</tr>
 <%
-	InventoryItem[] items = inventoryDB.getAllInventoryItems();
+	InventoryItem[] items = inventoryDB.getAllItemsForCategory(-1);
 	for(InventoryItem item: items){
 %>
 <tr>
-	<td><a href="javascript:viewItemDetails('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
-	<td><%=item.getDescription()%></td>
-	<td>$<%=item.getPrice()%></td>
-	<td width="20%">
-	
+	<td width="20%"><a href="javascript:viewItemDetails('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
+	<td width="10%"><%=item.getAuthor()%></td>
+	<td width="25%"><%=item.getDescription()%></td>
+	<td width="10%"><%=item.getCategory()%></td>
+	<td width="10%">$<%=item.getPrice()%></td>
+	<td width="10%"><%=item.getAverageRating()%></td>
+	<td width="15%">
 <% if(item.getQuantityInStock() > 0) { %>	
 	<a href="javascript:addItemToCart('<%=item.getId()%>');">[add to cart]</a>
 <% } else { %>	
 	out of stock
 <% } %>	
-	
 	</td>
+	
 </tr>
 <%
 	}

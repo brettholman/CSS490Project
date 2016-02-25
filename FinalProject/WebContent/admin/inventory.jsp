@@ -1,5 +1,5 @@
 <jsp:include page="/includes/header.jsp" />
-<jsp:include page="/includes/column_left_home.jsp" />
+<jsp:include page="/includes/column_left_admin.jsp" />
 
 <%@ page import="finalproject.models.*" %>
 <%@ page import="finalproject.data.*" %>

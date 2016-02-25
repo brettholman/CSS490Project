@@ -8,6 +8,7 @@
       Search:<input type="text" id="searchText" name="searchText"/>
 
       Category:<select id="category" name="category">
+      	<option value="*">All</option>
 <%
 	Category[] categories = categoryDB.getAllCategories();
 	for(Category cat: categories){
