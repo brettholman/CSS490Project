@@ -1,5 +1,7 @@
 package finalproject.controllers;
 
+import finalproject.DataStructures.Quad;
+import finalproject.DataStructures.cartItem;
 import finalproject.data.inventoryDB;
 import finalproject.data.userDB;
 import finalproject.models.*;
@@ -7,7 +9,10 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -84,15 +89,14 @@ public class UserController extends HttpServlet {
 		else if(requestURI.endsWith("addItemToCart")){
 
 			HttpSession session = request.getSession(true);
-			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
-			int itemQuantity = Integer.parseInt((String)request.getParameter("itemQuantity"));
 			
-			// TODO: add the itemID to the cart (need to track the quantity too - if the item is already in
-			//   the cart, then just increment the quantity.
-			
-			// Verify that we have quantity in stock before allowing the item to be added to the cart
-			
-			getServletContext().getRequestDispatcher("/shopping/cart.jsp").forward(request, response);
+			if(addItemToCart(request)) {
+				getServletContext().getRequestDispatcher("/shopping/cart.jsp").forward(request, response);
+			}
+			else {
+				session.setAttribute("errorMsg", "Unable to add item to cart.");
+				getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+			}
 		}
 		
 		// Remove an item from the cart
@@ -100,12 +104,13 @@ public class UserController extends HttpServlet {
 
 			HttpSession session = request.getSession(true);
 			
-			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
-			int itemQuantity = Integer.parseInt((String)request.getParameter("itemQuantity"));
-			
-			// TODO: remove the specified number of items for the itemID from the cart
-			
-			getServletContext().getRequestDispatcher("/shopping/cart.jsp").forward(request, response);
+			if(removeItemFromCart(request)) {
+				getServletContext().getRequestDispatcher("/shopping/cart.jsp").forward(request, response);
+			}
+			else {
+				session.setAttribute("errorMsg", "Unable to add item to cart.");
+				getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+			}
 		}	
 		
 		// Allow the user to place an order
@@ -169,5 +174,53 @@ public class UserController extends HttpServlet {
 		else {
 			return false;
 		}
+	}
+	
+	private Boolean addItemToCart(HttpServletRequest request){
+		
+		HttpSession session = request.getSession(true);
+		int itemID = Integer.parseInt(request.getParameter("itemID"));
+		int itemQuantity = Integer.parseInt(request.getParameter("itemQuantity"));
+		
+		// Get the shopping cart (create if needed)
+		Map<Integer, Integer> shoppingCart = (Map<Integer, Integer>) session.getAttribute("shoppingCart");
+		if(shoppingCart == null) {
+			shoppingCart = new HashMap<Integer, Integer>();
+			session.setAttribute("shoppingCart", shoppingCart);
+		}
+		
+		// If the parameters are valid then add the item to the cart
+		if(itemID > 0 && itemQuantity > 0) {
+
+			// If this item is already in the cart then increase the quantity
+			int count = 0;
+			if(shoppingCart.containsKey(itemID)) { count = shoppingCart.get(itemID); }
+			count += itemQuantity;
+			shoppingCart.put(itemID, count);
+			return true;
+		}
+		
+		return false;
 	}	
+	
+	private Boolean removeItemFromCart(HttpServletRequest request){
+		
+		HttpSession session = request.getSession(true);
+		int itemID = Integer.parseInt((String)request.getParameter("itemID"));
+		
+		// Get the shopping cart (create if needed)
+		Map<Integer, Integer> shoppingCart = (Map<Integer, Integer>) session.getAttribute("shoppingCart");
+		if(shoppingCart == null) {
+			shoppingCart = new HashMap<Integer, Integer>();
+			session.setAttribute("shoppingCart", shoppingCart);
+		}
+
+		// If the parameters are valid then add the item to the cart
+		if(itemID > 0 && shoppingCart.containsKey(itemID)) {
+			shoppingCart.remove(itemID);
+			return true;
+		}		
+		
+		return false;
+	}
 }

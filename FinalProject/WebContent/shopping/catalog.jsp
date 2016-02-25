@@ -17,6 +17,7 @@ function viewItemDetails(id){
 }
 function addItemToCart(id){
 	document.getElementById("addItemID").value=id;
+	document.getElementById("itemQuantity").value=1;
 	document.itemAddToCart.submit();
 }
 </script>
@@ -63,6 +64,7 @@ function addItemToCart(id){
 </form>
 <form name="itemAddToCart" method="post" action="/UserController/addItemToCart">
 	<input type="hidden" name="itemID" id="addItemID">
+	<input type="hidden" name="itemQuantity" id="itemQuantity">
 </form>
 
 </section>
