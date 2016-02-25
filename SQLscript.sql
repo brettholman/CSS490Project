@@ -109,9 +109,9 @@ create table if not exists Transactions (
 insert into Transactions values(1, 1, curdate(), 123);
 insert into Transactions values(2, 2, curdate(), 555);
 insert into Transactions values(3, 1, curdate(), 20);
-insert into Transactions values(3, 1, '01/23/2016', 20);
-insert into Transactions values(3, 1, '01/24/2016', 60);
-insert into Transactions values(3, 1, '01/14/2016', 70);
+insert into Transactions values(4, 1, '2016-01-23', 20);
+insert into Transactions values(5, 1, '2016-01-24', 60);
+insert into Transactions values(6, 1, '2016-01-14', 70);
 
 # Many-to-many relationship with Books and Transactions,
 # allows for more than one book to be purchased in a single transaction
