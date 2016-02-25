@@ -58,7 +58,7 @@
 	</script>
 
     <br>
-    <span>Are you a new user?  Click here to sign up now!<a href="/User/signup.jsp" style="margin-left:8px;"><button name="signupButton">Sign up</button></a></span>
+    <span>Are you a new user?  Click here to sign up now!<a href="/user/signup.jsp" style="margin-left:8px;"><button name="signupButton">Sign up</button></a></span>
 
 </section>
 
