@@ -9,7 +9,6 @@
 <!-- start the middle column -->
 
 <% 
-	session.setAttribute("sourceID", 1); 
 	User user = (User)session.getAttribute("currentUser");
 %>
 
@@ -29,7 +28,7 @@
     	   document.startCheckoutWithLogon.submit();
        }
        else {
-    	   document.startCheckout.submit();
+    	   window.location = "/shopping/checkout.jsp";
        }		
 	}	
 	</script>
@@ -70,9 +69,6 @@
 	<form name="removeItemFromCart" method="post" action="/UserController/removeItemFromCart">
 		<input type="hidden" name="itemID" id="itemID">
 	</form>	
-
-	<form name="startCheckout" method="post" action="/UserController/removeItemFromCart">
-	</form>
 
 	<form name="startCheckoutWithLogon" method="get" action="/UserController/logonManual">
 		<input type="hidden" name="sourceID" id="sourceID">
