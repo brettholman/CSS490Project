@@ -5,6 +5,7 @@ import java.sql.Date;
 public class Transaction {
 	private int OrderNumber;
 	private String userName;
+	private double totalSale;
 	private Date purchaseDate;
 	
 	public void setOrderNumber(int num) {
@@ -29,5 +30,13 @@ public class Transaction {
 	
 	public Date getPurchaseDate() {
 		return this.purchaseDate;
+	}
+	
+	public void setTotalSale(double amount) {
+		this.totalSale = amount;
+	}
+	
+	public double getTotalSale() {
+		return this.totalSale;
 	}
 }
