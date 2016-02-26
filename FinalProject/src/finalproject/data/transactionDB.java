@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import finalproject.DataStructures.SalesInformation;
+import finalproject.models.InventoryItem;
+import finalproject.models.Rating;
 
 public class transactionDB {
 	private static String dbURL = "jdbc:mysql://localhost:3360/CSS490";
@@ -17,7 +20,7 @@ public class transactionDB {
 	private static Calendar cal = Calendar.getInstance();
 	
 	// month = month that is requested. 
-	public SalesInformation getTotalSalesForCalendarMonth(int month, int year)
+	public static SalesInformation getTotalSalesForCalendarMonth(int month, int year)
 	{
 		if(month < 1 || month > 12 || year < 0 || year > cal.get(Calendar.YEAR))
 		{
@@ -61,6 +64,88 @@ public class transactionDB {
 			closeAll(stmt, conn, rs);
 		}
 		return null;
+	}
+	
+	public static int InsertTransaction(int userID, double totalCost)
+	{
+		if(userID < 0 || totalCost < 0)
+			return -1;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int transactionNumber = -1;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "insert into Transactions (userID, purchaseDate, totalCost) "
+								+ "values (?, curdate(), ?);";
+			
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, Integer.toString(userID));
+			stmt.setString(2, Double.toString(totalCost));
+			
+			if(stmt.executeUpdate() == 0)
+			{
+				return transactionNumber;
+			}
+			
+			query = "select max(transactionNumber) as num from transactions;";
+			
+			stmt = conn.prepareStatement(query);
+			
+			rs = stmt.executeQuery();
+			if(rs == null)
+			{
+				return transactionNumber;
+			}
+			
+			transactionNumber = rs.getInt("num");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return transactionNumber;
+	}
+	
+	public static boolean InsertPurchaseDetail(int transactionNumber, int itemID, int quantity)
+	{
+		boolean flag = false;
+		if(transactionNumber < 0 || itemID < 0 || quantity < 0)
+			return flag;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "insert into purchasedetails values (?, ?, ?);";
+			
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setInt(1, transactionNumber);
+			stmt.setInt(2, itemID);
+			stmt.setInt(3, quantity);
+			
+			if(stmt.executeUpdate() != 0)
+			{
+				flag = true;
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return flag;
 	}
 	
 	private static void closeAll(Statement stmt, Connection conn)

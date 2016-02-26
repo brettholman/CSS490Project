@@ -3,8 +3,11 @@ package finalproject.controllers;
 import finalproject.DataStructures.Quad;
 import finalproject.DataStructures.cartItem;
 import finalproject.data.inventoryDB;
+import finalproject.data.transactionDB;
 import finalproject.data.userDB;
 import finalproject.models.*;
+import javafx.util.Pair;
+
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -252,14 +255,49 @@ public class UserController extends HttpServlet {
 		HttpSession session = request.getSession(true);
 
 		Map<Integer, Integer> shoppingCart = (Map<Integer, Integer>) session.getAttribute("shoppingCart");
+		double validateTotalCost = (double)session.getAttribute("orderTotal");
+		int userID = Integer.parseInt((String)request.getParameter("userID"));
 		if(shoppingCart == null) { return false; }
 		
+		ArrayList<Pair<InventoryItem, Integer>> allItems = new ArrayList<Pair<InventoryItem, Integer>>();
+		
+		double totalCost = 0;
+		
+		// Will have to loop through this twice, first time to validate. 
 		for (Map.Entry<Integer, Integer> entry : shoppingCart.entrySet()) {
+			int itemID = entry.getKey();
+			int quantity = entry.getValue();
+			InventoryItem item = inventoryDB.getInventoryItem(itemID);
 			
-			InventoryItem item = inventoryDB.getInventoryItem(entry.getKey());
+			allItems.add(new Pair<InventoryItem, Integer>(item, quantity));
 			
-			// TODO: save the transaction details to the database
+			if((item.getQuantityInStock() - quantity) < 0)
+			{
+				return false;
+			}
 			
+			totalCost += (item.getPrice() * quantity);
+		}
+		// This seems a little odd, since its the exact same calculation, but just to be totally sure its right. 
+		if(totalCost != validateTotalCost)
+			return false;
+		
+		int transactionID = transactionDB.InsertTransaction(userID, totalCost);
+		
+		// Transaction failed
+		if(transactionID == -1)
+			return false;
+		
+		// Second time to update the DB. 
+		for (Pair<InventoryItem, Integer> val : allItems) {
+			InventoryItem item = val.getKey();
+			int quantity = val.getValue();
+			
+			transactionDB.InsertPurchaseDetail(transactionID, item.getId(), quantity);
+			
+			// Update the DB's item quantity.
+			item.setQuantityInStock(item.getQuantityInStock() - quantity);
+			inventoryDB.updateItem(item);
 		}
 		
 		// Clear the shopping cart
