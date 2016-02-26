@@ -9,7 +9,7 @@ drop table if exists InventoryItems;
 drop table if exists Category;
 
 create table if not exists Users (
-    id              integer unique not null auto_increment,
+    id              integer not null auto_increment,
     userName        varchar(20) unique not null,
     fName 		    varchar(20) not null,
     lName 		    varchar(20) not null,
@@ -20,9 +20,10 @@ create table if not exists Users (
     primary key(id)
 );
 
-insert into Users values(1,'test1', 'test1', 'test1', 'test@test.net', 'pass', curdate(), curdate());
-insert into Users values(2,'test2', 'test2', 'test2', 'test@test.net', 'pass', curdate(), curdate());
-insert into Users values(3,'test3', 'test3', 'test3', 'test3@test.net', 'pass', curdate(), curdate());
+insert into Users(userName, fName, lName, email, pass, lastLogin, accountCreated) values
+    ('test1', 'test1', 'test1', 'test@test.net', 'pass', curdate(), curdate()),
+    ('test2', 'test2', 'test2', 'test@test.net', 'pass', curdate(), curdate()),
+    ('test3', 'test3', 'test3', 'test3@test.net', 'pass', curdate(), curdate());
 
 create table if not exists roles (
     id              integer unique not null auto_increment,
@@ -96,7 +97,7 @@ insert into InventoryItems (title, author, quantity, price, description, categor
 	('The Rise and Fall of the Third Reich', 'William L. Shirer', 8, 21.99, 'Curabitur elementum ex blandit pharetra porta.', 5);
 
 create table if not exists Transactions (
-    transactionNumber       integer not null,
+    transactionNumber       integer auto_increment not null,
     userID 		            integer not null,
     purchaseDate            date not null,
     totalCost               double not null,
@@ -106,12 +107,13 @@ create table if not exists Transactions (
         on delete cascade on update cascade
 );
 
-insert into Transactions values(1, 1, curdate(), 123);
-insert into Transactions values(2, 2, curdate(), 555);
-insert into Transactions values(3, 1, curdate(), 20);
-insert into Transactions values(4, 1, '2016-01-23', 20);
-insert into Transactions values(5, 1, '2016-01-24', 60);
-insert into Transactions values(6, 1, '2016-01-14', 70);
+insert into Transactions(userID, purchaseDate, totalCost) values
+    (1, curdate(), 123),
+    (2, curdate(), 555),
+    (1, curdate(), 20),
+    (1, '2016-01-23', 20),
+    (1, '2016-01-24', 60),
+    (1, '2016-01-14', 70);
 
 # Many-to-many relationship with Books and Transactions,
 # allows for more than one book to be purchased in a single transaction
@@ -128,15 +130,15 @@ create table if not exists PurchaseDetails (
         on delete cascade on update cascade
 );
 
-insert into PurchaseDetails values(1, 1, 3);
-insert into PurchaseDetails values(2, 2, 3);
-insert into PurchaseDetails values(2, 1, 4);
-insert into PurchaseDetails values(3, 1, 3);
-
+insert into PurchaseDetails values
+    (1, 1, 3),
+    (2, 2, 3),
+    (2, 1, 4),
+    (3, 1, 3);
 
 # made to keep track of all ratings.
 create table if not exists Ratings (
-    id          integer unique not null auto_increment,
+    id          integer not null auto_increment,
     userID      integer not null,
     itemID      integer not null,
     rating      integer not null,
@@ -168,11 +170,12 @@ create trigger RatingsTrigger before insert on Ratings
     end $$
 delimiter ;
 
-insert into ratings values (1, 1, 1, 1, curdate(), 'super cool, dude');
-insert into ratings values (2, 1, 1, 3, curdate(), 'super cool, dude');
-insert into ratings values (3, 2, 2, 2, curdate(), 'super cool, dude');
-insert into ratings values (4, 2, 3, 2, curdate(), 'super cool, dude');
-insert into ratings values (5, 2, 3, 3, curdate(), 'super cool, dude');
-insert into ratings values (6, 1, 1, 4, curdate(), 'super cool, dude');
-insert into ratings values (7, 1, 2, 4, curdate(), 'super cool, dude');
-insert into ratings values (8, 2, 3, 5, curdate(), 'super cool, dude');
+insert into ratings (id, userID, itemID, rating, ratingDate, description) values
+    (1, 1, 1, 1, curdate(), 'super cool, dude'),
+    (2, 1, 1, 3, curdate(), 'super cool, dude'),
+    (3, 2, 2, 2, curdate(), 'super cool, dude'),
+    (4, 2, 3, 2, curdate(), 'super cool, dude'),
+    (5, 2, 3, 3, curdate(), 'super cool, dude'),
+    (6, 1, 1, 4, curdate(), 'super cool, dude'),
+    (7, 1, 2, 4, curdate(), 'super cool, dude'),
+    (8, 2, 3, 5, curdate(), 'super cool, dude');
