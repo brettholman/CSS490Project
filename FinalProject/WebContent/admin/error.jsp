@@ -5,7 +5,14 @@
 
 <section>
 
+	<%
+		String errorMsg = (String)session.getAttribute("errorMsg");
+	%>
+
 	<h1>Error</h1>
+
+	<br>
+	<p><%=errorMsg%></p>
 
 </section>
 

@@ -6,6 +6,8 @@
 <section>
 
 	<h1>Order Processed</h1>
+	<br>
+	<p>Thank you for your order!</p>
 
 </section>
 
