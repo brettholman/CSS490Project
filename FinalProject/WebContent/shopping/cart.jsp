@@ -8,6 +8,10 @@
 
 <!-- start the middle column -->
 
+<% 
+	User user = (User)session.getAttribute("currentUser");
+%>
+
 <section>
 
 	<h1>Shopping Cart</h1>
@@ -17,6 +21,16 @@
 		document.getElementById("itemID").value=id;
 		document.removeItemFromCart.submit();
 	}
+	function startCheckout(){
+	   var username = "<%=user.getUserName()%>";
+       if(username === 'Anonymous') {
+    	   document.getElementById("sourceID").value=1;
+    	   document.startCheckoutWithLogon.submit();
+       }
+       else {
+    	   window.location = "/shopping/checkout.jsp";
+       }		
+	}	
 	</script>
 	
 	<%
@@ -54,10 +68,15 @@
 	
 	<form name="removeItemFromCart" method="post" action="/UserController/removeItemFromCart">
 		<input type="hidden" name="itemID" id="itemID">
+	</form>	
+
+	<form name="startCheckoutWithLogon" method="get" action="/UserController/logonManual">
+		<input type="hidden" name="sourceID" id="sourceID">
 	</form>
 
 	<br>
 	<p>Current total is: $<%=orderTotal%></p>
+	<a href="javascript:startCheckout();">Checkout</a>
 
 	<% } else { %>
 	<p>Your shopping cart is empty.</p>

@@ -46,12 +46,32 @@ public class UserController extends HttpServlet {
 		// Allow users to logon manually (via the button)
 		if(requestURI.endsWith("logonManual")){
 
+			HttpSession session = request.getSession(true);
+
+			int sourceID = 0;
+			Map<String, String[]> map = request.getParameterMap();
+			if(map.containsKey("sourceID")) { sourceID = Integer.parseInt((String)request.getParameter("sourceID")); } 
+			
 			// Prompt the user to logon (since we're configured for FORM based auth)
 			if(request.authenticate(response)) {
-				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				
+				switch(sourceID) {
+					case 1:
+						getServletContext().getRequestDispatcher("/shopping/checkout.jsp").forward(request, response);
+						
+					default:
+						getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				}
 			}
 			else {
-				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				switch(sourceID) {
+					case 1:
+						session.setAttribute("errorMsg", "You must be logged on in order to place an order.");
+						getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+						
+					default:
+						getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				}
 			}
 		}		
 	}
@@ -118,10 +138,13 @@ public class UserController extends HttpServlet {
 
 			HttpSession session = request.getSession(true);
 			
-			// TODO: pull the cart items from the session, add all of the transaction details to the database,
-			// clear the cart, send the user to the orderProcessed.jsp page
-			
-			getServletContext().getRequestDispatcher("/shopping/orderProcessed.jsp").forward(request, response);
+			if(processOrder(request)) {
+				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+			}
+			else {
+				session.setAttribute("errorMsg", "Unable to process order.");
+				getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+			}			
 		}
 		
 		// Allow the user to modify their account details (EXCEPT for the isAdmin flag, which can only be changed
@@ -223,4 +246,25 @@ public class UserController extends HttpServlet {
 		
 		return false;
 	}
+	
+	private Boolean processOrder(HttpServletRequest request){
+		
+		HttpSession session = request.getSession(true);
+
+		Map<Integer, Integer> shoppingCart = (Map<Integer, Integer>) session.getAttribute("shoppingCart");
+		if(shoppingCart == null) { return false; }
+		
+		for (Map.Entry<Integer, Integer> entry : shoppingCart.entrySet()) {
+			
+			InventoryItem item = inventoryDB.getInventoryItem(entry.getKey());
+			
+			// TODO: save the transaction details to the database
+			
+		}
+		
+		// Clear the shopping cart
+		shoppingCart = new HashMap<Integer, Integer>();
+		session.setAttribute("shoppingCart", shoppingCart);
+		return true;
+	}	
 }
