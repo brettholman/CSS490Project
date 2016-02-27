@@ -61,9 +61,11 @@ public class UserController extends HttpServlet {
 				switch(sourceID) {
 					case 1:
 						getServletContext().getRequestDispatcher("/shopping/checkout.jsp").forward(request, response);
+						break;
 						
 					default:
 						getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+						break;
 				}
 			}
 			else {
@@ -71,9 +73,11 @@ public class UserController extends HttpServlet {
 					case 1:
 						session.setAttribute("errorMsg", "You must be logged on in order to place an order.");
 						getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+						break;
 						
 					default:
 						getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+						break;
 				}
 			}
 		}		
@@ -85,7 +89,7 @@ public class UserController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String requestURI = request.getRequestURI();
-		System.out.println(requestURI); 
+		//System.out.println(requestURI); 
 		String url = "";
 		
 		// Register a new user
@@ -95,6 +99,30 @@ public class UserController extends HttpServlet {
 			
 			else { getServletContext().getRequestDispatcher("/user/registerError.jsp").forward(request, response); }
 		}
+		
+		// Handle the filter for the catalog and inventory management views
+		else if(requestURI.endsWith("filter")) {
+			
+			HttpSession session = request.getSession(true);
+
+			int sourceID = Integer.parseInt(request.getParameter("sourceID"));
+			
+			String categoryText = request.getParameter("categoryText");
+			session.setAttribute("categoryText", categoryText); 
+			
+			String searchText = request.getParameter("searchText");
+			session.setAttribute("searchText", searchText); 
+			
+			switch(sourceID) {
+				case 1:
+					getServletContext().getRequestDispatcher("/shopping/catalog.jsp").forward(request, response);
+					break;
+					
+				default:
+					getServletContext().getRequestDispatcher("/admin/inventory.jsp").forward(request, response);
+					break;
+			}			
+		}		
 		
 		// View the details for a specific item
 		else if(requestURI.endsWith("viewItemDetails")){

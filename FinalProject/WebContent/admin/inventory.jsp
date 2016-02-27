@@ -13,6 +13,8 @@
 	<h1>Inventory Management</h1>
 
 <script>
+document.getElementById("sourceID").value=2;
+
 function editItem(id){
 	document.getElementById("editItemID").value=id;
 	document.editItem.submit();

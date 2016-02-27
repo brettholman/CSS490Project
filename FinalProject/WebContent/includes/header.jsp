@@ -17,7 +17,7 @@
 		user = userDB.getUser(""); 
 		session.setAttribute("currentUser", user); 
 	}
-	System.out.println("User = " + user.getUserName());
+	//System.out.println("User = " + user.getUserName());
 	String requestURI = request.getRequestURI();
 	
 	String headerType = "default";

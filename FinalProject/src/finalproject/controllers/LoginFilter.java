@@ -43,12 +43,19 @@ public class LoginFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
         String remoteUser = request.getRemoteUser();
 
+    	// Now check the session to see if we've already added the user to the session
+        HttpSession session = request.getSession();
+
+        // Setup the default stuff for the catalog toolbar
+		String category = (String)session.getAttribute("categoryText");
+		if(category == null) { session.setAttribute("categoryText", "*"); }	
+		
+		String searchText = (String)session.getAttribute("searchText");        
+		if(searchText == null) { session.setAttribute("searchText", ""); }	
+        
         // Is the user logged in already via j_security_check?
         if (remoteUser != null) {
         	
-        	// Now check the session to see if we've already added the user to the session
-            HttpSession session = request.getSession();
-
             // If not, add the user to the session now
         	User user = (User)session.getAttribute("currentUser");
             if(user == null || user.getUserName() == "Anonymous") {
@@ -67,5 +74,4 @@ public class LoginFilter implements Filter {
 	public void init(FilterConfig fConfig) throws ServletException {
 		// TODO Auto-generated method stub
 	}
-
 }

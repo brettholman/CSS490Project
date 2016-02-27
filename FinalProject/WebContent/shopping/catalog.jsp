@@ -11,6 +11,8 @@
 <section>
 
 <script>
+document.getElementById("sourceID").value=1;
+
 function viewItemDetails(id){
 	document.getElementById("viewItemID").value=id;
 	document.viewItemDetails.submit();
@@ -22,7 +24,13 @@ function addItemToCart(id){
 }
 </script>
 
-<form name="modify" method="post">
+<%
+	String searchText = (String)session.getAttribute("searchText");
+	String categoryText = (String)session.getAttribute("categoryText");
+
+	InventoryItem[] items = inventoryDB.getAllItemsForCategory(-1);
+	if(items != null) {
+%>
 <table id="list">
 	<tr>
 		<th>Title</th>
@@ -33,10 +41,7 @@ function addItemToCart(id){
 		<th>Rating</th>
 		<th>Order</th>
 	</tr>
-<%
-	InventoryItem[] items = inventoryDB.getAllItemsForCategory(-1);
-	for(InventoryItem item: items){
-%>
+<% for(InventoryItem item: items) { %>
 <tr>
 	<td width="20%"><a href="javascript:viewItemDetails('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
 	<td width="10%"><%=item.getAuthor()%></td>
@@ -45,19 +50,17 @@ function addItemToCart(id){
 	<td width="10%">$<%=item.getPrice()%></td>
 	<td width="10%"><%=item.getAverageRating()%></td>
 	<td width="15%">
-<% if(item.getQuantityInStock() > 0) { %>	
+	<% if(item.getQuantityInStock() > 0) { %>	
 	<a href="javascript:addItemToCart('<%=item.getId()%>');">[add to cart]</a>
-<% } else { %>	
+	<% } else { %>	
 	out of stock
-<% } %>	
+	<% } } %>	
 	</td>
-	
 </tr>
-<%
-	}
-%>
 </table>
-</form>
+<% } else { %>
+	no items found	
+<% } %>
 
 <form name="viewItemDetails" method="post" action="/UserController/viewItemDetails">
 	<input type="hidden" name="itemID" id="viewItemID">
