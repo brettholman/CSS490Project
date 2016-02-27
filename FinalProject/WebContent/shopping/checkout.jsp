@@ -5,6 +5,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="finalproject.models.*" %>
 <%@ page import="finalproject.data.*" %>
+<%@ page import="finalproject.calculations.*" %>
 
 <!-- start the middle column -->
 
@@ -53,9 +54,9 @@
 	<br>
 
 	<% double shippingCharge = 5.99; double totalCharge = shippingCharge + orderTotal; %>
-	<p>Subtotal: $<%=orderTotal%></p>
+	<p>Subtotal: $<%=Round.RoundMoney(orderTotal)%></p>
 	<p>Shipping: $<%=shippingCharge%></p>
-	<p>Total: $<%=totalCharge%></p>
+	<p>Total: $<%=Round.RoundMoney(totalCharge)%></p>
 	
 	<a href="javascript:placeOrder();">Place Order</a>
 

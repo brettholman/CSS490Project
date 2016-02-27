@@ -5,6 +5,8 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="finalproject.models.*" %>
 <%@ page import="finalproject.data.*" %>
+<%@ page import="finalproject.calculations.*" %>
+
 
 <!-- start the middle column -->
 
@@ -31,6 +33,9 @@
     	   window.location = "/shopping/checkout.jsp";
        }		
 	}	
+	function clearCart() {
+		document.clearCart.sumbit();
+	}
 	</script>
 	
 	<%
@@ -58,9 +63,9 @@
 			<td width="20%"><%=item.getAuthor()%></td>
 			<td width="20%">$<%=item.getPrice()%></td>
 			<td width="20%"><%=entry.getValue()%></td>
-			<td width="20%"><a href="javascript:removeItemFromCart('<%=item.getId()%>');">[remove]</a></td>
+			<td width="30%"><a href="javascript:removeItemFromCart('<%=item.getId()%>');">[remove]</a></td>
 		</tr>
-		<%
+		<%	
 			}
 		%>
 		</table>
@@ -69,13 +74,15 @@
 	<form name="removeItemFromCart" method="post" action="/UserController/removeItemFromCart">
 		<input type="hidden" name="itemID" id="itemID">
 	</form>	
-
+	
+	<form name="clearCart" method="post" action="/UserController/emptyCart">
+		<input type="hidden" name="cart" id="cart">
+	</form>
 	<form name="startCheckoutWithLogon" method="get" action="/UserController/logonManual">
 		<input type="hidden" name="sourceID" id="sourceID">
 	</form>
-
 	<br>
-	<p>Current total is: $<%=orderTotal%></p>
+	<p>Current total is: $ <%= Round.RoundMoney(orderTotal) %></p>
 	<a href="javascript:startCheckout();">Checkout</a>
 
 	<% } else { %>
@@ -83,7 +90,8 @@
 	<% } %>
 
 	<br>
-
+	<a href="javascript:clearCart();">Clear Cart</a>
+	<br>
 	<a href="/shopping/catalog.jsp">Continue Shopping</a>
 
 </section>
