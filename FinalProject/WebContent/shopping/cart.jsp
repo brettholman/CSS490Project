@@ -34,7 +34,7 @@
        }		
 	}	
 	function clearCart() {
-		document.clearCart.sumbit();
+		document.clearCart.submit();
 	}
 	</script>
 	

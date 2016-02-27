@@ -203,7 +203,15 @@ public class UserController extends HttpServlet {
 			// TODO: update the user's properties.
 			
 			getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
-		}		
+		}	
+		
+		else if(requestURI.endsWith("emptyCart")) {
+			HttpSession session = request.getSession(true);
+			
+			Map<Integer, Integer> shoppingCart = new HashMap<Integer, Integer>();
+			session.setAttribute("shoppingCart", shoppingCart);
+			getServletContext().getRequestDispatcher("/shopping/cart.jsp").forward(request, response);
+		}
 	}
 	
 	private Boolean registerUser(HttpServletRequest request){
