@@ -1,11 +1,13 @@
 package finalproject.data;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -26,12 +28,15 @@ public class transactionDB {
 		{
 			return new SalesInformation();
 		}
+		double totalCurrentMonth = 0;
+		double totalPreviousMonth = 0;
 		int previousYear = year;
 		int PreviousMonth = (month - 1 % 12) == 0 ? 12 : month - 1;
 		if((month - 1 % 12) == 0)
 			previousYear--;
-		
-		
+
+		YearMonth yearMonth = YearMonth.of(year, month);
+		YearMonth previousYearMonth = YearMonth.of(previousYear, PreviousMonth);
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -40,8 +45,13 @@ public class transactionDB {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
-			String query = "select * from Category";
+			String query = "SELECT Sum(totalCost) as currentAmount FROM transactions where purchasedate > ?;";
+			
 			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, 
+					Integer.toString(yearMonth.getYear()) + "-" + 
+					Integer.toString(yearMonth.getMonthValue()) + "-" + 1);
 			
 			rs = stmt.executeQuery();
 			if(rs == null || rs.wasNull()) {
@@ -50,7 +60,37 @@ public class transactionDB {
 	
 			// Get the first row and pull down the user data
 			if(rs.first()) {
-				
+				totalCurrentMonth = Double.parseDouble(rs.getString("amount"));
+			}
+			else {
+				return new SalesInformation();
+			}
+			
+			query = "SELECT * FROM transactions where purchaseDate >= ? and purchaseDate <= ?;";
+			
+			stmt = conn.prepareStatement(query);
+			
+
+			stmt.setString(1, 
+					Integer.toString(previousYearMonth.getYear()) + "-" +
+					Integer.toString(previousYearMonth.getMonthValue()) + "-" + 1);
+			
+			stmt.setString(1, 
+					Integer.toString(previousYearMonth.getYear()) + "-" +
+					Integer.toString(previousYearMonth.getMonthValue()) + "-" +
+					Integer.toString(previousYearMonth.atEndOfMonth().getDayOfMonth()));
+			
+			rs = stmt.executeQuery();
+			if(rs == null || rs.wasNull()) {
+				return new SalesInformation();
+			}
+	
+			// Get the first row and pull down the user data
+			if(rs.first()) {
+				totalPreviousMonth = Double.parseDouble(rs.getString("amount"));
+				AttemptToInsertIntoMonthHistory(previousYearMonth.getYear(), 
+						previousYearMonth.getMonthValue(), 
+						totalPreviousMonth);
 			}
 			else {
 				return new SalesInformation();
@@ -63,7 +103,93 @@ public class transactionDB {
 		finally {
 			closeAll(stmt, conn, rs);
 		}
-		return null;
+		return new SalesInformation(totalCurrentMonth, totalPreviousMonth);
+	}
+	
+	////////// Start here ///////////
+	public static SalesInformation getTotalSalesForCalendarWeek(int week, int year)
+	{
+		return new SalesInformation();
+		/*
+		if(week < 1 || week > 2 || year < 0 || year > cal.get(Calendar.YEAR))
+		{
+			return new SalesInformation();
+		}
+		double totalCurrentMonth = 0;
+		double totalPreviousMonth = 0;
+		int previousYear = year;
+		int PreviousMonth = (week - 1 % 52) == 0 ? 52 : week - 1;
+		
+		if((week - 1 % 52) == 0)
+			previousYear--;
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			String query = "SELECT Sum(totalCost) as currentAmount FROM transactions where purchasedate > ?;";
+			
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, 
+					Integer.toString(yearMonth.getYear()) + "-" + 
+					Integer.toString(yearMonth.getMonthValue()) + "-" + 1);
+			
+			rs = stmt.executeQuery();
+			if(rs == null || rs.wasNull()) {
+				return new SalesInformation();
+			}
+	
+			// Get the first row and pull down the user data
+			if(rs.first()) {
+				totalCurrentMonth = Double.parseDouble(rs.getString("amount"));
+			}
+			else {
+				return new SalesInformation();
+			}
+			
+			query = "SELECT * FROM transactions where purchaseDate >= ? and purchaseDate <= ?;";
+			
+			stmt = conn.prepareStatement(query);
+			
+
+			stmt.setString(1, 
+					Integer.toString(previousYearMonth.getYear()) + "-" +
+					Integer.toString(previousYearMonth.getMonthValue()) + "-" + 1);
+			
+			stmt.setString(1, 
+					Integer.toString(previousYearMonth.getYear()) + "-" +
+					Integer.toString(previousYearMonth.getMonthValue()) + "-" +
+					Integer.toString(previousYearMonth.atEndOfMonth().getDayOfMonth()));
+			
+			rs = stmt.executeQuery();
+			if(rs == null || rs.wasNull()) {
+				return new SalesInformation();
+			}
+	
+			// Get the first row and pull down the user data
+			if(rs.first()) {
+				totalPreviousMonth = Double.parseDouble(rs.getString("amount"));
+				AttemptToInsertIntoMonthHistory(previousYearMonth.getYear(), 
+						previousYearMonth.getMonthValue(), 
+						totalPreviousMonth);
+			}
+			else {
+				return new SalesInformation();
+			}			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return new SalesInformation(totalCurrentMonth, totalPreviousMonth);
+		*/
 	}
 	
 	public static int InsertTransaction(int userID, double totalCost)
@@ -144,6 +270,62 @@ public class transactionDB {
 			closeAll(stmt, conn, rs);
 		}
 		return flag;
+	}
+	
+	private static void AttemptToInsertIntoMonthHistory(int year, int month, double amount)
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			String query = "insert into saleshistorybymonth values (?, ?, ?);";
+			
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, Integer.toString(year));
+			stmt.setString(2, Integer.toString(month));
+			stmt.setString(3, Double.toString(amount));
+			
+			stmt.executeUpdate();
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
+	}
+	
+	private static void AttemptToInsertIntoWeekHistory(int year, int week, double amount)
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			String query = "insert into saleshistorybyweek values (?, ?, ?);";
+			
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, Integer.toString(year));
+			stmt.setString(2, Integer.toString(week));
+			stmt.setString(3, Double.toString(amount));
+			
+			stmt.executeUpdate();
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
 	}
 	
 	private static void closeAll(Statement stmt, Connection conn)
