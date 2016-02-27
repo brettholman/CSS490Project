@@ -5,22 +5,22 @@
 
 	<%
 	String searchText = (String)session.getAttribute("searchText");
-	String categoryText = (String)session.getAttribute("categoryText");
+	int categoryID = (int)session.getAttribute("categoryID");
 	%>
 
     <form method="post" name="form1" id="form1" action="/UserController/filter">
 
       Search:<input type="text" id="searchText" name="searchText" value=""/>
 
-      Category:<select id="categoryText" name="categoryText">
-      	<option value="*">All</option>
+      Category:<select id="categoryID" name="categoryID">
+      	<option value='0'>All</option>
 
 		<%
 			Category[] categories = categoryDB.getAllCategories();
 			for(Category cat: categories){
 		%>
-		<option <% if(categoryText.equalsIgnoreCase(cat.getCategoryName())) { %>selected<% } %>
-	  		value='<%=cat.getCategoryName()%>'><%=cat.getCategoryName()%></option>
+		<option <% if(categoryID == cat.getId()) { %>selected<% } %>
+	  		value='<%=cat.getId()%>'><%=cat.getCategoryName()%></option>
 		<% } %>   	
 
   	  </select>

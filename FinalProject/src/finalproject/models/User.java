@@ -18,16 +18,6 @@ public class User {
 				&& lName != null && email != null);
 	}
 	
-	public void setID(int id)
-	{
-		this.id = id;
-	}
-	
-	public int getID()
-	{
-		return this.id;
-	}
-	
 	public String getUserName() {
 		return userName;
 	}
@@ -82,5 +72,13 @@ public class User {
 	
 	public void setAccountCreated(Date date) {
 		this.accountCreated = date;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

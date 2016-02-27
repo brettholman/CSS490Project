@@ -26,9 +26,9 @@ function addItemToCart(id){
 
 <%
 	String searchText = (String)session.getAttribute("searchText");
-	String categoryText = (String)session.getAttribute("categoryText");
+	int categoryID = (int)session.getAttribute("categoryID");
 
-	InventoryItem[] items = inventoryDB.getAllItemsForCategory(-1);
+	InventoryItem[] items = inventoryDB.getAllItems(searchText, categoryID);
 	if(items != null) {
 %>
 <table id="list">

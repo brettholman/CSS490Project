@@ -107,8 +107,8 @@ public class UserController extends HttpServlet {
 
 			int sourceID = Integer.parseInt(request.getParameter("sourceID"));
 			
-			String categoryText = request.getParameter("categoryText");
-			session.setAttribute("categoryText", categoryText); 
+			int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+			session.setAttribute("categoryID", categoryID); 
 			
 			String searchText = request.getParameter("searchText");
 			session.setAttribute("searchText", searchText); 
@@ -317,7 +317,7 @@ public class UserController extends HttpServlet {
 			totalCost += (item.getPrice() * quantity);
 		}
 		
-		int transactionID = transactionDB.InsertTransaction(user.getID(), totalCost);
+		int transactionID = transactionDB.InsertTransaction(user.getId(), totalCost);
 		
 		// Transaction failed
 		if(transactionID == -1)
