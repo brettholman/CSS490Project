@@ -38,7 +38,7 @@ function addItemToCart(id){
 		<th></th>
 	</tr>
 <%
-	InventoryItem[] items = inventoryDB.getAllItemsForCategory(-1);
+	InventoryItem[] items = inventoryDB.getAllItems("", 0);
 	for(InventoryItem item: items){
 %>
 <tr>

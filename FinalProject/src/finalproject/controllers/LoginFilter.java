@@ -47,8 +47,7 @@ public class LoginFilter implements Filter {
         HttpSession session = request.getSession();
 
         // Setup the default stuff for the catalog toolbar
-		String category = (String)session.getAttribute("categoryText");
-		if(category == null) { session.setAttribute("categoryText", "*"); }	
+		try { int categoryID = (int)session.getAttribute("categoryID"); } catch(Exception e){ session.setAttribute("categoryID", 0); }
 		
 		String searchText = (String)session.getAttribute("searchText");        
 		if(searchText == null) { session.setAttribute("searchText", ""); }	

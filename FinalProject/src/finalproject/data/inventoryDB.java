@@ -151,7 +151,7 @@ public class inventoryDB {
 		return item;		
 	}	
 	
-	public static InventoryItem[] getAllItemsForCategory(int categoryID)
+	public static InventoryItem[] getAllItems(String searchText, int categoryID)
 	{
 		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 		Connection conn = null;
@@ -163,7 +163,7 @@ public class inventoryDB {
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			// If the categoryID is < 0 then return all items 
-			if(categoryID < 0) {
+			if(categoryID <= 0) {
 				String query = 
 						"SELECT II.id, C.categoryName as category, II.title, II.author, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
 						"INNER JOIN category AS C ON II.categoryID = C.id " +

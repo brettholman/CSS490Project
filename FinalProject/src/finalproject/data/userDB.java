@@ -93,7 +93,7 @@ public class userDB {
 				return null;
 			}
 
-			user.setID(rs.getInt("id"));
+			user.setId(rs.getInt("id"));
 			user.setfName(rs.getString("fName"));
 			user.setlName(rs.getString("lName"));
 			user.setEmail(rs.getString("email"));
@@ -169,7 +169,7 @@ public class userDB {
 
 			// Get the first row and pull down the user data
 			if(rs.first()) {
-				user.setID(rs.getInt("id"));
+				user.setId(rs.getInt("id"));
 				user.setfName(rs.getString("fName"));
 				user.setlName(rs.getString("lName"));
 				user.setEmail(rs.getString("email"));
