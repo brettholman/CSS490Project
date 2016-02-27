@@ -12,7 +12,7 @@
 
 <section>
 
-	<h1>Inventory Item</h1>
+	<h1>Catalog Item</h1>
 
 	<p>Title: <%=item.getTitle()%></p>
 	<p>Author: <%=item.getAuthor()%></p>
@@ -34,8 +34,8 @@
 	<table id="list">
 		<tr>
 			<th>User</th>
-			<th>Description</th>
 			<th>Rating</th>
+			<th>Description</th>
 		</tr>
 
 	<% for(Rating r: ratings){ %>
@@ -47,7 +47,6 @@
 	<% } %>
 	</table>	
 	<% } else { %>
-	<br>
 	<p>No ratings found</p>
 	<% } %>
 	
