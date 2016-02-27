@@ -171,7 +171,7 @@ public class UserController extends HttpServlet {
 			HttpSession session = request.getSession(true);
 			
 			if(processOrder(request)) {
-				getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+				getServletContext().getRequestDispatcher("/shopping/orderProcessed.jsp").forward(request, response);
 			}
 			else {
 				session.setAttribute("errorMsg", "Unable to process order.");
@@ -318,7 +318,7 @@ public class UserController extends HttpServlet {
 			totalCost += (item.getPrice() * quantity);
 		}
 		
-		int transactionID = transactionDB.InsertTransaction(user.getID(), Round.RoundMoney(totalCost));
+		int transactionID = transactionDB.InsertTransaction(user.getId(), Round.RoundMoney(totalCost));
 
 		
 		// Transaction failed
