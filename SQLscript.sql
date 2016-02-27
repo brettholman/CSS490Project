@@ -7,8 +7,6 @@ drop table if exists Users;
 drop table if exists Roles;
 drop table if exists InventoryItems;
 drop table if exists Category;
-drop table if exists SalesHistoryByMonth;
-drop table if exists SalesHistoryByWeek;
 
 create table if not exists Users (
     id              integer not null auto_increment,
@@ -181,17 +179,3 @@ insert into ratings (id, userID, itemID, rating, ratingDate, description) values
     (6, 1, 1, 4, curdate(), 'super cool, dude'),
     (7, 1, 2, 4, curdate(), 'super cool, dude'),
     (8, 2, 3, 5, curdate(), 'super cool, dude');
-
-create table if not exists SalesHistoryByMonth (
-    _year        integer not null,
-    _month       integer not null,
-    total       double not null,
-    primary key (_year, _month)
-);
-
-create table if not exists SalesHistoryByWeek (
-    _year        integer not null,
-    weekNumber  integer not null,
-    total       double not null,
-    primary key (_year, weekNumber)
-)

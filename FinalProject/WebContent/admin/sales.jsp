@@ -1,6 +1,14 @@
 <jsp:include page="/includes/header.jsp" />
 <jsp:include page="/includes/column_left_admin.jsp" />
-
+<%@ page import="finalproject.models.*" %>
+<%@ page import="finalproject.data.*" %>
+<%@ page import="finalproject.data.transactionDB" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="java.util.Date"%>
+<%@ page import="java.text.DateFormat"%>
+<%@ page import= "java.text.SimpleDateFormat"%>
+<%@ page import= "java.util.Calendar"%>
+<%@ page import= "java.util.ArrayList"%>
 <!-- start the middle column -->
 
 <section>
@@ -13,6 +21,38 @@
 	</div>
 	<script src="barGraph.js"></script>
 	<script type ="text/javascript" src="date.js"></script>
+	<%
+		ArrayList<String> monthArrayValues = new ArrayList<String>();
+		ArrayList<Double> weekArrayValues = new ArrayList<Double>();
+		ArrayList<Date> dMonthArray = new ArrayList<Date>();
+		ArrayList<Date> dWeekArray = new ArrayList<Date>();
+		Calendar cal = Calendar.getInstance();
+		DateFormat monthDateFormat = new SimpleDateFormat("MM/yyyy");
+		DateFormat weekDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		cal.set(Calendar.DATE, 1);
+		monthArrayValues.add(monthDateFormat.format(cal.getTime()));
+		dMonthArray.add(cal.getTime());
+		for(int i = 0; i < 4; i++)
+		{
+			cal.add(Calendar.MONTH, -1);
+			monthArrayValues.add(monthDateFormat.format(cal.getTime()));
+			dMonthArray.add(cal.getTime());
+		}
+		System.out.println(monthArrayValues);
+		cal = Calendar.getInstance();
+		
+		cal.set(Calendar.DAY_OF_WEEK, 0);
+		dWeekArray.add(cal.getTime());
+		for(int i = 0; i < 4; i++)
+		{
+			cal.set(Calendar.WEEK_OF_YEAR, -1);
+			dWeekArray.add(cal.getTime());
+		}
+		System.out.println(dMonthArray.toString());
+		StringSet set = transactionDB.getTotalSalesForListOfCalendarMonths(dMonthArray);
+		if(set == null)
+			return;
+	%>
 	<script>
 		var today = new Date();
 		var currentYear = today.getFullYear();
@@ -23,18 +63,24 @@
 		graph.width = 800;
 		graph.height = 400;
 		
-		var currentMonth = today.add(1 - today.getDate()).days().toString('MM/yyyy');
-		var previousMonth = today.add(-1).months().toString('MM/yyyy');
-		var twoMonthsBack = today.add(-1).months().toString('MM/yyyy');
-		var threeMonthsBack = today.add(-1).months().toString('MM/yyyy');
-		var fourMonthsBack = today.add(-1).months().toString('MM/yyyy');
-		today = Date.today();
+		var currentMonth = "<%=monthArrayValues.get(0)%>"
+		var previousMonth = "<%=monthArrayValues.get(1)%>"
+		var twoMonthsBack = "<%=monthArrayValues.get(2)%>"
+		var threeMonthsBack = "<%=monthArrayValues.get(3)%>"
+		var fourMonthsBack = "<%=monthArrayValues.get(4)%>"
 		graph.xAxisLabelArr = [fourMonthsBack, 
 		                       threeMonthsBack,
 		                       twoMonthsBack,
 		                       previousMonth, 
 		                       currentMonth];
-		graph.update([3, 4, 3, 13, 12]);
+		
+		graph.update([
+		              <%=set.getFourValuesBack()%>,
+		              <%=set.getThreeValuesBack()%>,
+		              <%=set.getTwoValuesBack()%>,
+		              <%=set.getPreviousValue()%>,
+		              <%=set.getCurrentValue()%>
+		              ]);
 		
 		var graph2 = new BarGraph(document.getElementById("canvasId2").getContext("2d"));
 		graph2.margin = 2;
@@ -50,8 +96,6 @@
 		                        twoWeeksBack,
 		                        previousWeek,
 		                        currentWeek];
-		
-		graph2.update([3, 4, 3, 13, 12]);
 	</script>
 </section>
 
