@@ -362,3 +362,20 @@ section input[type="submit"] {
 	width: auto;
 	padding: 3px;
 }
+
+.col-wrapper{
+	width:960px; 
+	margin:0 auto;
+}
+
+.col{
+	margin:0 10px; 
+	float:left; 
+	display:inline;
+}
+.col-left{
+	width:700px;
+}
+.col-right{
+	width:700px;
+}
