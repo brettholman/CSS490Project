@@ -97,12 +97,10 @@ public class transactionDB {
 			stmt = conn.prepareStatement(query);
 			
 			rs = stmt.executeQuery();
-			if(rs == null)
+			if(rs.first())
 			{
-				return transactionNumber;
+				transactionNumber = Integer.parseInt(rs.getString("num"));	
 			}
-			
-			transactionNumber = rs.getInt("num");
 		}
 		catch(Exception e) {
 			e.printStackTrace();

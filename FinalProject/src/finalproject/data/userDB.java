@@ -81,7 +81,7 @@ public class userDB {
             return null;
         
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			String query = "select * from users where id = ?";
@@ -92,7 +92,8 @@ public class userDB {
 			if(rs == null) {
 				return null;
 			}
-				
+
+			user.setID(rs.getInt("id"));
 			user.setfName(rs.getString("fName"));
 			user.setlName(rs.getString("lName"));
 			user.setEmail(rs.getString("email"));
@@ -121,7 +122,7 @@ public class userDB {
         	return false;
         
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			String query = "delete from users where id = ?;";
@@ -153,7 +154,7 @@ public class userDB {
 			return getAnonymousUser();
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			String query = "select * from users where userName = ?";
@@ -168,6 +169,7 @@ public class userDB {
 
 			// Get the first row and pull down the user data
 			if(rs.first()) {
+				user.setID(rs.getInt("id"));
 				user.setfName(rs.getString("fName"));
 				user.setlName(rs.getString("lName"));
 				user.setEmail(rs.getString("email"));
