@@ -167,9 +167,11 @@ public class inventoryDB {
 				String query = 
 						"SELECT II.id, C.categoryName as category, II.title, II.author, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
 						"INNER JOIN category AS C ON II.categoryID = C.id " +
-						"LEFT JOIN ratings AS R ON R.itemID = II.id " +
-						"GROUP BY II.id ORDER BY title";
+						"LEFT JOIN ratings AS R ON R.itemID = II.id ";
+				if(searchText.length() > 0) { query += "WHERE title LIKE ? "; }
+				query += "GROUP BY II.id ORDER BY title";
 				stmt = conn.prepareStatement(query);
+				if(searchText.length() > 0) { stmt.setString(1, "%" + searchText + "%"); }
 			}
 			// Get all items in the specified category
 			else {
@@ -178,10 +180,12 @@ public class inventoryDB {
 					"from inventoryitems as ii " +
 					"inner join category as c on ii.categoryid = c.id " +
 					"LEFT join ratings as r on r.itemId = ii.id " +
-					"where c.id = ? " +
-					"group by ii.id, c.id;";
+					"where c.id = ? ";
+				if(searchText.length() > 0) { query += "AND title LIKE ? "; }
+				query += "group by ii.id, c.id";
 				stmt = conn.prepareStatement(query);
 				stmt.setString(1, Integer.toString(categoryID));
+				if(searchText.length() > 0) { stmt.setString(2, "%" + searchText + "%"); }
 			}
 			
 			rs = stmt.executeQuery();

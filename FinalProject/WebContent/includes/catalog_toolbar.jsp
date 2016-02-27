@@ -10,7 +10,7 @@
 
     <form method="post" name="form1" id="form1" action="/UserController/filter">
 
-      Search:<input type="text" id="searchText" name="searchText" value=""/>
+      Title Search:<input type="text" id="searchText" name="searchText" value=""/>
 
       Category:<select id="categoryID" name="categoryID">
       	<option value='0'>All</option>
