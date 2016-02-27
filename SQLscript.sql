@@ -113,7 +113,19 @@ insert into Transactions(userID, purchaseDate, totalCost) values
     (1, curdate(), 20),
     (1, '2016-01-23', 20),
     (1, '2016-01-24', 60),
-    (1, '2016-01-14', 70);
+    (1, '2016-01-14', 70),
+    (1, '2015-12-14', 70),
+    (1, '2015-12-15', 700),
+    (1, '2015-11-15', 700),
+    (1, '2015-11-14', 700),
+    (1, '2015-12-15', 700),
+    (1, '2015-12-15', 700),
+    (1, '2015-11-15', 700),
+    (1, '2015-12-15', 700),
+    (1, '2015-10-15', 700),
+    (1, '2015-10-15', 700),
+    (1, '2015-12-15', 700),
+    (1, '2015-10-15', 700);
 
 # Many-to-many relationship with Books and Transactions,
 # allows for more than one book to be purchased in a single transaction
