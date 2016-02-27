@@ -2,6 +2,7 @@ package finalproject.controllers;
 
 import finalproject.DataStructures.Quad;
 import finalproject.DataStructures.cartItem;
+import finalproject.calculations.*;
 import finalproject.data.inventoryDB;
 import finalproject.data.transactionDB;
 import finalproject.data.userDB;
@@ -317,7 +318,7 @@ public class UserController extends HttpServlet {
 			totalCost += (item.getPrice() * quantity);
 		}
 		
-		int transactionID = transactionDB.InsertTransaction(user.getID(), totalCost);
+		int transactionID = transactionDB.InsertTransaction(user.getID(), Round.RoundMoney(totalCost));
 		
 		// Transaction failed
 		if(transactionID == -1)
