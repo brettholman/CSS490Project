@@ -50,9 +50,12 @@ public class ratingDB {
 			stmt.setString(1, Integer.toString(id));
 			
 			rs = stmt.executeQuery();
-			
-			if(rs != null)
-			{
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+	
+			// Get the first row and pull down the item data
+			if(rs.first()) {
 				do {
 					Rating item = new Rating();
 					item.setID(rs.getInt("r.id"));
@@ -65,7 +68,7 @@ public class ratingDB {
 			}
 			else {
 				return null;
-			}
+			}					
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -74,7 +77,7 @@ public class ratingDB {
 		finally {
 			closeAll(stmt, conn, rs);
 		}
-		return (Rating[])list.toArray();
+		return list.toArray(new Rating[list.size()]);
 	}
 	
 	private static void closeAll(Statement stmt, Connection conn)
