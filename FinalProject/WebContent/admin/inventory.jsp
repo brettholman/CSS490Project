@@ -25,7 +25,14 @@ function addItemToCart(id){
 }
 </script>
 
-<form name="modify" method="post">
+<%
+	String searchText = (String)session.getAttribute("searchText");
+	int categoryID = (int)session.getAttribute("categoryID");
+	
+	InventoryItem[] items = inventoryDB.getAllItems(searchText, categoryID);
+	if(items != null) {
+%>
+
 <table id="list">
 	<tr>
 		<th>Title</th>
@@ -37,24 +44,21 @@ function addItemToCart(id){
 		<th>UserRating</th>
 		<th></th>
 	</tr>
-<%
-	InventoryItem[] items = inventoryDB.getAllItems("", 0);
-	for(InventoryItem item: items){
-%>
-<tr>
-	<td width="20%"><a href="javascript:editItem('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
-	<td width="15%"><%=item.getAuthor()%></td>
-	<td width="25%"><%=item.getDescription()%></td>
-	<td width="15%"><%=item.getCategory()%></td>
-	<td width="10%">$<%=item.getPrice()%></td>
-	<td width="10%"><%=item.getQuantityInStock()%></td>
-	<td width="10%"><%=item.getAverageRating()%></td>
-</tr>
-<%
-	}
-%>
+	<% for(InventoryItem item: items) { %>
+	<tr>
+		<td width="20%"><a href="javascript:editItem('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
+		<td width="15%"><%=item.getAuthor()%></td>
+		<td width="25%"><%=item.getDescription()%></td>
+		<td width="15%"><%=item.getCategory()%></td>
+		<td width="10%">$<%=item.getPrice()%></td>
+		<td width="10%"><%=item.getQuantityInStock()%></td>
+		<td width="10%"><%=item.getAverageRating()%></td>
+	</tr>
+	<% } %>
 </table>
-</form>
+<% } else { %>
+	no items found	
+<% } %>
 
 <form name="editItem" method="post" action="/AdminController/editItem">
 	<input type="hidden" name="itemID" id="editItemID">
