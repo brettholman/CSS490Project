@@ -3,6 +3,7 @@ package finalproject.models;
 import java.sql.Date;
 
 public class User {
+	private int id = -1;
 	private String userName = null;
 	private String fName = null;
 	private String lName = null;
@@ -15,6 +16,16 @@ public class User {
 	{
 		return (userName != null && fName != null 
 				&& lName != null && email != null);
+	}
+	
+	public void setID(int id)
+	{
+		this.id = id;
+	}
+	
+	public int getID()
+	{
+		return this.id;
 	}
 	
 	public String getUserName() {

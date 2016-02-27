@@ -178,7 +178,7 @@ public class inventoryDB {
 					"from inventoryitems as ii " +
 					"inner join category as c on ii.categoryid = c.id " +
 					"LEFT join ratings as r on r.itemId = ii.id " +
-					"where c.id = 1 " +
+					"where c.id = ? " +
 					"group by ii.id, c.id;";
 				stmt = conn.prepareStatement(query);
 				stmt.setString(1, Integer.toString(categoryID));

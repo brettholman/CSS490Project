@@ -281,10 +281,20 @@ public class UserController extends HttpServlet {
 	private Boolean processOrder(HttpServletRequest request){
 		
 		HttpSession session = request.getSession(true);
+		
+		if(session == null)
+			System.out.println("Session is null");
 
 		Map<Integer, Integer> shoppingCart = (Map<Integer, Integer>) session.getAttribute("shoppingCart");
-		double validateTotalCost = (double)session.getAttribute("orderTotal");
-		int userID = Integer.parseInt((String)request.getParameter("userID"));
+		User user = (User)session.getAttribute("currentUser");
+
+		if(user == null)
+			return false;
+		
+		// Can't check out if the user has not logged in.
+		if(user.getUserName().equals("Anonymous"))
+			return false;
+		
 		if(shoppingCart == null) { return false; }
 		
 		ArrayList<Pair<InventoryItem, Integer>> allItems = new ArrayList<Pair<InventoryItem, Integer>>();
@@ -306,15 +316,14 @@ public class UserController extends HttpServlet {
 			
 			totalCost += (item.getPrice() * quantity);
 		}
-		// This seems a little odd, since its the exact same calculation, but just to be totally sure its right. 
-		if(totalCost != validateTotalCost)
-			return false;
 		
-		int transactionID = transactionDB.InsertTransaction(userID, totalCost);
+		int transactionID = transactionDB.InsertTransaction(user.getID(), totalCost);
 		
 		// Transaction failed
 		if(transactionID == -1)
+		{
 			return false;
+		}
 		
 		// Second time to update the DB. 
 		for (Pair<InventoryItem, Integer> val : allItems) {
