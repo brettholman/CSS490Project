@@ -8,7 +8,25 @@
 
 <%
 	InventoryItem item = (InventoryItem)session.getAttribute("currentItem");
+	User user = (User)session.getAttribute("currentUser");
 %>
+
+<script>
+function addRating(id) {
+	var cboValue = document.getElementById("cbo").value
+	if('<%=user.getUserName()%>' == 'Anonymous') {
+		alert("You must be logged on to submit a rating!");
+		return;
+	}
+	if(cboValue == 0) {
+		alert("You must select a value for your rating!")
+		return;
+	}
+	document.getElementById("rating").value = cboValue;
+	document.getElementById("itemID").value=id;
+	document.AddRating.submit();	
+}
+</script>
 
 <section>
 
@@ -34,7 +52,7 @@
 	<table id="list">
 		<tr>
 			<th>User</th>
-			<th>Rating</th>
+			<th>Rating<button>Test!</button></th>
 			<th>Description</th>
 		</tr>
 
@@ -49,9 +67,21 @@
 	<% } else { %>
 	<p>No ratings found</p>
 	<% } %>
-	
+	<a href = "javascript:addRating(<%=item.getId()%>)">Add a rating</a> 
+	<select id="cbo"> 
+		<option value="0"></option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+	</select>
 	<br>
 	<a href="/shopping/catalog.jsp">Back</a>
+	<form name="AddRating" method="post" action="/UserController/addRating">
+		<input type="hidden" name="itemID" id="itemID">
+		<input type="hidden" name="rating" id="rating">
+	</form>
 	
 </section>
 

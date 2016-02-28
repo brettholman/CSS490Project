@@ -12,6 +12,7 @@ import java.util.Calendar;
 import finalproject.models.Category;
 import finalproject.models.InventoryItem;
 import finalproject.models.Rating;
+import finalproject.models.User;
 
 public class ratingDB {
 	private static String dbURL = "jdbc:mysql://localhost:3360/CSS490";
@@ -78,6 +79,12 @@ public class ratingDB {
 			closeAll(stmt, conn, rs);
 		}
 		return list.toArray(new Rating[list.size()]);
+	}
+	
+	public static Boolean addRatingForBook(User user, InventoryItem item, String rating)
+	{
+		System.out.println("In addRating");
+		return false;
 	}
 	
 	private static void closeAll(Statement stmt, Connection conn)

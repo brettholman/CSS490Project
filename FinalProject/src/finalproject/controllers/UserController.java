@@ -4,6 +4,7 @@ import finalproject.DataStructures.Quad;
 import finalproject.DataStructures.cartItem;
 import finalproject.calculations.*;
 import finalproject.data.inventoryDB;
+import finalproject.data.ratingDB;
 import finalproject.data.transactionDB;
 import finalproject.data.userDB;
 import finalproject.models.*;
@@ -99,6 +100,10 @@ public class UserController extends HttpServlet {
 			if(registerUser(request)) { getServletContext().getRequestDispatcher("/index.jsp").forward(request, response); }
 			
 			else { getServletContext().getRequestDispatcher("/user/registerError.jsp").forward(request, response); }
+		}
+		
+		else if(requestURI.endsWith("logonManual")) {
+			
 		}
 		
 		// Handle the filter for the catalog and inventory management views
@@ -199,8 +204,16 @@ public class UserController extends HttpServlet {
 		else if(requestURI.endsWith("addRating")){
 			
 			InventoryItem item = inventoryDB.getInventoryItem(Integer.parseInt((String)request.getParameter("itemID")));
+			String rating = (String)request.getParameter("rating");
+			HttpSession session = request.getSession(true);
+			User user = (User)session.getAttribute("currentUser");
 			
-			// TODO: update the user's properties.
+			if(ratingDB.addRatingForBook(user, item, rating)) {
+				getServletContext().getRequestDispatcher("/shopping/ratingAdded.jsp").forward(request, response);
+			} else {
+				session.setAttribute("errorMsg", "Unable to process order.");
+				getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+			}
 			
 			getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
 		}	
