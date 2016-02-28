@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.*;
 
 import finalproject.models.Category;
 import finalproject.models.InventoryItem;
@@ -223,12 +224,11 @@ public class inventoryDB {
 	}
 	
 	// This will need some massive testing once the UI is using it. 
-	public static InventoryItem[] getBestSellers(int maxBooks, Category category)
+	public static Map<InventoryItem, String> getBestSellers(int maxBooks, int category)
 	{
 		// flag to tell if the request wants all categories or not. 
-		boolean allCategories = (category != null);
-		
-		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
+		boolean allCategories = (category == -1);
+		Map<InventoryItem, String> items = new HashMap<InventoryItem, String>();
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -243,6 +243,7 @@ public class inventoryDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
+			// Test Me
 			String query = "select pd.itemID, sum(pd.quantity) as total,"
 					+ "ii.id, ii.title, ii.quantity, ii.price, ii.description, c.categoryID, c.categoryName"
 					+ "from PurchaseDetails as pd"
@@ -278,7 +279,7 @@ public class inventoryDB {
 					cat.setCategoryName(rs.getNString("categoryName"));
 					cat.setId(rs.getInt("c.id"));
 					//item.setCategory(cat);
-					items.add(item);
+					items.put(item, rs.getString("total"));
 				}while(rs.next());
 			}
 			else 
@@ -295,7 +296,7 @@ public class inventoryDB {
 		finally {
 			closeAll(stmt, conn, rs);
 		}
-		return (InventoryItem[])items.toArray();
+		return items;
 	}
 
 	public static InventoryItem getInventoryItemWithAverage(int itemID)
