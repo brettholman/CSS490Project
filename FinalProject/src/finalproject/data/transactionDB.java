@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import finalproject.DataStructures.SalesInformation;
+import finalproject.calculations.Round;
 import finalproject.models.*;
 
 public class transactionDB {
@@ -69,7 +70,8 @@ public class transactionDB {
 				}
 						// Get the first row and pull down the user data
 				if(rs.first()) {
-					total = rs.getString("amount");					
+					total = rs.getString("amount") == null ? "0" : rs.getString("amount");		
+					total = String.valueOf(Round.RoundMoney(Double.parseDouble(total)));		
 				}
 				else {
 					return null;
@@ -137,9 +139,10 @@ public class transactionDB {
 				if(rs == null || rs.wasNull()) {
 					return null;
 				}
-						// Get the first row and pull down the user data
+				
 				if(rs.first()) {
-					total = rs.getString("amount") == null ? "0" : rs.getString("amount");					
+					total = rs.getString("amount") == null ? "0" : rs.getString("amount");		
+					total = String.valueOf(Round.RoundMoney(Double.parseDouble(total)));					
 				}
 				else {
 					return null;
