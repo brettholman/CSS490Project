@@ -23,12 +23,12 @@
 	<script type ="text/javascript" src="date.js"></script>
 	<%
 		ArrayList<String> monthArrayValues = new ArrayList<String>();
-		ArrayList<Double> weekArrayValues = new ArrayList<Double>();
+		ArrayList<String> weekArrayValues = new ArrayList<String>();
 		ArrayList<Date> dMonthArray = new ArrayList<Date>();
 		ArrayList<Date> dWeekArray = new ArrayList<Date>();
 		Calendar cal = Calendar.getInstance();
 		DateFormat monthDateFormat = new SimpleDateFormat("MM/yyyy");
-		DateFormat weekDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat weekDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		cal.set(Calendar.DATE, 1);
 		monthArrayValues.add(monthDateFormat.format(cal.getTime()));
 		dMonthArray.add(cal.getTime());
@@ -41,16 +41,19 @@
 		System.out.println(monthArrayValues);
 		cal = Calendar.getInstance();
 		
-		cal.set(Calendar.DAY_OF_WEEK, 0);
+		cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 		dWeekArray.add(cal.getTime());
+		weekArrayValues.add(weekDateFormat.format(cal.getTime()));
 		for(int i = 0; i < 4; i++)
 		{
-			cal.set(Calendar.WEEK_OF_YEAR, -1);
+			cal.add(Calendar.WEEK_OF_YEAR, -1);
+			weekArrayValues.add(weekDateFormat.format(cal.getTime()));
 			dWeekArray.add(cal.getTime());
 		}
 		System.out.println(dMonthArray.toString());
-		StringSet set = transactionDB.getTotalSalesForListOfCalendarMonths(dMonthArray);
-		if(set == null)
+		StringSet mSet = transactionDB.getTotalSalesForListOfCalendarMonths(dMonthArray);
+		StringSet wSet = transactionDB.getTotalSalesForListOfCalendarWeek(dWeekArray);
+		if(mSet == null || wSet == null)
 			return;
 	%>
 	<script>
@@ -75,27 +78,34 @@
 		                       currentMonth];
 		
 		graph.update([
-		              <%=set.getFourValuesBack()%>,
-		              <%=set.getThreeValuesBack()%>,
-		              <%=set.getTwoValuesBack()%>,
-		              <%=set.getPreviousValue()%>,
-		              <%=set.getCurrentValue()%>
+		              <%=mSet.getFourValuesBack()%>,
+		              <%=mSet.getThreeValuesBack()%>,
+		              <%=mSet.getTwoValuesBack()%>,
+		              <%=mSet.getPreviousValue()%>,
+		              <%=mSet.getCurrentValue()%>
 		              ]);
 		
 		var graph2 = new BarGraph(document.getElementById("canvasId2").getContext("2d"));
 		graph2.margin = 2;
 		graph2.width = 800;
 		graph2.height = 400;
-		var currentWeek = today.add(-1).weeks().add(1).days().toString('MM/dd/yyyy');
-		var previousWeek = today.add(-1).weeks().toString('MM/dd/yyyy');
-		var	twoWeeksBack = today.add(-1).weeks().toString('MM/dd/yyyy');
-		var threeWeeksBack = today.add(-1).weeks().toString('MM/dd/yyyy');
-		var fourWeeksBack = today.add(-1).weeks().toString('MM/dd/yyyy');
+		var currentWeek = "<%=weekArrayValues.get(0)%>";
+		var previousWeek = "<%=weekArrayValues.get(1)%>";
+		var	twoWeeksBack = "<%=weekArrayValues.get(2)%>";
+		var threeWeeksBack = "<%=weekArrayValues.get(3)%>";
+		var fourWeeksBack = "<%=weekArrayValues.get(4)%>";
 		graph2.xAxisLabelArr = [fourWeeksBack,
 		                        threeWeeksBack,
 		                        twoWeeksBack,
 		                        previousWeek,
 		                        currentWeek];
+		graph2.update([
+		              <%=wSet.getFourValuesBack()%>,
+		              <%=wSet.getThreeValuesBack()%>,
+		              <%=wSet.getTwoValuesBack()%>,
+		              <%=wSet.getPreviousValue()%>,
+		              <%=wSet.getCurrentValue()%>
+		              ]);
 	</script>
 </section>
 

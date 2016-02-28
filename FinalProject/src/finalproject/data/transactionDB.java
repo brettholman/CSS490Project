@@ -86,87 +86,67 @@ public class transactionDB {
 			closeAll(stmt, conn, rs);
 		}
 		
-	
 		return new StringSet(toReturn);
 	}
 	
 	
-	public static String[] getTotalSalesForCalendarWeek(ArrayList<Date> dates)
+	public static StringSet getTotalSalesForListOfCalendarWeek(ArrayList<Date> dates)
 	{
-		return null;
-		/*
-		return new SalesInformation();
-		int year = date.getYear();
-		int week = 0;
-		if(week < 1 || week > 2 || year < 0 || year > cal.get(Calendar.YEAR))
-		{
-			return new SalesInformation();
+		ArrayList<String> toReturn = new ArrayList<String>();
+		if(dates == null) {
+			return null;
 		}
-		double totalCurrentMonth = 0;
-		double totalPreviousMonth = 0;
-		int previousYear = year;
-		int PreviousMonth = (week - 1 % 52) == 0 ? 52 : week - 1;
-		
-		if((week - 1 % 52) == 0)
-			previousYear--;
-		
+		int index = 0;
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		
+		String total = "";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
-			String query = "SELECT Sum(totalCost) as currentAmount FROM transactions where purchasedate > ?;";
+			String query = "";
+			for(Date date : dates) {
+				if(index == 0){
+					query = "SELECT Sum(totalCost) as amount FROM transactions where purchasedate >= ?;";
+				}
+				else {
+					query = "SELECT SUM(totalCost) as amount FROM transactions where purchasedate >= ? and purchaseDate < ?";
+				}
+				nCal.setTime(date);
+				nCal.add(Calendar.DAY_OF_YEAR, + 7);
+				cCal.setTime(date);
+				int nDay = nCal.get(Calendar.DAY_OF_MONTH);
+				int nMonth = nCal.get(Calendar.MONTH) + 1;
+				int nYear = nCal.get(Calendar.YEAR);
+				int day = cCal.get(Calendar.DAY_OF_MONTH);
+				int month = cCal.get(Calendar.MONTH) + 1;
+				int year = cCal.get(Calendar.YEAR);
+				stmt = conn.prepareStatement(query);
 			
-			stmt = conn.prepareStatement(query);
-			
-			stmt.setString(1, 
-					Integer.toString(yearMonth.getYear()) + "-" + 
-					Integer.toString(yearMonth.getMonthValue()) + "-" + 1);
-			
-			rs = stmt.executeQuery();
-			if(rs == null || rs.wasNull()) {
-				return new SalesInformation();
+				stmt.setString(1, 
+						Integer.toString(year) + "-" + 
+						Integer.toString(month) + "-" + Integer.toString(day));
+				if(index > 0)
+				{
+					stmt.setString(2, 
+							Integer.toString(nYear) + "-" +
+							Integer.toString(nMonth) + "-" + Integer.toString(nDay));
+				}
+		
+				rs = stmt.executeQuery();
+				if(rs == null || rs.wasNull()) {
+					return null;
+				}
+						// Get the first row and pull down the user data
+				if(rs.first()) {
+					total = rs.getString("amount") == null ? "0" : rs.getString("amount");					
+				}
+				else {
+					return null;
+				}
+				index++;
+				toReturn.add(total);
 			}
-	
-			// Get the first row and pull down the user data
-			if(rs.first()) {
-				totalCurrentMonth = Double.parseDouble(rs.getString("amount"));
-			}
-			else {
-				return new SalesInformation();
-			}
-			
-			query = "SELECT * FROM transactions where purchaseDate >= ? and purchaseDate <= ?;";
-			
-			stmt = conn.prepareStatement(query);
-			
-
-			stmt.setString(1, 
-					Integer.toString(previousYearMonth.getYear()) + "-" +
-					Integer.toString(previousYearMonth.getMonthValue()) + "-" + 1);
-			
-			stmt.setString(1, 
-					Integer.toString(previousYearMonth.getYear()) + "-" +
-					Integer.toString(previousYearMonth.getMonthValue()) + "-" +
-					Integer.toString(previousYearMonth.atEndOfMonth().getDayOfMonth()));
-			
-			rs = stmt.executeQuery();
-			if(rs == null || rs.wasNull()) {
-				return new SalesInformation();
-			}
-	
-			// Get the first row and pull down the user data
-			if(rs.first()) {
-				totalPreviousMonth = Double.parseDouble(rs.getString("amount"));
-				AttemptToInsertIntoMonthHistory(previousYearMonth.getYear(), 
-						previousYearMonth.getMonthValue(), 
-						totalPreviousMonth);
-			}
-			else {
-				return new SalesInformation();
-			}			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -175,8 +155,8 @@ public class transactionDB {
 		finally {
 			closeAll(stmt, conn, rs);
 		}
-		return new SalesInformation(totalCurrentMonth, totalPreviousMonth);
-		*/
+		
+		return new StringSet(toReturn);
 	}
 	
 	public static int InsertTransaction(int userID, double totalCost)
