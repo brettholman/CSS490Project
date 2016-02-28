@@ -1,3 +1,4 @@
 - Best Seller Information
-- Modify User (Admin and User)
+- Modify User (Admin)
+- Modify User (User)
 - Marketing Data
