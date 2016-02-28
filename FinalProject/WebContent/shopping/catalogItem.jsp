@@ -54,7 +54,7 @@ function addRating(id) {
 	<table id="list">
 		<tr>
 			<th>User</th>
-			<th>Rating<button>Test!</button></th>
+			<th>Rating</th>
 			<th>Description</th>
 		</tr>
 
