@@ -23,7 +23,9 @@ function addRating(id) {
 		return;
 	}
 	document.getElementById("rating").value = cboValue;
-	document.getElementById("itemID").value=id;
+	document.getElementById("itemID").value = id;
+	document.getElementById("description").value = document.getElementById("descriptionInput").value
+	alert(document.getElementById("description").value);
 	document.AddRating.submit();	
 }
 </script>
@@ -67,21 +69,29 @@ function addRating(id) {
 	<% } else { %>
 	<p>No ratings found</p>
 	<% } %>
-	<a href = "javascript:addRating(<%=item.getId()%>)">Add a rating</a> 
-	<select id="cbo"> 
-		<option value="0"></option>
-		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-		<option value="5">5</option>
-	</select>
-	<br>
-	<a href="/shopping/catalog.jsp">Back</a>
+
 	<form name="AddRating" method="post" action="/UserController/addRating">
 		<input type="hidden" name="itemID" id="itemID">
 		<input type="hidden" name="rating" id="rating">
+		<input type="hidden" name="description" id="description">
+		<div>Description:</div>
 	</form>
+	<textarea name="descriptionInput" id="descriptionInput" rows="4" cols=""></textarea>
+	<br>
+	<select id="cbo"> 
+			<option value="0"></option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+	</select>
+	<br>
+	<br>
+	<a href = "javascript:addRating(<%=item.getId()%>)">Add a rating</a> 
+	<br>
+	<br>
+	<a href="/shopping/catalog.jsp">Back</a>
 	
 </section>
 

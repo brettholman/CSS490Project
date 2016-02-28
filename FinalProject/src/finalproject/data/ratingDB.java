@@ -81,10 +81,41 @@ public class ratingDB {
 		return list.toArray(new Rating[list.size()]);
 	}
 	
-	public static Boolean addRatingForBook(User user, InventoryItem item, String rating)
+	public static Boolean addRatingForBook(User user, InventoryItem item, String rating, String description)
 	{
-		System.out.println("In addRating");
-		return false;
+		boolean flag = false;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		if(user == null || item == null)
+			return flag;
+		if(description == null)
+			description = "";
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "insert into ratings (userID, itemID, rating, ratingDate, description) values "
+					+ "(?, ?, ?, curdate(), ?);";
+			
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, String.valueOf(user.getId()));
+			stmt.setString(2, String.valueOf(item.getId()));
+			stmt.setString(3, rating);
+			stmt.setString(4, description);
+			
+			if(stmt.executeUpdate() > 0)
+				flag = true;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			flag = false;
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
+		return flag;
 	}
 	
 	private static void closeAll(Statement stmt, Connection conn)

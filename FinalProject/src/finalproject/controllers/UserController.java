@@ -205,10 +205,12 @@ public class UserController extends HttpServlet {
 			
 			InventoryItem item = inventoryDB.getInventoryItem(Integer.parseInt((String)request.getParameter("itemID")));
 			String rating = (String)request.getParameter("rating");
+			String description = (String)request.getParameter("description");
 			HttpSession session = request.getSession(true);
 			User user = (User)session.getAttribute("currentUser");
 			
-			if(ratingDB.addRatingForBook(user, item, rating)) {
+			
+			if(ratingDB.addRatingForBook(user, item, rating, description)) {
 				getServletContext().getRequestDispatcher("/shopping/ratingAdded.jsp").forward(request, response);
 			} else {
 				session.setAttribute("errorMsg", "Unable to process order.");
