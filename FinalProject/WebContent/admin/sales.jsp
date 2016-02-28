@@ -14,7 +14,7 @@
 <section>
 
 	<h1>Statistics</h1>
-	
+	<h6>*Yellow is in progress. <br>*Rounded to the nearest dollar amount</h6>
 	<div class="col-wrapper">
 		<span class="col col-left"><h1>By Month</h1><canvas id = "canvasId1"></canvas></span>
 		<span class="col col-right"><h1>Month Back</h1><canvas id = "canvasId2"></canvas></span>
