@@ -259,7 +259,7 @@ public class inventoryDB {
 			stmt = conn.prepareStatement(query);
 			
 			if(!allCategories)
-				stmt.setString(1, Integer.toString(category.getId()));
+				stmt.setString(1, Integer.toString(category));
 			
 			stmt.setString(allCategories ? 1 : 2, Integer.toString(maxBooks));
 			
