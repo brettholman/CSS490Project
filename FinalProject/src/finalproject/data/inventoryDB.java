@@ -260,7 +260,6 @@ public class inventoryDB {
 					+ "limit ?;";
 
 			stmt = conn.prepareStatement(query);
-			System.out.println(query);
 			
 			if(!allCategories)
 				stmt.setString(1, Integer.toString(category));

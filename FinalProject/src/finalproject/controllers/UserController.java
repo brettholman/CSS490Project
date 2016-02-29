@@ -123,6 +123,9 @@ public class UserController extends HttpServlet {
 				case 1:
 					getServletContext().getRequestDispatcher("/shopping/catalog.jsp").forward(request, response);
 					break;
+				case 3:
+					getServletContext().getRequestDispatcher("/admin/bestsellers.jsp").forward(request, response);
+					break;
 					
 				default:
 					getServletContext().getRequestDispatcher("/admin/inventory.jsp").forward(request, response);
