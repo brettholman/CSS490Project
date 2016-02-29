@@ -61,6 +61,45 @@ public class categoryDB {
 		return list.toArray(new Category[list.size()]);
 	}	
 	
+	public static Category getCategoryByID(int id)
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Category toReturn = new Category();
+		
+		if(id < 0)
+			return null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			String query = "select * from Category where id = ?";
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setInt(1, id);
+			
+			rs = stmt.executeQuery();
+	
+			// Get the first row and pull down the user data
+			if(rs.first()) {
+				toReturn.setCategoryName(rs.getNString("categoryName"));
+				toReturn.setId(rs.getInt("id"));
+			}
+			else {
+				return null;
+			}			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return toReturn;
+	}	
+	
 	private static void closeAll(Statement stmt, Connection conn)
 	{
 		if(stmt != null) {
