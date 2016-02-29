@@ -127,6 +127,11 @@ public class AdminController extends HttpServlet {
 				getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
 			}
 		}
+		// View Marketing Data
+		else if(requestURI.endsWith("viewMarketingDetails")){
+			System.out.println("In View Marketing Details");
+			getServletContext().getRequestDispatcher("/admin/inventoryItemMarketingDetails.jsp").forward(request, response);
+		}
 	}
 	
 	private Boolean saveItem(HttpServletRequest request){
