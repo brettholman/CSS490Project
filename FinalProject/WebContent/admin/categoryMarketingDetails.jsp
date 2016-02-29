@@ -7,8 +7,8 @@
 <!-- start the middle column -->
 
 <section>
-	<h1>Inventory Item Marketing Details</h1>
-	<h2>Customers who have purchased the book {INSERT BOOK TITLE HERE} more than two times this past month.</h2>
+	<h1>Category Item Marketing Details</h1>
+	<h2>Customers who have purchased any books with the category type {INSERT CATEGORY NAME} more than two times this past month.</h2>
 </section>
 
 <!-- end the middle column -->

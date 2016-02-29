@@ -127,10 +127,15 @@ public class AdminController extends HttpServlet {
 				getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
 			}
 		}
-		// View Marketing Data
-		else if(requestURI.endsWith("viewMarketingDetails")){
-			System.out.println("In View Marketing Details");
+		// View Item Marketing Data
+		else if(requestURI.endsWith("viewItemMarketingDetails")){
+			System.out.println("In View Item Marketing Details");
 			getServletContext().getRequestDispatcher("/admin/inventoryItemMarketingDetails.jsp").forward(request, response);
+		}
+		// View Category Marketing Data
+		else if(requestURI.endsWith("viewCategoryMarketingDetails")){
+			System.out.println("In View Category Marketing Details");
+			getServletContext().getRequestDispatcher("/admin/categoryMarketingDetails.jsp").forward(request, response);
 		}
 	}
 	

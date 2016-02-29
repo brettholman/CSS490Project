@@ -12,9 +12,13 @@
 <script>
 document.getElementById("sourceID").value=1;
 
-function viewMarketingDetails(id){
+function viewItemMarketingDetails(id){
 	document.getElementById("viewItemID").value=id;
-	document.viewMarketingDetails.submit();
+	document.viewItemMarketingDetails.submit();
+}
+function viewCategoryMarketingDetails(id){
+	document.getElementById("viewItemID").value=id;
+	document.viewCategoryMarketingDetails.submit();
 }
 </script>
 
@@ -36,10 +40,10 @@ function viewMarketingDetails(id){
 	</tr>
 <% for(InventoryItem item: items) { %>
 <tr>
-	<td width="20%"><a href="javascript:viewMarketingDetails('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
+	<td width="20%"><a href="javascript:viewItemMarketingDetails('<%=item.getId()%>');"><%=item.getTitle()%></a></td>
 	<td width="10%"><%=item.getAuthor()%></td>
 	<td width="25%"><%=item.getDescription()%></td>
-	<td width="10%"><%=item.getCategory()%></td>
+	<td width="10%"><a href="javascript:viewCategoryMarketingDetails('<%=item.getCategoryID()%>');"><%=item.getCategory()%></a></td>
 	<td width="10%">$<%=item.getPrice()%></td>
 	<td width="10%"><%=item.getAverageRating()%></td>
 	<td width="15%">
@@ -51,12 +55,12 @@ function viewMarketingDetails(id){
 	no items found	
 <% } %>
 
-<form name="viewMarketingDetails" method="post" action="/AdminController/viewMarketingDetails">
+<form name="viewItemMarketingDetails" method="post" action="/AdminController/viewItemMarketingDetails">
 	<input type="hidden" name="itemID" id="viewItemID">
 </form>
-<form name="itemAddToCart" method="post" action="/UserController/addItemToCart">
-	<input type="hidden" name="itemID" id="addItemID">
-	<input type="hidden" name="itemQuantity" id="itemQuantity">
+
+<form name="viewCategoryMarketingDetails" method="post" action="/AdminController/viewCategoryMarketingDetails">
+	<input type="hidden" name="itemID" id="viewItemID">
 </form>
 
 </section>
