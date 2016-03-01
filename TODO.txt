@@ -2,7 +2,6 @@
 - Modify User (User)
 
 - Storing last login (Not sure if this is being done already)
-- Change marketing data to one Month
 - Get presentation ready
     - Different use cases
     - ER Diagram
