@@ -17,16 +17,13 @@ function viewItemMarketingDetails(id){
 	document.viewItemMarketingDetails.submit();
 }
 function viewCategoryMarketingDetails(id){
-	document.getElementById("viewItemID").value=id;
+	document.getElementById("categoryID").value=id;
 	document.viewCategoryMarketingDetails.submit();
 }
 </script>
 
 <%
-	String searchText = (String)session.getAttribute("searchText");
-	int categoryID = (int)session.getAttribute("categoryID");
-
-	InventoryItem[] items = inventoryDB.getAllItems(searchText, categoryID);
+	InventoryItem[] items = inventoryDB.getAllItems("", -1);
 	if(items != null) {
 %>
 <table id="list">
@@ -60,7 +57,7 @@ function viewCategoryMarketingDetails(id){
 </form>
 
 <form name="viewCategoryMarketingDetails" method="post" action="/AdminController/viewCategoryMarketingDetails">
-	<input type="hidden" name="itemID" id="viewItemID">
+	<input type="hidden" name="categoryID" id="categoryID">
 </form>
 
 </section>

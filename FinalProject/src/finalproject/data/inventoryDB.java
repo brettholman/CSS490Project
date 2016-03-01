@@ -167,7 +167,7 @@ public class inventoryDB {
 			// If the categoryID is < 0 then return all items 
 			if(categoryID <= 0) {
 				String query = 
-						"SELECT II.id, C.categoryName as category, II.title, II.author, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
+						"SELECT II.id, C.categoryName as category, II.categoryID as categoryID, II.title, II.author, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
 						"INNER JOIN category AS C ON II.categoryID = C.id " +
 						"LEFT JOIN ratings AS R ON R.itemID = II.id ";
 				if(searchText.length() > 0) { query += "WHERE title LIKE ? "; }
@@ -178,7 +178,7 @@ public class inventoryDB {
 			// Get all items in the specified category
 			else {
 				String query = 
-					"select ii.id, c.categoryName as category, ii.title, II.author, ii.description, ii.price, ii.quantity, avg(r.rating) as rating " +
+					"select ii.id, ii.categoryID as categoryID, c.categoryName as category, ii.title, II.author, ii.description, ii.price, ii.quantity, avg(r.rating) as rating " +
 					"from inventoryitems as ii " +
 					"inner join category as c on ii.categoryid = c.id " +
 					"LEFT join ratings as r on r.itemId = ii.id " +
@@ -200,6 +200,7 @@ public class inventoryDB {
 				do {
 					InventoryItem item = new InventoryItem();
 					item.setId(rs.getInt("id"));
+					item.setCategoryID(rs.getInt("categoryID"));
 					item.setCategory(rs.getString("category"));
 					item.setTitle(rs.getString("title"));
 					item.setAuthor(rs.getString("author"));

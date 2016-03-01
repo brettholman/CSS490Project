@@ -11,6 +11,7 @@ public class User {
 	private String password = null;
 	private Date lastLogin = null;
 	private Date accountCreated = null;
+	private int totalPurchased = 0;
 	
 	public Boolean isValid()
 	{
@@ -19,6 +20,8 @@ public class User {
 	}
 	
 	public String getUserName() {
+		if(userName == null || userName.length() == 0)
+			return "";
 		return userName;
 	}
 	
@@ -27,6 +30,8 @@ public class User {
 	}
 	
 	public String getfName() {
+		if(fName == null || fName.length() == 0)
+			return "";
 		return fName;
 	}
 	
@@ -39,10 +44,14 @@ public class User {
 	}
 
 	public String getlName() {
+		if(lName == null || lName.length() == 0)
+			return "";
 		return lName;
 	}
 	
 	public String getEmail() {
+		if(email == null || email.length() == 0)
+			return "";
 		return email;
 	}
 	
@@ -80,5 +89,15 @@ public class User {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public void setTotalPurchased(int num)
+	{
+		this.totalPurchased = num;
+	}
+	
+	public int getTotalPurchased()
+	{
+		return this.totalPurchased;
 	}
 }

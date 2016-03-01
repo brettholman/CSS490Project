@@ -1,6 +1,8 @@
 package finalproject.controllers;
 
+import finalproject.data.categoryDB;
 import finalproject.data.inventoryDB;
+import finalproject.data.marketingDB;
 import finalproject.data.userDB;
 import finalproject.models.*;
 import java.io.IOException;
@@ -129,12 +131,22 @@ public class AdminController extends HttpServlet {
 		}
 		// View Item Marketing Data
 		else if(requestURI.endsWith("viewItemMarketingDetails")){
-			System.out.println("In View Item Marketing Details");
+			HttpSession session = request.getSession(true);
+			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
+			InventoryItem item = inventoryDB.getInventoryItem(itemID);
+			User[] users = marketingDB.getAllUsersPurchaseDetailsOnInventoryItem(itemID);
+			session.setAttribute("currentItem", item);
+			session.setAttribute("listOfUsers", users);
 			getServletContext().getRequestDispatcher("/admin/inventoryItemMarketingDetails.jsp").forward(request, response);
 		}
 		// View Category Marketing Data
 		else if(requestURI.endsWith("viewCategoryMarketingDetails")){
-			System.out.println("In View Category Marketing Details");
+			HttpSession session = request.getSession(true);
+			int categoryID = Integer.parseInt((String)request.getParameter("categoryID"));
+			Category category = categoryDB.getCategoryByID(categoryID);
+			User[] users = marketingDB.getAllUsersPurchaseDetailsOnCategory(categoryID);
+			session.setAttribute("currentCategory", category);
+			session.setAttribute("listOfUsers", users);
 			getServletContext().getRequestDispatcher("/admin/categoryMarketingDetails.jsp").forward(request, response);
 		}
 	}
