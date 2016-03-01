@@ -225,6 +225,61 @@ public class inventoryDB {
 		return items.toArray(new InventoryItem[items.size()]);
 	}
 	
+	public static InventoryItem[] getAllItemsWithSaleRecords()
+	{
+		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+				String query = 
+					"select ii.id, ii.categoryID as categoryID, c.categoryName as category, ii.title, II.author, ii.description, ii.price, ii.quantity, avg(r.rating) as rating " +
+					"from inventoryitems as ii " +
+					"inner join category as c on ii.categoryid = c.id " +
+					"LEFT join ratings as r on r.itemId = ii.id " +
+					"inner join purchaseDetails d on d.itemID = ii.id " + 
+					"group by ii.id, c.id";
+				stmt = conn.prepareStatement(query);
+			
+			rs = stmt.executeQuery();
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+	
+			// Get the first row and pull down the user data
+			if(rs.first()) {
+				do {
+					InventoryItem item = new InventoryItem();
+					item.setId(rs.getInt("id"));
+					item.setCategoryID(rs.getInt("categoryID"));
+					item.setCategory(rs.getString("category"));
+					item.setTitle(rs.getString("title"));
+					item.setAuthor(rs.getString("author"));
+					item.setDescription(rs.getNString("description"));
+					item.setPrice(rs.getDouble("price"));
+					item.setQuantityInStock(rs.getInt("quantity"));
+					item.setAverageRating(rs.getDouble("rating"));
+					items.add(item);
+				}while(rs.next());
+			}
+			else {
+				return null;
+			}			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return items.toArray(new InventoryItem[items.size()]);
+	}
+	
 	// This will need some massive testing once the UI is using it. 
 	public static ArrayList<Pair<InventoryItem, String>> getBestSellers(int maxBooks, int category)
 	{

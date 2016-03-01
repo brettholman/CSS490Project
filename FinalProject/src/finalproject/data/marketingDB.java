@@ -40,7 +40,7 @@ public class marketingDB {
 			stmt = conn.prepareStatement(query);
 			
 			stmt.setInt(1, id);
-			cal.set(Calendar.MONTH, -2);
+			cal.set(Calendar.MONTH, -1);
 			String year = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + Integer.toString(01);
 			stmt.setString(2, year);
 			rs = stmt.executeQuery();
@@ -98,7 +98,7 @@ public class marketingDB {
 			stmt = conn.prepareStatement(query);
 			
 			stmt.setInt(1, id);
-			cal.set(Calendar.MONTH, -2);
+			cal.set(Calendar.MONTH, -1);
 			String year = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + Integer.toString(01);
 			stmt.setString(2, year);
 			rs = stmt.executeQuery();

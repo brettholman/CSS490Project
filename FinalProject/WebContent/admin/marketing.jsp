@@ -8,6 +8,8 @@
 
 <section>
 <!-- Catalog view -->
+<h1>Items with Purchase History</h1>
+<hr>
 
 <script>
 document.getElementById("sourceID").value=1;
@@ -23,7 +25,7 @@ function viewCategoryMarketingDetails(id){
 </script>
 
 <%
-	InventoryItem[] items = inventoryDB.getAllItems("", -1);
+	InventoryItem[] items = inventoryDB.getAllItemsWithSaleRecords();
 	if(items != null) {
 %>
 <table id="list">
