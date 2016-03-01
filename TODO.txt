@@ -1,7 +1,7 @@
 - Modify User (Admin)
 - Modify User (User)
+- Make more test data for DB Script (Inventory Items, Transactions and PurchaseDetails)
 
-- Storing last login **VERFIY**
 - Get presentation ready
     - Different use cases
     - ER Diagram

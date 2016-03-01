@@ -1,0 +1,28 @@
+A list for different use cases that we will present
+***Run DB Script day of to prevent bar graph from not drawing the current month/week value.***
+
+**User** (Matt)
+    - Login
+    - Modifying Account info
+    - Logout
+    - Describe Anonymous user vs logged in user
+
+**Shopping Logged out** (Brett)
+    - Browse items
+    - Add to Cart
+    - Remove from Cart
+    - Unable to process/process order without logging in
+
+**Shopping Logged in** (Matt)
+    - Browse Items
+    - Add to Cart
+    - Remove from Cart
+    - Preview Order
+    - Process Order
+
+**Administration**
+    - Best Seller List (Brett)
+    - Inventory Management (Matt)
+    - Marketing Data (Brett)
+    - Sales Stats (Matt) * Might switch these
+    - User Management (Brett) * Might switch these
