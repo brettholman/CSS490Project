@@ -16,10 +16,7 @@ public class userDB {
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
 	
-	/* 
-	 * returns a triplet of User, Previous Month Max purchases and all time max purchases
-	 * Assuming that the first and last name are the names requested. 
-	 */
+	
 	public static Quad<String, String, Integer, Integer>[] getAllUserAndTotals()
 	{
 		ArrayList<Quad<String, String, Integer, Integer>> items = new ArrayList<Quad<String, String, Integer, Integer>>();
