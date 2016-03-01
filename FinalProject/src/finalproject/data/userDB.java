@@ -70,6 +70,32 @@ public class userDB {
 		return (Quad<String, String, Integer, Integer>[])items.toArray();
 	}
 	
+	public static void updateLastLogon(User user)
+	{
+		if(user == null)
+			return;
+		Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "update users set lastLogin = now() where id = ?;";
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, user.getId());
+			
+			stmt.executeUpdate();
+
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			user = null;
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
+	}
+	
 	public static User getUser(int id)
 	{
         User user = new User();

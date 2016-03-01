@@ -1,7 +1,7 @@
 - Modify User (Admin)
 - Modify User (User)
 
-- Storing last login (Not sure if this is being done already)
+- Storing last login **VERFIY**
 - Get presentation ready
     - Different use cases
     - ER Diagram

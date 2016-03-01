@@ -60,6 +60,7 @@ public class LoginFilter implements Filter {
             if(user == null || user.getUserName() == "Anonymous") {
             	user = userDB.getUser(remoteUser);
                 session.setAttribute("currentUser", user);
+                userDB.updateLastLogon(user);
             }
         }
 
