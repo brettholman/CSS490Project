@@ -1,4 +1,3 @@
 - Modify User (Admin)
 - Modify User (User)
-- Marketing Data
 - Storing last login (Not sure if this is being done already)
