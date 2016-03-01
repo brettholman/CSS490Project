@@ -115,17 +115,56 @@ public class userDB {
 			stmt.setString(1, Integer.toString(id));
 			
 			rs = stmt.executeQuery();
-			if(rs == null) {
-				return null;
+			if(rs.first()) {
+				user.setId(rs.getInt("id"));
+				user.setfName(rs.getString("fName"));
+				user.setlName(rs.getString("lName"));
+				user.setEmail(rs.getString("email"));
+				user.setUserName(rs.getString("userName"));
+				user.setLastLogin(rs.getDate("lastLogin"));
+				user.setAccountCreated(rs.getDate("accountCreated"));
 			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			user = null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return user;
+	}	
+	
 
-			user.setId(rs.getInt("id"));
-			user.setfName(rs.getString("fName"));
-			user.setlName(rs.getString("lName"));
-			user.setEmail(rs.getString("email"));
-			user.setUserName(rs.getString("userName"));
-			user.setLastLogin(rs.getDate("lastLogin"));
-			user.setAccountCreated(rs.getDate("accountCreated"));
+	public static User getUserWithPassword(int id)
+	{
+        User user = new User();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        if(id < 0)
+            return null;
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			String query = "select * from users where id = ?";
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, Integer.toString(id));
+			
+			rs = stmt.executeQuery();
+			if(rs.first()) {
+				user.setId(rs.getInt("id"));
+				user.setfName(rs.getString("fName"));
+				user.setlName(rs.getString("lName"));
+				user.setEmail(rs.getString("email"));
+				user.setUserName(rs.getString("userName"));
+				user.setLastLogin(rs.getDate("lastLogin"));
+				user.setAccountCreated(rs.getDate("accountCreated"));
+				user.setPassword(rs.getString("pass"));
+			}
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -302,13 +341,15 @@ public class userDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 
-			String query = "update user set fName = ?, lName = ?, email = ?, pass = ?, lastLogin = ? where userName = ?";
+			String query = "update user set fName = ?, lName = ?, email = ?, pass = ?, userName = ? where id = ?";
 			stmt = conn.prepareStatement(query);
 			
 			stmt.setString(1, user.getfName());
 			stmt.setString(2, user.getlName());
 			stmt.setString(3, user.getEmail());
 			stmt.setString(4, user.getPassword());
+			stmt.setString(5, user.getUserName());
+			stmt.setInt(6, user.getId());
 			
 			flag = stmt.executeUpdate();
 		}

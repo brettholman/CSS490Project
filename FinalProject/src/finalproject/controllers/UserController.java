@@ -192,15 +192,32 @@ public class UserController extends HttpServlet {
 		else if(requestURI.endsWith("modifyUser")){
 			
 			int userID = Integer.parseInt((String)request.getParameter("userID"));
-			User user = userDB.getUser(userID);
+			User user = userDB.getUserWithPassword(userID);
+			if(user == null)
+			{
+				getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+			}
 			user.setEmail((String)request.getParameter("mail"));
 			user.setUserName((String)request.getParameter("name"));
 			user.setfName((String)request.getParameter("fmail"));
 			user.setlName((String)request.getParameter("lmail"));
+			String cPass = (String)request.getParameter("cPass");
+			String nPass = (String)request.getParameter("nPass");
+			// if the passwords are equal and not empty
+			if(nPass.equals(cPass) && !cPass.equals("") && !nPass.equals("")) {
+				user.setPassword(cPass); // At this point it doesn't matter which password we use. 
+			}
+			// either the passwords were not equal or they were empty (probably the case
+			// since there is client side checking)
 			
-			// TODO: update the user's properties.
-			
-			getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
+			if(userDB.modifyUser(user) == -1)
+			{
+				getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+			}
+			else {
+				// Send them back to the home page. 
+				getServletContext().getRequestDispatcher("/").forward(request, response);
+			}
 		}
 		
 		// Allow the user to add a rating for the specified item.
