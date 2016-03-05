@@ -197,12 +197,17 @@ public class UserController extends HttpServlet {
 			{
 				getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
 			}
-			user.setEmail((String)request.getParameter("mail"));
-			user.setUserName((String)request.getParameter("name"));
-			user.setfName((String)request.getParameter("fmail"));
-			user.setlName((String)request.getParameter("lmail"));
+			String email = (String)request.getParameter("email");
+			String userName = (String)request.getParameter("userName");
+			String fName = (String)request.getParameter("fName");
+			String lName = (String)request.getParameter("lName");
 			String cPass = (String)request.getParameter("cPass");
 			String nPass = (String)request.getParameter("nPass");
+			
+			user.setEmail(email);
+			user.setUserName(userName);
+			user.setfName(fName);
+			user.setlName(lName);
 			// if the passwords are equal and not empty
 			if(nPass.equals(cPass) && !cPass.equals("") && !nPass.equals("")) {
 				user.setPassword(cPass); // At this point it doesn't matter which password we use. 
