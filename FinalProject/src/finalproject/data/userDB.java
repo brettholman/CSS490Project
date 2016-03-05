@@ -409,4 +409,45 @@ public class userDB {
 			}
 		}
 	}
+	public static User[] getAllUsers() {
+		ArrayList<User> users = new ArrayList<User>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			String query = "select * from users";
+			stmt = conn.prepareStatement(query);
+			
+			rs.getStatement().executeQuery(query);
+			
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+			
+			if(rs.first()) {
+				do {
+					User user = new User();
+					user.setEmail(rs.getString("email"));
+					user.setId(rs.getInt("id"));
+					user.setUserName(rs.getString("uName"));
+					user.setfName(rs.getString("fName"));
+					user.setlName(rs.getString("lName"));
+					user.setUserName(rs.getString("userName"));
+					user.setPassword(rs.getString("pass"));
+					users.add(user);
+				}while(rs.next());
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();;
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return users.toArray(new User[users.size()]);
+	}
 }
