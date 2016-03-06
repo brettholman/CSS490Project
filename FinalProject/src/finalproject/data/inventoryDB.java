@@ -15,7 +15,7 @@ import finalproject.models.InventoryItem;
 import javafx.util.Pair;
 
 public class inventoryDB {
-	private static String dbURL = "jdbc:mysql://localhost:3360/CSS490";
+	private static String dbURL = "jdbc:mysql://localhost/CSS490";
 	private static String dbUser = "css490";
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
@@ -323,18 +323,23 @@ public class inventoryDB {
 			stmt.setInt(allCategories ? 1 : 2, maxBooks);
 			
 			rs = stmt.executeQuery();
-			while(rs.next()){
-				InventoryItem item = new InventoryItem();
-				item.setId(rs.getInt("ii.id"));
-				item.setTitle(rs.getNString("title"));
-				item.setAuthor(rs.getString("ii.author"));
-				item.setQuantityInStock(rs.getInt("quantity"));
-				item.setDescription(rs.getNString("description"));
-				item.setPrice(rs.getDouble("price"));
-				item.setCategoryID(rs.getInt("c.id"));
-				item.setCategory(rs.getNString("categoryName"));
-				item.setAverageRating(Double.parseDouble(rs.getString("avgRating")));
-				items.add(new Pair<InventoryItem, String>(item, rs.getString("total")));
+			if(rs.next()){
+				do {
+					InventoryItem item = new InventoryItem();
+					item.setId(rs.getInt("ii.id"));
+					item.setTitle(rs.getNString("title"));
+					item.setAuthor(rs.getString("ii.author"));
+					item.setQuantityInStock(rs.getInt("quantity"));
+					item.setDescription(rs.getNString("description"));
+					item.setPrice(rs.getDouble("price"));
+					item.setCategoryID(rs.getInt("c.id"));
+					item.setCategory(rs.getNString("categoryName"));
+					item.setAverageRating(Double.parseDouble(rs.getString("avgRating")));
+					items.add(new Pair<InventoryItem, String>(item, rs.getString("total")));
+				} while(rs.next()); 
+			}
+			else {
+				items = null;
 			}
 		}
 		catch(Exception e) {
