@@ -15,7 +15,7 @@ import finalproject.models.InventoryItem;
 import javafx.util.Pair;
 
 public class inventoryDB {
-	private static String dbURL = "jdbc:mysql://localhost/CSS490";
+	private static String dbURL = "jdbc:mysql://localhost:3360/CSS490";
 	private static String dbUser = "css490";
 	private static String dbPass = "css490pass";
 	private static Calendar cal = Calendar.getInstance();
