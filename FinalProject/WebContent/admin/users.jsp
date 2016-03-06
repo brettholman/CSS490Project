@@ -6,7 +6,16 @@
 <section>
 
 	<h1>User Management</h1>
-
+<%
+	User[] users = userDB.getAllUsers();
+	if(users != null) {
+%>
+	<ul>
+		<%for(User user: users) { %>
+		<li><% user.getUserName(); %></li>
+		<%} %>
+	</ul>
+<%} %>
 </section>
 
 <!-- end the middle column -->
