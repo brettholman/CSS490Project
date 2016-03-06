@@ -191,6 +191,7 @@ public class UserController extends HttpServlet {
 		// from the admin page.
 		else if(requestURI.endsWith("modifyUser")){
 			
+			HttpSession session = request.getSession(true);
 			int userID = Integer.parseInt((String)request.getParameter("userID"));
 			User user = userDB.getUserWithPassword(userID);
 			if(user == null)
@@ -220,6 +221,7 @@ public class UserController extends HttpServlet {
 				getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
 			}
 			else {
+				session.setAttribute("currentUser", user); 
 				// Send them back to the home page. 
 				getServletContext().getRequestDispatcher("/").forward(request, response);
 			}
