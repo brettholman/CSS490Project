@@ -15,7 +15,7 @@
 %>
 	<ul>
 		<%for(User user: users) { %>
-		<li><%= user.getUserName() %></li>
+		<li><%= user.getUserName() %>    <button onclick="userDB.deleteUser(<%user.getId();%>)">remove</button></li>
 		<%} %>
 	</ul>
 <%} %>
