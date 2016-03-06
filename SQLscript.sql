@@ -111,6 +111,9 @@ insert into Transactions(userID, purchaseDate, totalCost) values
     (1, curdate(), 123),
     (2, curdate(), 555),
     (1, curdate(), 20),
+    (1, curdate(), 123),
+    (2, curdate(), 555),
+    (1, curdate(), 20),
     (1, '2016-01-25', 20),
     (1, '2016-01-25', 203.99),
     (1, '2016-01-25', 230),
@@ -218,9 +221,21 @@ create table if not exists PurchaseDetails (
 
 insert into PurchaseDetails values
     (1, 1, 3),
+    (1, 2, 7),
     (2, 2, 3),
-    (2, 1, 4),
-    (3, 1, 3);
+    (2, 5, 4),
+    (3, 3, 4),
+    (4, 5, 3),
+    (5, 6, 2),
+    (6, 1, 5),
+    (6, 2, 4),
+    (3, 1, 6),
+    (4, 1, 3),
+    (5, 5, 8),
+    (2, 6, 3),
+    (3, 4, 3),
+    (6, 3, 4),
+    (4, 2, 3);
 
 # made to keep track of all ratings.
 create table if not exists Ratings (
