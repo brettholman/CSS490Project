@@ -1,6 +1,9 @@
 <jsp:include page="/includes/header.jsp" />
 <jsp:include page="/includes/column_left_admin.jsp" />
 
+<%@ page import="finalproject.models.*" %>
+<%@ page import="finalproject.data.*" %>
+
 <!-- start the middle column -->
 
 <section>
@@ -12,7 +15,7 @@
 %>
 	<ul>
 		<%for(User user: users) { %>
-		<li><% user.getUserName(); %></li>
+		<li><%= user.getUserName() %></li>
 		<%} %>
 	</ul>
 <%} %>

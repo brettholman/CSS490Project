@@ -132,7 +132,6 @@ public class userDB {
 		return user;
 	}	
 	
-
 	public static User getUserWithPassword(int id)
 	{
         User user = new User();
@@ -338,7 +337,7 @@ public class userDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 
-			String query = "update user set fName = ?, lName = ?, email = ?, pass = ?, userName = ? where id = ?";
+			String query = "update users set fName = ?, lName = ?, email = ?, pass = ?, userName = ? where id = ?";
 			stmt = conn.prepareStatement(query);
 			
 			stmt.setString(1, user.getfName());
@@ -421,7 +420,7 @@ public class userDB {
 			String query = "select * from users";
 			stmt = conn.prepareStatement(query);
 			
-			rs.getStatement().executeQuery(query);
+			rs = stmt.executeQuery(query);
 			
 			if(rs == null || rs.wasNull()) {
 				return null;
@@ -432,10 +431,9 @@ public class userDB {
 					User user = new User();
 					user.setEmail(rs.getString("email"));
 					user.setId(rs.getInt("id"));
-					user.setUserName(rs.getString("uName"));
+					user.setUserName(rs.getString("userName"));
 					user.setfName(rs.getString("fName"));
 					user.setlName(rs.getString("lName"));
-					user.setUserName(rs.getString("userName"));
 					user.setPassword(rs.getString("pass"));
 					users.add(user);
 				}while(rs.next());
