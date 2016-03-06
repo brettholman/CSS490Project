@@ -2,8 +2,10 @@ A list for different use cases that we will present
 ***Run DB Script day of to prevent bar graph from not drawing the current month/week value.***
 
 **User** (Matt)
-    - Login
-    - Modifying Account info
+    - Login 
+    - Modifying Account info (Evan)
+        - Allows users to change account info e.g., email, username, password, first/lastname
+        - new input validated
     - Logout
     - Describe Anonymous user vs logged in user
 
@@ -26,3 +28,4 @@ A list for different use cases that we will present
     - Marketing Data (Brett)
     - Sales Stats (Matt) * Might switch these
     - User Management (Brett) * Might switch these
+        - Currently features user removal (Evan)
