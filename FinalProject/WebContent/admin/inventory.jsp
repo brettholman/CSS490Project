@@ -9,8 +9,20 @@
 
 <!-- Catalog view -->
 <section>
+	
+	<script>
+	function addNewItem(){
+		document.newItem.submit();
+	}
+	</script>
 
 	<h1>Inventory Management</h1>
+	<a href="javascript:addNewItem();"><button id="btnNewItem" name="newItemButton">Add New Item</button></a>
+	<br/>
+	<br/>
+
+<form name="newItem" method="post" action="/AdminController/newItem">
+</form>
 
 <script>
 document.getElementById("sourceID").value=2;

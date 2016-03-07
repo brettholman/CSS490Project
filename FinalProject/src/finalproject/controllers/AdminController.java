@@ -46,19 +46,23 @@ public class AdminController extends HttpServlet {
 		String url = "";
 		
 		// Add a new item
-		if(requestURI.endsWith("addItem")){
-			
+		if(requestURI.endsWith("newItem")){
+
+			HttpSession session = request.getSession(true);
 			InventoryItem item = new InventoryItem();
-			item.setTitle(request.getParameter("title"));
-			item.setAuthor(request.getParameter("author"));
-			item.setDescription(request.getParameter("description"));
-			item.setQuantityInStock(Integer.parseInt(request.getParameter("quantityInStock")));
-			item.setPrice(Double.parseDouble(request.getParameter("price")));
-			item.setCategoryID(Integer.parseInt(request.getParameter("categoryID")));
+			item.setAuthor("NewItem");
+			item.setTitle("NewItem");	
+			item.setDescription("NewItem");
+			item.setPrice(1);
+			item.setQuantityInStock(0);
+			session.setAttribute("currentItem", item);
+
+			item.setCategoryID(1);
+			Category cat = categoryDB.getCategoryByID(1);
+			item.setCategory(cat.getCategoryName());
 			
-			// TODO: Add the new item to the database (not sure how we determine/set the ID?).  
-			
-			getServletContext().getRequestDispatcher("/admin/inventory.jsp").forward(request, response);
+			// Redirect the user to the inventoryItem view
+			getServletContext().getRequestDispatcher("/admin/inventoryItem.jsp").forward(request, response);
 		}
 
 		// Edit a specific item

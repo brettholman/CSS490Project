@@ -34,14 +34,14 @@ public class inventoryDB {
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			String query = "INSERT INTO inventoryitems (title, author, description, categoryID, quantity, price) " +
-					"SELECT ?, ?, ?, coalesce(C.id, 1), ?, ? FROM category C WHERE C.categoryName = ?";
+					"SELECT ?, ?, ?, ?, ?, ?";
 			
 			stmt = conn.prepareStatement(query);
 			
 			stmt.setString(1, item.getTitle());
 			stmt.setString(2, item.getAuthor());
 			stmt.setString(3, item.getDescription());
-			stmt.setString(4, item.getCategory());
+			stmt.setInt(4, item.getCategoryID());
 			stmt.setInt(5, item.getQuantityInStock());
 			stmt.setDouble(6, item.getPrice());
 			
