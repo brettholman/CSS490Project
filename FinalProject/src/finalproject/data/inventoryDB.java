@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.*;
@@ -291,7 +292,7 @@ public class inventoryDB {
 		ResultSet rs = null;
 		
 		Calendar curCal = Calendar.getInstance();
-		curCal.set(Calendar.DAY_OF_WEEK, 0); // Set to Sunday of this week. 
+		curCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // Set to Sunday of this week. 
 		curCal.add(Calendar.DAY_OF_YEAR, -14); // set two weeks back
 		
 		
@@ -317,15 +318,17 @@ public class inventoryDB {
 					+ "inner join ratings as r "
 					+ "on r.itemID = ii.id "
 					+ "where t.purchaseDate >= \'" 
-						+ cal.get(Calendar.YEAR) + "-" // Year
-						+ cal.get(Calendar.MONTH) + "-" // Month
-						+ cal.get(Calendar.DAY_OF_MONTH) + "\'" // Day
+					+ (new SimpleDateFormat("yyyy").format(curCal.getTime())) + "-" // Year
+					+ (new SimpleDateFormat("MM").format(curCal.getTime())) + "-" // Month
+					+ (new SimpleDateFormat("dd").format(curCal.getTime())) + "\'" // Day
 					+ (!allCategories ? "and ii.categoryID = ? " : "")
 					+ "group by pd.itemID " 
 					+ "order by total desc "
 					+ "limit ?;";
-
+			
 			stmt = conn.prepareStatement(query);
+			
+			
 			
 			if(!allCategories)
 				stmt.setString(1, Integer.toString(category));
@@ -362,7 +365,7 @@ public class inventoryDB {
 		return items;
 	}
 	
-	public static ArrayList<Pair<InventoryItem, String>> getBestSellers(int maxBooks, int category)
+	public static ArrayList<Pair<InventoryItem, String>> getWeeklyBestSellers(int maxBooks, int category)
 	{
 		ArrayList<Pair<InventoryItem, String>> items = new ArrayList<Pair<InventoryItem, String>>();
 		// flag to tell if the request wants all categories or not. 
@@ -370,7 +373,11 @@ public class inventoryDB {
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
+		ResultSet rs = null;		
+		
+		Calendar curCal = Calendar.getInstance();
+		curCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // Set to Sunday of this week. 
+		curCal.add(Calendar.DAY_OF_YEAR, -7); // set one week back
 		
 		if(maxBooks <= 0)
 		{
@@ -385,16 +392,23 @@ public class inventoryDB {
 			String query = "select pd.itemID, sum(pd.quantity) as total, "
 					+ "ii.id, ii.title, ii.quantity, ii.price, ii.description, ii.author, c.id, c.categoryName, avg(r.rating) as avgRating "
 					+ "from PurchaseDetails as pd "
+					+ "inner join Transactions as t "
+					+ "on t.transactionNumber = pd.transactionNumber "
 					+ "inner join InventoryItems as ii "
 					+ "on ii.id = pd.itemID "
 					+ "inner join Category as c "
 					+ "on ii.categoryID = c.id "
 					+ "inner join ratings as r "
 					+ "on r.itemID = ii.id "
-					+ (!allCategories ? "where ii.categoryID = ? " : "")
+					+ "where t.purchaseDate >= \'" 
+					+ (new SimpleDateFormat("yyyy").format(curCal.getTime())) + "-" // Year
+					+ (new SimpleDateFormat("MM").format(curCal.getTime())) + "-" // Month
+					+ (new SimpleDateFormat("dd").format(curCal.getTime())) + "\'" // Day
+					+ (!allCategories ? "and ii.categoryID = ? " : "")
 					+ "group by pd.itemID " 
 					+ "order by total desc "
 					+ "limit ?;";
+			
 
 			stmt = conn.prepareStatement(query);
 			

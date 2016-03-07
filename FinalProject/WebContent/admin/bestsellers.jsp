@@ -27,7 +27,7 @@ document.getElementById("sourceID").value=3;
 		categoryID = -1;
 	}
 	
-	ArrayList<Pair<InventoryItem, String>> items = inventoryDB.getBestSellers(max, categoryID);
+	ArrayList<Pair<InventoryItem, String>> items = inventoryDB.getWeeklyBestSellers(max, categoryID);
 	if(items != null) {
 %>
 

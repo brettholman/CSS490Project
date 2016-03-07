@@ -237,7 +237,7 @@ create table if not exists PurchaseDetails (
 insert into PurchaseDetails values
     (1, 1, 3),
     (1, 2, 7),
-    (2, 2, 3),
+    (2, 8, 3),
     (2, 5, 4),
     (3, 3, 4),
     (4, 5, 3),
