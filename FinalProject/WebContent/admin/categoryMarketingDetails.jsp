@@ -13,7 +13,7 @@
 
 <section>
 	<h1>Category Item Marketing Details</h1>
-	<h2>Customers who have purchased any books with the category type <%=category.getCategoryName() %> more than two times this past month.</h2>
+	<h2>Customers who have purchased any books with the category type "<%=category.getCategoryName() %>" more than two times this past month.</h2>
 	<hr>
 	<br>
 	<table>
