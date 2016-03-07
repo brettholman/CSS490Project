@@ -55,6 +55,7 @@ public class marketingDB {
 					item.setId(rs.getInt("id"));
 					item.setUserName(rs.getString("userName"));
 					item.setfName(rs.getString("fName"));
+					item.setlName(rs.getString("lName"));
 					item.setEmail(rs.getString("email"));
 					item.setTotalPurchased(rs.getInt("s"));
 					list.add(item);
@@ -113,6 +114,7 @@ public class marketingDB {
 					item.setId(rs.getInt("id"));
 					item.setUserName(rs.getString("userName"));
 					item.setfName(rs.getString("fName"));
+					item.setlName(rs.getString("lName"));
 					item.setEmail(rs.getString("email"));
 					item.setTotalPurchased(rs.getInt("s"));
 					list.add(item);
