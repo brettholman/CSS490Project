@@ -6,20 +6,17 @@
 
 <!-- start the middle column -->
 
-<section>
-
-	<h1>User Management</h1>
 <%
 	User[] users = userDB.getAllUsers();
 	if(users != null) {
 %>
 	<ul>
 		<%for(User user: users) { %>
-		<li><%= user.getUserName() %>    <button onclick="userDB.deleteUser(<%user.getId();%>)">remove</button></li>
+		<li><%= user.getUserName() %>    <a href="/UserController/removeUser?id=<%user.getId();%>">remove</a></li>
 		<%} %>
 	</ul>
 <%} %>
-</section>
+
 
 <!-- end the middle column -->
 
