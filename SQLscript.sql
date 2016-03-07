@@ -94,8 +94,18 @@ insert into InventoryItems (title, author, quantity, price, description, categor
 	('The Stand', 'Stephen King', 42, 21.99, 'Vivamus rutrum nibh quis volutpat lobortis.', 12),
 	('The Day of the Triffids', 'John Wyndham', 17, 21.99, 'Proin quis nibh lobortis, porttitor tortor a, finibus massa.', 10),
 	('The Civil War: A Narrative', 'Shelby Foote', 22, 21.99, 'Nullam in dolor ullamcorper, euismod tellus in, tristique ipsum.', 5),
-	('The Rise and Fall of the Third Reich', 'William L. Shirer', 8, 21.99, 'Curabitur elementum ex blandit pharetra porta.', 5);
-
+	('The Rise and Fall of the Third Reich', 'William L. Shirer', 8, 21.99, 'Curabitur elementum ex blandit pharetra porta.', 5),
+	('The Lion the Witch and the Wardrobe', 'C.S. Lewis', 12, 5.99, 'Ut id tellus venenatis magna mattis interdum.', 11),
+	('Dune', 'Frank Herbert', 2, 19.99, 'Integer et metus vitae nisi bibendum faucibus.', 10),
+	('The View from the Cherry Tree', 'Willo Davis Roberts', 9, 12.97, 'Etiam lobortis libero eu libero maximus, ultrices dignissim felis auctor.', 8),
+	('Charlie and the Chocolate Factory', 'Roald Dahl', 48, 9.99, 'Duis tempor justo quis nisl pulvinar pulvinar.', 3),
+	('The Hitchhiker''s Guide to the Galaxy', 'Douglas Adams', 42, 9.99, 'Quisque lobortis odio vitae est volutpat, eget aliquam ante aliquet.', 10),
+	('Watership Down', 'Richard Adams', 16, 12.99, 'Vivamus a nulla bibendum, hendrerit augue nec, molestie justo.', 11),
+	('The Aeronaut''s Windlass', 'Jim Butcher', 14, 29.99, 'Maecenas sollicitudin sem at lectus pellentesque, nec interdum velit laoreet.', 11),
+	('Fuzzy Nation', 'John Scalzi', 27, 19.99, 'Donec id velit vel magna varius consectetur egestas vitae libero.', 10),
+	('The Man who Folded Himself', 'David Gerrold', 13, 7.99, 'Nam auctor nunc sit amet blandit consequat.', 10),
+	('Alas, Babylon', 'Pat Frank', 2, 7.99, 'Nullam non diam tristique eros condimentum auctor non vitae quam.', 10);
+	
 create table if not exists Transactions (
     transactionNumber       integer auto_increment not null,
     userID 		            integer not null,
