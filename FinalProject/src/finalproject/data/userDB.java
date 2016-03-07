@@ -435,6 +435,8 @@ public class userDB {
 					user.setfName(rs.getString("fName"));
 					user.setlName(rs.getString("lName"));
 					user.setPassword(rs.getString("pass"));
+					user.setLastLogin(rs.getDate("lastLogin"));
+					user.setAccountCreated(rs.getDate("accountCreated"));
 					users.add(user);
 				}while(rs.next());
 			}
