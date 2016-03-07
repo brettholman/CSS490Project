@@ -82,6 +82,9 @@ public class UserController extends HttpServlet {
 						break;
 				}
 			}
+		} else if (requestURI.endsWith("removeUser")){ //to delete a user
+			userDB.deleteUser(request.getParameter("id"));
+			getServletContext().getRequestDispatcher("/admin/users.jsp"); //refreseh the users page for admin
 		}		
 	}
 
