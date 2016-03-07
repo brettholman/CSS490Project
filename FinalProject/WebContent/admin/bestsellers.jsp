@@ -14,7 +14,7 @@ document.getElementById("sourceID").value=3;
 </script>
 
 <section>
-	<h1>Best Sellers</h1>
+	<h1>Best Sellers</h1><a href="bi-weeklyBestsellers.jsp">Click for Bi-Weekly results</a>
 <%
 	String searchText = (String)session.getAttribute("searchText");
 	int max = 10;

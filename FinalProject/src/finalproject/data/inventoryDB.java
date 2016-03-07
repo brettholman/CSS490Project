@@ -279,8 +279,89 @@ public class inventoryDB {
 		}
 		return items.toArray(new InventoryItem[items.size()]);
 	}
+
+	public static ArrayList<Pair<InventoryItem, String>> getBiWeeklyBestSellers(int maxBooks, int category)
+	{
+		ArrayList<Pair<InventoryItem, String>> items = new ArrayList<Pair<InventoryItem, String>>();
+		// flag to tell if the request wants all categories or not. 
+		boolean allCategories = (category == -1);
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		Calendar curCal = Calendar.getInstance();
+		curCal.set(Calendar.DAY_OF_WEEK, 0); // Set to Sunday of this week. 
+		curCal.add(Calendar.DAY_OF_YEAR, -14); // set two weeks back
+		
+		
+		if(maxBooks <= 0)
+		{
+			return null;
+		}
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			
+			// Test Me
+			String query = "select pd.itemID, sum(pd.quantity) as total, "
+					+ "ii.id, ii.title, ii.quantity, ii.price, ii.description, ii.author, c.id, c.categoryName, avg(r.rating) as avgRating "
+					+ "from PurchaseDetails as pd "
+					+ "inner join Transactions as t "
+					+ "on t.transactionNumber = pd.transactionNumber "
+					+ "inner join InventoryItems as ii "
+					+ "on ii.id = pd.itemID "
+					+ "inner join Category as c "
+					+ "on ii.categoryID = c.id "
+					+ "inner join ratings as r "
+					+ "on r.itemID = ii.id "
+					+ "where t.purchaseDate >= \'" 
+						+ cal.get(Calendar.YEAR) + "-" // Year
+						+ cal.get(Calendar.MONTH) + "-" // Month
+						+ cal.get(Calendar.DAY_OF_MONTH) + "\'" // Day
+					+ (!allCategories ? "and ii.categoryID = ? " : "")
+					+ "group by pd.itemID " 
+					+ "order by total desc "
+					+ "limit ?;";
+
+			stmt = conn.prepareStatement(query);
+			
+			if(!allCategories)
+				stmt.setString(1, Integer.toString(category));
+			
+			stmt.setInt(allCategories ? 1 : 2, maxBooks);
+			
+			rs = stmt.executeQuery();
+			if(rs.next()){
+				do {
+					InventoryItem item = new InventoryItem();
+					item.setId(rs.getInt("ii.id"));
+					item.setTitle(rs.getNString("title"));
+					item.setAuthor(rs.getString("ii.author"));
+					item.setQuantityInStock(rs.getInt("quantity"));
+					item.setDescription(rs.getNString("description"));
+					item.setPrice(rs.getDouble("price"));
+					item.setCategoryID(rs.getInt("c.id"));
+					item.setCategory(rs.getNString("categoryName"));
+					item.setAverageRating(Double.parseDouble(rs.getString("avgRating")));
+					items.add(new Pair<InventoryItem, String>(item, rs.getString("total")));
+				} while(rs.next()); 
+			}
+			else {
+				items = null;
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			items = null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return items;
+	}
 	
-	// This will need some massive testing once the UI is using it. 
 	public static ArrayList<Pair<InventoryItem, String>> getBestSellers(int maxBooks, int category)
 	{
 		ArrayList<Pair<InventoryItem, String>> items = new ArrayList<Pair<InventoryItem, String>>();
