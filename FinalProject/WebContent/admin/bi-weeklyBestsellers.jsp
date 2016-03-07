@@ -14,7 +14,7 @@ document.getElementById("sourceID").value=3;
 </script>
 
 <section>
-	<h1>Best Sellers</h1><a href="bestsellers.jsp">Click for Monthly results</a>
+	<h1>Best Sellers</h1><a href="bestsellers.jsp">Click for Weekly results</a>
 <%
 	String searchText = (String)session.getAttribute("searchText");
 	int max = 10;
@@ -55,6 +55,7 @@ document.getElementById("sourceID").value=3;
 	<% } %>
 </table>
 <% } else { %>
+	<br>
 	no items found	
 <% } %>
 
