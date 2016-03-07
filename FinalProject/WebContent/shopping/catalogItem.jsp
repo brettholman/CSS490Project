@@ -28,21 +28,40 @@ function addRating(id) {
 	alert(document.getElementById("description").value);
 	document.AddRating.submit();	
 }
+
+function addItemToCart(id){
+	document.getElementById("addItemID").value=id;
+	document.getElementById("itemQuantity").value=1;
+	document.itemAddToCart.submit();
+}
 </script>
 
 <section>
 
-	<h1>Catalog Item</h1>
-
-	<p>Title: <%=item.getTitle()%></p>
-	<p>Author: <%=item.getAuthor()%></p>
-	<p>Category: <%=item.getCategory()%></p>
-	<br>
-	<p>Description:
-	<br><%=item.getDescription()%></p>
-	<br>
-	<p>Price: $<%=item.getPrice()%></p>
-	<p>QuantityInStock: <%=item.getQuantityInStock()%></p>
+	<div class="catalogItem">
+		<label for="title">Title</label>
+		<input type="text" name="title" id="title" value="<%=item.getTitle()%>" readonly><br>
+	
+		<label for="author">Title</label>
+		<input type="text" name="author" id="author" value="<%=item.getAuthor()%>" readonly><br>
+	
+		<label for="description">Description</label>
+		<textarea rows=10 cols=80 name="description" id="description" readonly><%=item.getDescription()%></textarea><br>
+	
+		<label for="category">Category</label>
+		<input type="text" name="category" id="category" value="<%=item.getCategory()%>" readonly><br>
+		
+		<label for="price">Price</label>
+		<input type="number" name="price" id="price" min="0" max="999999.99" step="0.01" value=<%=item.getPrice()%> readonly><br>
+	
+		<label for="quantity">Quantity</label>
+		<input type="number" name="quantity" id="quantity" min="0" max="9999" value=<%=item.getQuantityInStock()%> readonly><br>
+	
+		<br/>
+		<a href="javascript:addItemToCart('<%=item.getId()%>');"><button>add to cart</button></a></span>
+		<br/>
+	</div>
+	
 	<br>
 	<h2>Ratings</h2>
 	
@@ -92,9 +111,18 @@ function addRating(id) {
 	<br>
 	<br>
 	<a href="/shopping/catalog.jsp">Back</a>
-	
+
+	<form name="itemAddToCart" method="post" action="/UserController/addItemToCart">
+		<input type="hidden" name="itemID" id="addItemID">
+		<input type="hidden" name="itemQuantity" id="itemQuantity">
+	</form>	
+
 </section>
 
 <!-- end the middle column -->
 
 <jsp:include page="/includes/footer.jsp" />
+
+
+
+
