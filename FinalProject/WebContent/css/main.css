@@ -157,7 +157,7 @@ section label {
 }
 
 section input {
-    width: 12em;
+    width: 20em;
     margin-left: 0.5em;    
 }
 
@@ -379,3 +379,16 @@ section input[type="submit"] {
 .col-right{
 	width:700px;
 }
+
+.catalogItem input, .catalogItem textarea {
+	background-color: lightgray;
+}
+
+.catalogItem input {
+	width: 20em;
+}
+
+.catalogItem input, .catalogItem textarea {
+}
+
+    
