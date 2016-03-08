@@ -126,7 +126,7 @@ insert into Transactions(userID, purchaseDate, totalCost) values
     (1, curdate(), 20),
     (1, '2016-02-25', 20),
     (1, '2016-02-24', 203.99),
-    (1, '2016-02-26', 230),
+    (1, '2016-02-28', 230),
     (1, '2016-01-25', 20),
     (1, '2016-01-25', 230),
     (1, '2016-01-25', 20),
@@ -236,7 +236,7 @@ create table if not exists PurchaseDetails (
 
 insert into PurchaseDetails values
     (1, 1, 3),
-    (1, 2, 7),
+    (1, 8, 7),
     (2, 8, 3),
     (2, 5, 4),
     (3, 3, 4),
