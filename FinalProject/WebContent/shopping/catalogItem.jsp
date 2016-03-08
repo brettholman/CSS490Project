@@ -9,6 +9,8 @@
 <%
 	InventoryItem item = (InventoryItem)session.getAttribute("currentItem");
 	User user = (User)session.getAttribute("currentUser");
+
+	boolean hasUserRating = false;
 %>
 
 <script>
@@ -77,18 +79,22 @@ function addItemToCart(id){
 			<th>Description</th>
 		</tr>
 
-	<% for(Rating r: ratings){ %>
+		<% for(Rating r: ratings){ %>
 		<tr>
 			<td width="20%"><%=r.getuUserName()%></td>
 			<td width="20%"><%=r.getRating()%></td>
 			<td width="40%"><%=r.getDescription()%></td>
 		</tr>
-	<% } %>
+		<% if(r.getuUserName().equals(user.getUserName())) {
+				hasUserRating = true;
+		   }%>
+		<% } %>
 	</table>	
 	<% } else { %>
 	<p>No ratings found</p>
 	<% } %>
-
+	
+	<%if(!hasUserRating) {%> <!--  Decided that the link just shouldn't be there if the user has a rating already.  -->
 	<form name="AddRating" method="post" action="/UserController/addRating">
 		<input type="hidden" name="itemID" id="itemID">
 		<input type="hidden" name="rating" id="rating">
@@ -107,9 +113,12 @@ function addItemToCart(id){
 	</select>
 	<br>
 	<br>
-	<a href = "javascript:addRating(<%=item.getId()%>)">Add a rating</a> 
+		<a href = "javascript:addRating(<%=item.getId()%>)">Add a rating</a> 
+		<br>
+		<br>
+	<%} else {%>
 	<br>
-	<br>
+	<%} %>
 	<a href="/shopping/catalog.jsp">Back</a>
 
 	<form name="itemAddToCart" method="post" action="/UserController/addItemToCart">
