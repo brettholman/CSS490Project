@@ -61,6 +61,7 @@ public class ratingDB {
 					Rating item = new Rating();
 					item.setID(rs.getInt("r.id"));
 					item.setUserName(rs.getString("username"));
+					item.setRating(rs.getInt("rating"));
 					item.setBookID(rs.getInt("itemId"));
 					item.setRatingDate(rs.getDate("ratingDate"));
 					item.setDescription(rs.getString("description"));
