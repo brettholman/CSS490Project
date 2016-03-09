@@ -15,9 +15,13 @@
 
 	<h1>Statistics</h1>
 	<h6>*Yellow is in progress. <br>*Rounded to the nearest dollar amount</h6>
-	<div class="col-wrapper">
+	<div>
 		<span class="col col-left"><h1>Total Sales By Month</h1><canvas id = "canvasId1"></canvas></span>
 		<span class="col col-right"><h1>Total Sales By Week</h1><canvas id = "canvasId2"></canvas></span>
+	</div>
+	<div>
+		<span class="col col-left"><h1>Total Profit By Month</h1><canvas id = "canvasId3"></canvas></span>
+		<span class="col col-right"><h1>Total Profit By Week</h1><canvas id = "canvasId4"></canvas></span>
 	</div>
 	<script src="barGraph.js"></script>
 	<script type ="text/javascript" src="date.js"></script>
@@ -51,9 +55,11 @@
 			dWeekArray.add(cal.getTime());
 		}
 		System.out.println(dMonthArray.toString());
-		StringSet mSet = transactionDB.getTotalSalesForListOfCalendarMonths(dMonthArray);
-		StringSet wSet = transactionDB.getTotalSalesForListOfCalendarWeek(dWeekArray);
-		if(mSet == null || wSet == null)
+		StringSet mSSet = transactionDB.getTotalSalesForListOfCalendarMonths(dMonthArray);
+		StringSet wSSet = transactionDB.getTotalSalesForListOfCalendarWeek(dWeekArray);
+		StringSet mPSet = transactionDB.getTotalProfitForListOfCalendarMonth(dMonthArray);
+		StringSet wPSet = transactionDB.getTotalProfitForListOfCalendarWeek(dWeekArray);
+		if(mSSet == null || wSSet == null || mPSet == null || wPSet == null)
 			return;
 	%>
 	<script>
@@ -63,7 +69,7 @@
 		
 		var graph = new BarGraph(document.getElementById("canvasId1").getContext("2d"));
 		graph.margin = 2;
-		graph.width = 800;
+		graph.width = 600;
 		graph.height = 400;
 		
 		var currentMonth = "<%=monthArrayValues.get(0)%>"
@@ -78,16 +84,16 @@
 		                       currentMonth];
 		
 		graph.update([
-		              <%=mSet.getFourValuesBack()%>,
-		              <%=mSet.getThreeValuesBack()%>,
-		              <%=mSet.getTwoValuesBack()%>,
-		              <%=mSet.getPreviousValue()%>,
-		              <%=mSet.getCurrentValue()%>
+		              <%=mSSet.getFourValuesBack()%>,
+		              <%=mSSet.getThreeValuesBack()%>,
+		              <%=mSSet.getTwoValuesBack()%>,
+		              <%=mSSet.getPreviousValue()%>,
+		              <%=mSSet.getCurrentValue()%>
 		              ]);
 		
 		var graph2 = new BarGraph(document.getElementById("canvasId2").getContext("2d"));
 		graph2.margin = 2;
-		graph2.width = 800;
+		graph2.width = 600;
 		graph2.height = 400;
 		var currentWeek = "<%=weekArrayValues.get(0)%>";
 		var previousWeek = "<%=weekArrayValues.get(1)%>";
@@ -100,11 +106,57 @@
 		                        previousWeek,
 		                        currentWeek];
 		graph2.update([
-		              <%=wSet.getFourValuesBack()%>,
-		              <%=wSet.getThreeValuesBack()%>,
-		              <%=wSet.getTwoValuesBack()%>,
-		              <%=wSet.getPreviousValue()%>,
-		              <%=wSet.getCurrentValue()%>
+		              <%=wSSet.getFourValuesBack()%>,
+		              <%=wSSet.getThreeValuesBack()%>,
+		              <%=wSSet.getTwoValuesBack()%>,
+		              <%=wSSet.getPreviousValue()%>,
+		              <%=wSSet.getCurrentValue()%>
+		              ]);
+		
+		var graph3 = new BarGraph(document.getElementById("canvasId3").getContext("2d"));
+		graph3.margin = 2;
+		graph3.width = 600;
+		graph3.height = 400;
+		
+		var currentMonth = "<%=monthArrayValues.get(0)%>"
+		var previousMonth = "<%=monthArrayValues.get(1)%>"
+		var twoMonthsBack = "<%=monthArrayValues.get(2)%>"
+		var threeMonthsBack = "<%=monthArrayValues.get(3)%>"
+		var fourMonthsBack = "<%=monthArrayValues.get(4)%>"
+		graph3.xAxisLabelArr = [fourMonthsBack, 
+		                       threeMonthsBack,
+		                       twoMonthsBack,
+		                       previousMonth, 
+		                       currentMonth];
+		
+		graph3.update([
+		              <%=mPSet.getFourValuesBack()%>,
+		              <%=mPSet.getThreeValuesBack()%>,
+		              <%=mPSet.getTwoValuesBack()%>,
+		              <%=mPSet.getPreviousValue()%>,
+		              <%=mPSet.getCurrentValue()%>
+		              ]);
+		
+		var graph4 = new BarGraph(document.getElementById("canvasId4").getContext("2d"));
+		graph4.margin = 2;
+		graph4.width = 600;
+		graph4.height = 400;
+		var currentWeek = "<%=weekArrayValues.get(0)%>";
+		var previousWeek = "<%=weekArrayValues.get(1)%>";
+		var	twoWeeksBack = "<%=weekArrayValues.get(2)%>";
+		var threeWeeksBack = "<%=weekArrayValues.get(3)%>";
+		var fourWeeksBack = "<%=weekArrayValues.get(4)%>";
+		graph4.xAxisLabelArr = [fourWeeksBack,
+		                        threeWeeksBack,
+		                        twoWeeksBack,
+		                        previousWeek,
+		                        currentWeek];
+		graph4.update([
+		              <%=wPSet.getFourValuesBack()%>,
+		              <%=wPSet.getThreeValuesBack()%>,
+		              <%=wPSet.getTwoValuesBack()%>,
+		              <%=wPSet.getPreviousValue()%>,
+		              <%=wPSet.getCurrentValue()%>
 		              ]);
 	</script>
 </section>

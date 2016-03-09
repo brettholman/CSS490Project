@@ -91,6 +91,90 @@ public class transactionDB {
 		return new StringSet(toReturn);
 	}
 	
+	public static StringSet getTotalProfitForListOfCalendarMonth(ArrayList<Date> dates)
+	{
+		ArrayList<String> toReturn = new ArrayList<String>();
+		if(dates == null) {
+			return null;
+		}
+		int index = 0;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			String query = "";
+			for(Date date : dates) {
+				if(index == 0){
+					query = "SELECT sum(pd.quantity) as quantity, ii.cost, ii.price FROM transactions t "
+							+ "inner join purchasedetails as pd "
+							+ "on t.transactionNumber = pd.transactionNUmber "
+							+ "inner join inventoryitems as ii "
+							+ "on ii.id = pd.itemID "
+							+ "where t.purchasedate >= ? "
+							+ "group by ii.id ";
+				}
+				else {
+					query = "SELECT sum(pd.quantity) as quantity, ii.cost, ii.price FROM transactions t "
+							+ "inner join purchasedetails as pd "
+							+ "on t.transactionNumber = pd.transactionNUmber "
+							+ "inner join inventoryitems as ii "
+							+ "on ii.id = pd.itemID "
+							+ "where t.purchasedate >= ? and t.purchaseDate < ? "
+							+ "group by ii.id ";
+				}
+				System.out.println(query);
+				nCal.setTime(date);
+				nCal.add(Calendar.MONTH, + 1);
+				cCal.setTime(date);
+				int nMonth = nCal.get(Calendar.MONTH) + 1;
+				int nYear = nCal.get(Calendar.YEAR);
+				int month = cCal.get(Calendar.MONTH) + 1;
+				int year = cCal.get(Calendar.YEAR);
+				stmt = conn.prepareStatement(query);
+			
+				stmt.setString(1, 
+						Integer.toString(year) + "-" + 
+						Integer.toString(month) + "-" + 1);
+				if(index > 0)
+				{
+					stmt.setString(2, 
+							Integer.toString(nYear) + "-" +
+							Integer.toString(nMonth) + "-" + 1);
+				}
+		
+				rs = stmt.executeQuery();
+				if(rs == null || rs.wasNull()) {
+					return null;
+				}
+				
+				double totalCost = 0;
+				double totalPrice = 0;
+				double total = 0;
+				
+				while(rs.next()) {		
+					int quantity = rs.getInt("quantity");
+					totalCost = (quantity * rs.getDouble("cost"));
+					totalPrice = (quantity * rs.getDouble("price"));
+					total += Round.RoundMoney(totalPrice - totalCost);
+				}
+				index++;
+				toReturn.add(String.valueOf(total));
+			}
+		}
+		catch(Exception e) {
+			System.out.println(2);
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		
+		return new StringSet(toReturn);
+	}
+	
 	
 	public static StringSet getTotalSalesForListOfCalendarWeek(ArrayList<Date> dates)
 	{
@@ -153,6 +237,92 @@ public class transactionDB {
 		}
 		catch(Exception e) {
 			e.printStackTrace();
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		
+		return new StringSet(toReturn);
+	}
+	
+	public static StringSet getTotalProfitForListOfCalendarWeek(ArrayList<Date> dates)
+	{
+		ArrayList<String> toReturn = new ArrayList<String>();
+		if(dates == null) {
+			return null;
+		}
+		int index = 0;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			String query = "";
+			for(Date date : dates) {
+				if(index == 0){
+					query = "SELECT sum(pd.quantity) as quantity, ii.cost, ii.price FROM transactions t "
+							+ "inner join purchasedetails as pd "
+							+ "on t.transactionNumber = pd.transactionNumber "
+							+ "inner join inventoryitems as ii "
+							+ "on ii.id = pd.itemID "
+							+ "where t.purchasedate >= ? "
+							+ "group by ii.id ";
+				}
+				else {
+					query = "SELECT sum(pd.quantity) as quantity, ii.cost, ii.price FROM transactions t "
+							+ "inner join purchasedetails as pd "
+							+ "on t.transactionNumber = pd.transactionNumber "
+							+ "inner join inventoryitems as ii "
+							+ "on ii.id = pd.itemID "
+							+ "where t.purchasedate >= ? and t.purchaseDate < ? "
+							+ "group by ii.id ";
+				}
+				System.out.println(query);
+				nCal.setTime(date);
+				nCal.add(Calendar.DAY_OF_YEAR, + 7);
+				cCal.setTime(date);
+				int nDay = nCal.get(Calendar.DAY_OF_MONTH);
+				int nMonth = nCal.get(Calendar.MONTH) + 1;
+				int nYear = nCal.get(Calendar.YEAR);
+				int day = cCal.get(Calendar.DAY_OF_MONTH);
+				int month = cCal.get(Calendar.MONTH) + 1;
+				int year = cCal.get(Calendar.YEAR);
+				stmt = conn.prepareStatement(query);
+			
+				stmt.setString(1, 
+						Integer.toString(year) + "-" + 
+						Integer.toString(month) + "-" + Integer.toString(day));
+				if(index > 0)
+				{
+					stmt.setString(2, 
+							Integer.toString(nYear) + "-" +
+							Integer.toString(nMonth) + "-" + Integer.toString(nDay));
+				}
+		
+				rs = stmt.executeQuery();
+				if(rs == null || rs.wasNull()) {
+					return null;
+				}
+				
+				double totalCost = 0;
+				double totalPrice = 0;
+				double total = 0;
+				
+				while(rs.next()) {		
+					int quantity = rs.getInt("quantity");
+					totalCost = (quantity * rs.getDouble("cost"));
+					totalPrice = (quantity * rs.getDouble("price"));
+					total += Round.RoundMoney(totalPrice - totalCost);
+				}
+				index++;
+				toReturn.add(String.valueOf(total));
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			System.out.println(1);
 			return null;
 		}
 		finally {
