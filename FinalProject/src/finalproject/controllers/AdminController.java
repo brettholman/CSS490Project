@@ -90,6 +90,19 @@ public class AdminController extends HttpServlet {
 			}
 		}			
 		
+		else if(requestURI.endsWith("changeUserRole")) {			// Get the itemID and add it to the session
+			HttpSession session = request.getSession(true);
+			String userName = (String)request.getParameter("userIDUR");
+			boolean newRoleIsAdmin = Boolean.parseBoolean((String)request.getParameter("newRoleIsAdmin"));
+			if(newRoleIsAdmin) {
+				userDB.setRole(userName);
+			}
+			else {
+				userDB.removeRole(userName);
+			}
+			getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
+		}
+		
 		// Remove an item (by reducing "quantityInStock" to 0)
 		else if(requestURI.endsWith("removeItem")){
 			

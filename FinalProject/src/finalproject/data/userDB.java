@@ -358,6 +358,132 @@ public class userDB {
 		return flag;
 	}
 	
+	public static void removeRole(String userName)
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		if(userName == null)
+			return;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+
+			String query = "delete from roles where username = ?";
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, userName);
+			
+			stmt.executeUpdate();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
+	}
+	
+	public static void setRole(String userName) 
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		if(userName == null)
+			return;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+
+			String query = "insert into roles (userName, roleName) values(?,'admin');";
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, userName);
+			
+			stmt.executeUpdate();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
+	}
+	
+	public static String getRole(User user)
+	{
+		String role = null;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		if(user == null || !user.isValid())
+			return null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+
+			String query = "select * from roles where userName = ?";
+			stmt = conn.prepareStatement(query);
+			
+			stmt.setString(1, user.getUserName());
+			
+			rs = stmt.executeQuery();
+			if(rs.first())
+			{
+				role = rs.getString("roleName");
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(stmt, conn);
+		}
+		return role;
+	}
+	
+	public static User[] getAllUsers() {
+		ArrayList<User> users = new ArrayList<User>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
+			String query = "select * from users";
+			stmt = conn.prepareStatement(query);
+			
+			rs = stmt.executeQuery(query);
+			
+			if(rs == null || rs.wasNull()) {
+				return null;
+			}
+			
+			if(rs.first()) {
+				do {
+					User user = new User();
+					user.setEmail(rs.getString("email"));
+					user.setId(rs.getInt("id"));
+					user.setUserName(rs.getString("userName"));
+					user.setfName(rs.getString("fName"));
+					user.setlName(rs.getString("lName"));
+					user.setPassword(rs.getString("pass"));
+					user.setLastLogin(rs.getDate("lastLogin"));
+					user.setAccountCreated(rs.getDate("accountCreated"));
+					users.add(user);
+				}while(rs.next());
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();;
+			return null;
+		}
+		finally {
+			closeAll(stmt, conn, rs);
+		}
+		return users.toArray(new User[users.size()]);
+	}
+
+	
 	private static void closeAll(Statement stmt, Connection conn)
 	{
 		if(stmt != null) {
@@ -407,47 +533,5 @@ public class userDB {
 				sqle.printStackTrace();
 			}
 		}
-	}
-	public static User[] getAllUsers() {
-		ArrayList<User> users = new ArrayList<User>();
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
-			String query = "select * from users";
-			stmt = conn.prepareStatement(query);
-			
-			rs = stmt.executeQuery(query);
-			
-			if(rs == null || rs.wasNull()) {
-				return null;
-			}
-			
-			if(rs.first()) {
-				do {
-					User user = new User();
-					user.setEmail(rs.getString("email"));
-					user.setId(rs.getInt("id"));
-					user.setUserName(rs.getString("userName"));
-					user.setfName(rs.getString("fName"));
-					user.setlName(rs.getString("lName"));
-					user.setPassword(rs.getString("pass"));
-					user.setLastLogin(rs.getDate("lastLogin"));
-					user.setAccountCreated(rs.getDate("accountCreated"));
-					users.add(user);
-				}while(rs.next());
-			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();;
-			return null;
-		}
-		finally {
-			closeAll(stmt, conn, rs);
-		}
-		return users.toArray(new User[users.size()]);
 	}
 }
