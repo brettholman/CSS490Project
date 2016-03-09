@@ -4,14 +4,28 @@
 <section id="catalogToolbar" class="pagePart">
 
 	<%
-	String searchText = (String)session.getAttribute("searchText");
-	int categoryID = (int)session.getAttribute("categoryID");
+		int topCount = 5;
+		if(session.getAttribute("topCount")	!= null) { topCount = (int)session.getAttribute("topCount"); }
+
+		int categoryID = -1;
+		if(session.getAttribute("categoryID") != null) {
+			categoryID = (int)session.getAttribute("categoryID");
+			if(categoryID == 0) { categoryID = -1; }
+		}
+		
+		int timeframe = 0;
+		if(session.getAttribute("timeframe") != null) {
+			timeframe = (int)session.getAttribute("timeframe");
+		}
 	%>
 
-    <form method="post" name="form1" id="form1" action="/UserController/filter">
+    <form method="post" name="form1" id="form1" action="/AdminController/bestSellerFilter">
 
-      Quantity Filter:<input type="text" id="searchText" name="searchText" value=""/>
-
+	  Top:<select id="topCount" name="topCount">
+      	<option value='5' <% if(topCount == 5) { %>selected<% } %>>5</option>
+      	<option value='10' <% if(topCount == 10) { %>selected<% } %>>10</option>
+  	  </select>
+	  
       Category:<select id="categoryID" name="categoryID">
       	<option value='0'>All</option>
 
@@ -23,6 +37,13 @@
 	  		value='<%=cat.getId()%>'><%=cat.getCategoryName()%></option>
 		<% } %>   	
 
+  	  </select>
+
+	  Timeframe:<select id="timeframe" name="timeframe">
+      	<option value='0' <% if(timeframe == 0) { %>selected<% } %>>All Time</option>
+      	<option value='1' <% if(timeframe == 1) { %>selected<% } %>>Last Month</option>
+      	<option value='2' <% if(timeframe == 2) { %>selected<% } %>>Last 2 Weeks</option>
+      	<option value='3' <% if(timeframe == 3) { %>selected<% } %>>Last Week</option>
   	  </select>
 
   	  <input type="hidden" name="sourceID" id="sourceID">

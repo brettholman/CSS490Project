@@ -167,6 +167,23 @@ public class AdminController extends HttpServlet {
 			session.setAttribute("listOfUsers", users);
 			getServletContext().getRequestDispatcher("/admin/categoryMarketingDetails.jsp").forward(request, response);
 		}
+		
+		// Handle the filter for the catalog and inventory management views
+		else if(requestURI.endsWith("bestSellerFilter")) {
+			
+			HttpSession session = request.getSession(true);
+			
+			int topCount = Integer.parseInt(request.getParameter("topCount"));
+			session.setAttribute("topCount", topCount); 
+			
+			int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+			session.setAttribute("categoryID", categoryID); 
+
+			int timeframe = Integer.parseInt(request.getParameter("timeframe"));
+			session.setAttribute("timeframe", timeframe); 
+			
+			getServletContext().getRequestDispatcher("/admin/bestsellers.jsp").forward(request, response);
+		}			
 	}
 	
 	private Boolean saveItem(HttpServletRequest request){
