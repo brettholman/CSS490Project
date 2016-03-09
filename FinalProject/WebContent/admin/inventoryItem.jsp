@@ -46,7 +46,7 @@
   			<%if(item.getTitle().equals("NewItem")) {%>
   				<input type="number" name="cost" id="cost" min="0" max="999999.99" step="0.01" value=<%=item.getCost()%>><br>
 			<%} else {%>
-				<input type="number" name="cost" id="cost" min="0" max="999999.99" step="0.01" value=<%=item.getCost()%> disabled><br>
+				<input type="number" name="cost" id="cost" min="0" max="999999.99" step="0.01" value=<%=item.getCost()%> readonly><br>
 			<%} %>	
 			<label for="quantity">Quantity</label>
   			<input type="number" name="quantity" id="quantity" min="0" max="9999" value=<%=item.getQuantityInStock()%>><br>

@@ -104,18 +104,6 @@ public class AdminController extends HttpServlet {
 			getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
 		}
 		
-		// Remove an item (by reducing "quantityInStock" to 0)
-		else if(requestURI.endsWith("removeItem")){
-			
-			int itemID = Integer.parseInt((String)request.getParameter("itemID"));
-			InventoryItem item = inventoryDB.getInventoryItem(itemID);
-			
-			// TODO: call a function to set the quantityInStock for the specified item to 0.  We can't actually delete the item
-			// from the database without breaking our transaction history.
-			
-			getServletContext().getRequestDispatcher("/admin/inventoryItem.jsp").forward(request, response);
-		}
-		
 		// Modify a user (allow setting the password and the isAdmin flag)
 		else if(requestURI.endsWith("modifyUser")){
 			
@@ -126,8 +114,6 @@ public class AdminController extends HttpServlet {
 			user.setfName((String)request.getParameter("fmail"));
 			user.setlName((String)request.getParameter("lmail"));
 			user.setPassword((String)request.getParameter("password"));
-			
-			// TODO: update the user's properties.
 			
 			getServletContext().getRequestDispatcher("/admin/users.jsp").forward(request, response);
 		}
