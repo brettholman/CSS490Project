@@ -11,6 +11,7 @@ public class InventoryItem {
 	private int quantityInStock;
 	private double price; // Price for customer
 	private double cost; // cost for store to buy
+	private double profit; // profit for price - cost
 	private int categoryID;
 	private String category;
 	private double averageRating;
@@ -53,6 +54,14 @@ public class InventoryItem {
 	
 	public void setCost(double cost) {
 		this.cost = cost;
+	}
+	
+	public double getProfit() {
+		return profit;
+	}
+	
+	public void setprofit(double profit) {
+		this.profit = profit;
 	}
 	
 	public int getCategoryID() {
