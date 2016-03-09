@@ -235,7 +235,8 @@ public class UserController extends HttpServlet {
 			
 			InventoryItem item = inventoryDB.getInventoryItem(Integer.parseInt((String)request.getParameter("itemID")));
 			String rating = (String)request.getParameter("rating");
-			String description = (String)request.getParameter("description");
+			String description = (String)request.getParameter("rdescription");
+			System.out.println(description);
 			HttpSession session = request.getSession(true);
 			User user = (User)session.getAttribute("currentUser");
 			

@@ -26,8 +26,7 @@ function addRating(id) {
 	}
 	document.getElementById("rating").value = cboValue;
 	document.getElementById("itemID").value = id;
-	document.getElementById("description").value = document.getElementById("descriptionInput").value
-	alert(document.getElementById("description").value);
+	document.getElementById("rdescription").value = document.getElementById("descriptionInput").value;
 	document.AddRating.submit();	
 }
 
@@ -98,8 +97,7 @@ function addItemToCart(id){
 	<form name="AddRating" method="post" action="/UserController/addRating">
 		<input type="hidden" name="itemID" id="itemID">
 		<input type="hidden" name="rating" id="rating">
-		<input type="hidden" name="description" id="description">
-		<div>Description:</div>
+		<input type="hidden" name="rdescription" id="rdescription">
 	</form>
 	<textarea name="descriptionInput" id="descriptionInput" rows="4" cols=""></textarea>
 	<br>
