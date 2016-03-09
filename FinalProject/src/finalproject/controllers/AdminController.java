@@ -54,6 +54,7 @@ public class AdminController extends HttpServlet {
 			item.setTitle("NewItem");	
 			item.setDescription("NewItem");
 			item.setPrice(1);
+			item.setCost(1);
 			item.setQuantityInStock(0);
 			session.setAttribute("currentItem", item);
 
@@ -181,6 +182,7 @@ public class AdminController extends HttpServlet {
 			item.setAuthor(request.getParameter("author"));
 			item.setDescription(request.getParameter("description"));
 			item.setPrice(Double.parseDouble(request.getParameter("price")));
+			item.setCost(Double.parseDouble(request.getParameter("cost")));
 			item.setCategory(request.getParameter("category"));
 			item.setQuantityInStock(Integer.parseInt(request.getParameter("quantity")));
 			

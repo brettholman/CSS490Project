@@ -34,8 +34,8 @@ public class inventoryDB {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
-			String query = "INSERT INTO inventoryitems (title, author, description, categoryID, quantity, price) " +
-					"SELECT ?, ?, ?, ?, ?, ?";
+			String query = "INSERT INTO inventoryitems (title, author, description, categoryID, quantity, price, cost) " +
+					"SELECT ?, ?, ?, ?, ?, ?, ?";
 			
 			stmt = conn.prepareStatement(query);
 			
@@ -45,6 +45,7 @@ public class inventoryDB {
 			stmt.setInt(4, item.getCategoryID());
 			stmt.setInt(5, item.getQuantityInStock());
 			stmt.setDouble(6, item.getPrice());
+			stmt.setDouble(7, item.getCost());
 			
 			// returns total rows effected. 
 			if(stmt.executeUpdate() > 0)
@@ -76,7 +77,7 @@ public class inventoryDB {
 			
 			String query = "UPDATE inventoryitems SET title=?, author=?, description=?, " + 
 					"categoryID=coalesce((SELECT id FROM category WHERE categoryName=?),1), " +
-					"quantity=?, price=? WHERE id=? ";
+					"quantity=?, price=?, cost=? WHERE id=? ";
 			
 			stmt = conn.prepareStatement(query);
 			
@@ -86,7 +87,8 @@ public class inventoryDB {
 			stmt.setString(4, item.getCategory());
 			stmt.setInt(5, item.getQuantityInStock());
 			stmt.setDouble(6, item.getPrice());
-			stmt.setInt(7, item.getId());
+			stmt.setDouble(7,  item.getCost());
+			stmt.setInt(8, item.getId());
 			
 			// returns total rows effected. 
 			if(stmt.executeUpdate() > 0)
@@ -115,7 +117,7 @@ public class inventoryDB {
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			String query = 
-					"SELECT II.id, C.categoryName as category, II.title, II.author, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
+					"SELECT II.id, C.categoryName as category, II.title, II.author, II.description, II.price, II.quantity, II.cost, avg(R.rating) AS rating FROM inventoryitems AS II " +
 					"INNER JOIN category AS C ON II.categoryID = C.id " +
 					"LEFT JOIN ratings AS R ON R.itemID = II.id " +
 					"WHERE II.id = ? " +
@@ -137,6 +139,7 @@ public class inventoryDB {
 				item.setAuthor(rs.getString("author"));
 				item.setDescription(rs.getNString("description"));
 				item.setPrice(rs.getDouble("price"));
+				item.setCost(rs.getDouble("cost"));
 				item.setQuantityInStock(rs.getInt("quantity"));
 				item.setAverageRating(rs.getDouble("rating"));
 			}
@@ -168,7 +171,7 @@ public class inventoryDB {
 			// If the categoryID is < 0 then return all items 
 			if(categoryID <= 0) {
 				String query = 
-						"SELECT II.id, C.categoryName as category, II.categoryID as categoryID, II.title, II.author, II.description, II.price, II.quantity, avg(R.rating) AS rating FROM inventoryitems AS II " +
+						"SELECT II.id, C.categoryName as category, II.categoryID as categoryID, II.title, II.author, II.description, II.price, II.quantity, II.cost, avg(R.rating) AS rating FROM inventoryitems AS II " +
 						"INNER JOIN category AS C ON II.categoryID = C.id " +
 						"LEFT JOIN ratings AS R ON R.itemID = II.id ";
 				if(searchText.length() > 0) { query += "WHERE title LIKE ? "; }
@@ -179,7 +182,7 @@ public class inventoryDB {
 			// Get all items in the specified category
 			else {
 				String query = 
-					"select ii.id, ii.categoryID as categoryID, c.categoryName as category, ii.title, II.author, ii.description, ii.price, ii.quantity, avg(r.rating) as rating " +
+					"select ii.id, ii.categoryID as categoryID, c.categoryName as category, ii.title, II.author, ii.description, ii.price, ii.quantity, ii.cost, avg(r.rating) as rating " +
 					"from inventoryitems as ii " +
 					"inner join category as c on ii.categoryid = c.id " +
 					"LEFT join ratings as r on r.itemId = ii.id " +
@@ -209,6 +212,7 @@ public class inventoryDB {
 					item.setPrice(rs.getDouble("price"));
 					item.setQuantityInStock(rs.getInt("quantity"));
 					item.setAverageRating(rs.getDouble("rating"));
+					item.setCost(rs.getDouble("cost"));
 					items.add(item);
 				}while(rs.next());
 			}
@@ -238,7 +242,7 @@ public class inventoryDB {
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 				String query = 
-					"select ii.id, ii.categoryID as categoryID, c.categoryName as category, ii.title, II.author, ii.description, ii.price, ii.quantity, avg(r.rating) as rating " +
+					"select ii.id, ii.categoryID as categoryID, c.categoryName as category, ii.title, II.author, ii.description, ii.price, ii.quantity, ii.cost, avg(r.rating) as rating " +
 					"from inventoryitems as ii " +
 					"inner join category as c on ii.categoryid = c.id " +
 					"LEFT join ratings as r on r.itemId = ii.id " +
@@ -262,6 +266,7 @@ public class inventoryDB {
 					item.setAuthor(rs.getString("author"));
 					item.setDescription(rs.getNString("description"));
 					item.setPrice(rs.getDouble("price"));
+					item.setCost(rs.getDouble("cost"));
 					item.setQuantityInStock(rs.getInt("quantity"));
 					item.setAverageRating(rs.getDouble("rating"));
 					items.add(item);
@@ -307,7 +312,7 @@ public class inventoryDB {
 			
 			// Test Me
 			String query = "select pd.itemID, sum(pd.quantity) as total, "
-					+ "ii.id, ii.title, ii.quantity, ii.price, ii.description, ii.author, c.id, c.categoryName, avg(r.rating) as avgRating "
+					+ "ii.id, ii.title, ii.quantity, ii.price, ii.description, ii.author, c.id, ii.cost, c.categoryName, avg(r.rating) as avgRating "
 					+ "from PurchaseDetails as pd "
 					+ "inner join Transactions as t "
 					+ "on t.transactionNumber = pd.transactionNumber "
@@ -345,6 +350,7 @@ public class inventoryDB {
 					item.setQuantityInStock(rs.getInt("quantity"));
 					item.setDescription(rs.getNString("description"));
 					item.setPrice(rs.getDouble("price"));
+					item.setCost(rs.getDouble("cost"));
 					item.setCategoryID(rs.getInt("c.id"));
 					item.setCategory(rs.getNString("categoryName"));
 					item.setAverageRating(Double.parseDouble(rs.getString("avgRating")));
@@ -390,7 +396,7 @@ public class inventoryDB {
 			
 			// Test Me
 			String query = "select pd.itemID, sum(pd.quantity) as total, "
-					+ "ii.id, ii.title, ii.quantity, ii.price, ii.description, ii.author, c.id, c.categoryName, avg(r.rating) as avgRating "
+					+ "ii.id, ii.title, ii.quantity, ii.price, ii.description, ii.author, c.id, c.categoryName, ii.cost, avg(r.rating) as avgRating "
 					+ "from PurchaseDetails as pd "
 					+ "inner join Transactions as t "
 					+ "on t.transactionNumber = pd.transactionNumber "
@@ -427,6 +433,7 @@ public class inventoryDB {
 					item.setQuantityInStock(rs.getInt("quantity"));
 					item.setDescription(rs.getNString("description"));
 					item.setPrice(rs.getDouble("price"));
+					item.setCost(rs.getDouble("cost"));
 					item.setCategoryID(rs.getInt("c.id"));
 					item.setCategory(rs.getNString("categoryName"));
 					item.setAverageRating(Double.parseDouble(rs.getString("avgRating")));
@@ -461,7 +468,7 @@ public class inventoryDB {
 			conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 			
 			String query = "select i.id, i.title, "
-					+ "i.quantity, i.price, i.categoryID, c.ID as 'c.ID', "
+					+ "i.quantity, i.price, i.cost, i.categoryID, c.ID as 'c.ID', "
 					+ "c.categoryName, avg(r.rating) as average "
 					+ "from InventoryItems as i "
 					+ "inner join Category as c "
@@ -483,6 +490,7 @@ public class inventoryDB {
 			item.setQuantityInStock(rs.getInt("quantity"));
 			item.setDescription(rs.getNString("description"));
 			item.setPrice(rs.getDouble("price"));
+			item.setCost(rs.getDouble("cost"));
 			Category cat = new Category();
 			cat.setCategoryName(rs.getNString("categoryName"));
 			cat.setId(rs.getInt("c.id"));

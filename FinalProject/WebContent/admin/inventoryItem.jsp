@@ -41,7 +41,13 @@
 		
 			<label for="price">Price</label>
   			<input type="number" name="price" id="price" min="0" max="999999.99" step="0.01" value=<%=item.getPrice()%>><br>
-		
+  			
+  			<label for="cost">Cost</label>
+  			<%if(item.getTitle().equals("NewItem")) {%>
+  				<input type="number" name="cost" id="cost" min="0" max="999999.99" step="0.01" value=<%=item.getCost()%>><br>
+			<%} else {%>
+				<input type="number" name="cost" id="cost" min="0" max="999999.99" step="0.01" value=<%=item.getCost()%> disabled><br>
+			<%} %>	
 			<label for="quantity">Quantity</label>
   			<input type="number" name="quantity" id="quantity" min="0" max="9999" value=<%=item.getQuantityInStock()%>><br>
 
