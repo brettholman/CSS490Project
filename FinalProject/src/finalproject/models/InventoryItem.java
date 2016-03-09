@@ -9,7 +9,8 @@ public class InventoryItem {
 	private String author;
 	private String description;
 	private int quantityInStock;
-	private double price;
+	private double price; // Price for customer
+	private double cost; // cost for store to buy
 	private int categoryID;
 	private String category;
 	private double averageRating;
@@ -44,6 +45,14 @@ public class InventoryItem {
 	
 	public void setPrice(double price) {
 		this.price = price;
+	}
+	
+	public double getCost() {
+		return cost;
+	}
+	
+	public void setCost(double cost) {
+		this.cost = cost;
 	}
 	
 	public int getCategoryID() {
