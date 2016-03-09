@@ -127,7 +127,8 @@ public class marketingDB {
 					+ "inner join users as u "
 					+ "on u.id = t.userid "
 					+ "where p.itemid = ? and t.purchasedate >= ? "
-					+ "group by t.userID";
+					+ "group by t.userID "
+					+ "having s >= 2";
 			
 			stmt = conn.prepareStatement(query);
 			
@@ -186,7 +187,8 @@ public class marketingDB {
 					+ "inner join InventoryItems as i "
 					+ "on i.id = p.itemID "
 					+ "where i.categoryID = ? and t.purchasedate >= ? "
-					+ "group by t.userID";
+					+ "group by t.userID "
+					+ "having s >= 2";
 			
 			stmt = conn.prepareStatement(query);
 			
