@@ -63,6 +63,7 @@ create table if not exists InventoryItems (
 	author			varchar(50) not null,
     quantity 	    integer not null,
     price 		    double not null,
+    cost            double not null,
     description     varchar(100),   # can be null
     categoryID	    integer not null, 	# foreign key
     primary key     (id),
@@ -88,24 +89,24 @@ delimiter $$
     end $$
 delimiter ;
 
-insert into InventoryItems (title, author, quantity, price, description, categoryID) values
-	('The Eye of the World', 'Robert Jordan', 0, 20.99, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 11),
-	('The Great Hunt', 'Robert Jordan', 3, 21.99, 'Vestibulum pulvinar leo sit amet dui hendrerit mattis.', 11),
-	('The Stand', 'Stephen King', 42, 21.99, 'Vivamus rutrum nibh quis volutpat lobortis.', 12),
-	('The Day of the Triffids', 'John Wyndham', 17, 21.99, 'Proin quis nibh lobortis, porttitor tortor a, finibus massa.', 10),
-	('The Civil War: A Narrative', 'Shelby Foote', 22, 21.99, 'Nullam in dolor ullamcorper, euismod tellus in, tristique ipsum.', 5),
-	('The Rise and Fall of the Third Reich', 'William L. Shirer', 8, 21.99, 'Curabitur elementum ex blandit pharetra porta.', 5),
-	('The Lion the Witch and the Wardrobe', 'C.S. Lewis', 12, 5.99, 'Ut id tellus venenatis magna mattis interdum.', 11),
-	('Dune', 'Frank Herbert', 2, 19.99, 'Integer et metus vitae nisi bibendum faucibus.', 10),
-	('The View from the Cherry Tree', 'Willo Davis Roberts', 9, 12.97, 'Etiam lobortis libero eu libero maximus, ultrices dignissim felis auctor.', 8),
-	('Charlie and the Chocolate Factory', 'Roald Dahl', 48, 9.99, 'Duis tempor justo quis nisl pulvinar pulvinar.', 3),
-	('The Hitchhiker''s Guide to the Galaxy', 'Douglas Adams', 42, 9.99, 'Quisque lobortis odio vitae est volutpat, eget aliquam ante aliquet.', 10),
-	('Watership Down', 'Richard Adams', 16, 12.99, 'Vivamus a nulla bibendum, hendrerit augue nec, molestie justo.', 11),
-	('The Aeronaut''s Windlass', 'Jim Butcher', 14, 29.99, 'Maecenas sollicitudin sem at lectus pellentesque, nec interdum velit laoreet.', 11),
-	('Fuzzy Nation', 'John Scalzi', 27, 19.99, 'Donec id velit vel magna varius consectetur egestas vitae libero.', 10),
-	('The Man who Folded Himself', 'David Gerrold', 13, 7.99, 'Nam auctor nunc sit amet blandit consequat.', 10),
-	('Alas, Babylon', 'Pat Frank', 2, 7.99, 'Nullam non diam tristique eros condimentum auctor non vitae quam.', 10);
-	
+insert into InventoryItems (title, author, quantity, price, cost, description, categoryID) values
+	('The Eye of the World', 'Robert Jordan', 0, 20.99, 19.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 11),
+	('The Great Hunt', 'Robert Jordan', 3, 21.99, 19.00, 'Vestibulum pulvinar leo sit amet dui hendrerit mattis.', 11),
+	('The Stand', 'Stephen King', 42, 21.99, 19.00, 'Vivamus rutrum nibh quis volutpat lobortis.', 12),
+	('The Day of the Triffids', 'John Wyndham', 17, 21.99, 19.00, 'Proin quis nibh lobortis, porttitor tortor a, finibus massa.', 10),
+	('The Civil War: A Narrative', 'Shelby Foote', 22, 21.99, 19.00, 'Nullam in dolor ullamcorper, euismod tellus in, tristique ipsum.', 5),
+	('The Rise and Fall of the Third Reich', 'William L. Shirer', 8, 21.99, 19.00, 'Curabitur elementum ex blandit pharetra porta.', 5),
+	('The Lion the Witch and the Wardrobe', 'C.S. Lewis', 12, 5.99, 3.00, 'Ut id tellus venenatis magna mattis interdum.', 11),
+	('Dune', 'Frank Herbert', 2, 19.99, 15.00, 'Integer et metus vitae nisi bibendum faucibus.', 10),
+	('The View from the Cherry Tree', 'Willo Davis Roberts', 9, 12.97, 10.00, 'Etiam lobortis libero eu libero maximus, ultrices dignissim felis auctor.', 8),
+	('Charlie and the Chocolate Factory', 'Roald Dahl', 48, 9.99, 5.00, 'Duis tempor justo quis nisl pulvinar pulvinar.', 3),
+	('The Hitchhiker''s Guide to the Galaxy', 'Douglas Adams', 42, 9.99, 5.00, 'Quisque lobortis odio vitae est volutpat, eget aliquam ante aliquet.', 10),
+	('Watership Down', 'Richard Adams', 16, 12.99, 7.99, 'Vivamus a nulla bibendum, hendrerit augue nec, molestie justo.', 11),
+	('The Aeronaut''s Windlass', 'Jim Butcher', 14, 29.99, 10.00, 'Maecenas sollicitudin sem at lectus pellentesque, nec interdum velit laoreet.', 11),
+	('Fuzzy Nation', 'John Scalzi', 27, 19.99, 15.00, 'Donec id velit vel magna varius consectetur egestas vitae libero.', 10),
+	('The Man who Folded Himself', 'David Gerrold', 13, 7.99, 3.00, 'Nam auctor nunc sit amet blandit consequat.', 10),
+	('Alas, Babylon', 'Pat Frank', 2, 7.99, 3.00, 'Nullam non diam tristique eros condimentum auctor non vitae quam.', 10);
+
 create table if not exists Transactions (
     transactionNumber       integer auto_increment not null,
     userID 		            integer not null,
@@ -254,7 +255,7 @@ insert into PurchaseDetails values
     (7, 6, 3),
     (8, 4, 3),
     (8, 3, 4),
-    (9, 2, 3),    
+    (9, 2, 3),
     (10, 1, 3),
     (11, 2, 7),
     (12, 2, 3),
@@ -274,7 +275,7 @@ insert into PurchaseDetails values
     (23, 6, 3),
     (24, 4, 3),
     (25, 3, 4),
-    (26, 2, 3),   
+    (26, 2, 3),
     (27, 1, 3),
     (28, 2, 7),
     (29, 2, 3),
