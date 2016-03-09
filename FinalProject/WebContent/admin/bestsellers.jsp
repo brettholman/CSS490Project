@@ -14,43 +14,39 @@ document.getElementById("sourceID").value=3;
 </script>
 
 <section>
-	<h1>Weekly Best Sellers</h1><a href="bi-weeklyBestsellers.jsp">Click for Bi-Weekly results</a>
+	<h1>Best Sellers</h1>
 <%
-	String searchText = (String)session.getAttribute("searchText");
-	int max = 10;
-	if(searchText != null && searchText.length() > 0) {
-		max = Integer.parseInt(searchText);
-	}
-	int categoryID = (int)session.getAttribute("categoryID");
-	if(categoryID == 0)
-	{
-		categoryID = -1;
+	int topCount = 5;
+	if(session.getAttribute("topCount")	!= null) { topCount = (int)session.getAttribute("topCount"); }
+	
+	int categoryID = -1;
+	if(session.getAttribute("categoryID") != null) {
+		categoryID = (int)session.getAttribute("categoryID");
+		if(categoryID == 0) { categoryID = -1; }
 	}
 	
-	ArrayList<Pair<InventoryItem, String>> items = inventoryDB.getWeeklyBestSellers(max, categoryID);
-	if(items != null) {
+	int timeframe = 0;
+	if(session.getAttribute("timeframe") != null) {
+		timeframe = (int)session.getAttribute("timeframe");
+	}
+	
+	SalesStatItem[] items = marketingDB.getSalesStatItems(topCount, categoryID, timeframe);
+	if(items != null) {	
 %>
 
 <table id="list">
 	<tr>
 		<th>Title</th>
 		<th>Author</th>
-		<th>Description</th>
 		<th>Category</th>
-		<th>Price</th>
-		<th>QuantityInStock</th>
-		<th>UserRating</th>
-		<th></th>
+		<th>QuantitySold</th>
 	</tr>
-	<% for(int i = 0; i < items.size(); i++) { %>
+	<% for(SalesStatItem item: items) { %>
 	<tr>
-		<td width="20%"><%=items.get(i).getKey().getTitle()%></a></td>
-		<td width="15%"><%=items.get(i).getKey().getAuthor()%></td>
-		<td width="25%"><%=items.get(i).getKey().getDescription()%></td>
-		<td width="15%"><%=items.get(i).getKey().getCategory()%></td>
-		<td width="10%">$<%=items.get(i).getKey().getPrice()%></td>
-		<td width="10%"><%=items.get(i).getKey().getQuantityInStock()%></td>
-		<td width="10%"><%=items.get(i).getKey().getAverageRating()%></td>
+		<td width="20%"><%=item.getTitle()%></td>
+		<td width="15%"><%=item.getAuthor()%></td>
+		<td width="15%"><%=item.getCategory()%></td>
+		<td width="10%"><%=item.getQuantitySold()%></td>
 	</tr>
 	<% } %>
 </table>
